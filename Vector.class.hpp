@@ -3,37 +3,7 @@
 
 // The explicit keyword in C++ is used to mark constructors to not implicitly convert types.
 #include <iostream>
-
-// template<typename T>
-// class Allocator
-// {
-// public:
-//     template<class Type>
-//     struct rebind
-//     {
-//         typedef Allocator<Type> other;
-//     };
-//     typedef T value_type;
-//     typedef T* pointer;
-//     typedef T& reference;
-//     typedef const T* const_pointer;
-//     typedef const T& const_reference;
-//     typedef size_t size_type;
-//     typedef std::ptrdiff_t difference_type;
-
-// public:
-//     Allocator();
-//     ~Allocator();
-//     pointer address(reference x) const;
-//     const pointer address(const reference x) const;
-//     pointer allocate(size_type n, Allocator<void>::const_pointer hint=0);
-//     void deallocate(pointer p, size_type n);
-//     size_type max_size() const throw();
-//     void construct(pointer p, const_reference val);
-//     void destroy(pointer p);
-// private:
-
-// };
+#include "NormalIterator.class.hpp"
 
 template <class T, class Alloc = std::allocator<T> >
 class Vector
@@ -46,13 +16,24 @@ public:
     typedef typename allocator_type::pointer pointer;
     typedef typename allocator_type::const_pointer const_pointer;
     typedef size_t size_type;
+    typedef Normal_iterator<T> iterator;
 
-public:
+private:
     T *m_data;
     allocator_type m_allocator;
     size_type m_capacity;
     size_type m_size;
-
+    void allocateAndCopy(size_type n)
+    {
+        T *tmp = m_allocator.alloc(n);
+        for (size_type i = 0; i < m_size; i++)
+        {
+            tmp[i] = m_data[i];
+        }
+        m_allocator.deallocate(m_data, m_capacity);
+        m_data = tmp;
+        m_capacity = n;
+    };
 
 public:
     // Constructs:
@@ -88,19 +69,31 @@ public:
     };
 
     // Capacity:
-    size_type size() const {return (m_size);};
-    size_type max_size() const;
-    void resize(size_type n, value_type val = value_type());
-    size_type capacity() const;
-    bool empty() const;
-    void reserve(size_type n);
+    size_type size() const { return (m_size); };
+    size_type max_size() const { return m_allocator.max_size(); };
+    size_type capacity() const { return (m_capacity); };
+    bool empty() const
+    {
+        if (m_size == 0)
+            return (true);
+        return false;
+    };
+
+    void reserve(size_type n)
+    {
+        // If the size requested is greater than the maximum size (vector::max_size), a length_error exception is thrown.
+        if (n > m_capacity)
+        {
+            this->allocateAndCopy(n);
+        }
+    };
 
     // Element access:
     reference operator[](size_type n)
     {
         return m_data[n];
     };
-    const_reference operator[](size_type n) const{return m_data[n];};
+    const_reference operator[](size_type n) const { return m_data[n]; };
 
     reference at(size_type n)
     {
@@ -113,16 +106,16 @@ public:
         return (m_data[n]);
     };
 
-    reference front() {return (m_data[0]);};
-    const_reference front() const {return (m_data[0]);};
+    reference front() { return (m_data[0]); };
+    const_reference front() const { return (m_data[0]); };
 
-    reference back();
-    const_reference back() const;
+    reference back() { return (m_data[m_size - 1]); };
+    const_reference back() const { return (m_data[m_size - 1]); };
 
     // Modifiers;
     void clear()
     {
-        for(size_type i = 0; i < m_size; i++)
+        for (size_type i = 0; i < m_size; i++)
             m_data[i].~T();
         m_size = 0;
     };
@@ -135,16 +128,45 @@ public:
     // iterator erase( iterator pos );
     // iterator erase( iterator first, iterator last );
 
-    // void push_back( const T& value );
+    void push_back(const T &value)
+    {
+        if (m_size >= m_capacity)
+            this->allocateAndCopy(m_capacity * 2);
+        m_data[m_size++] = value;
+    };
 
-    // void pop_back();
+    void pop_back()
+    {
+        m_data[m_size - 1].~T();
+        m_size--;
+    }
 
-    // void resize( size_type count, T value = T() );
+    void resize(size_type count, T value = T())
+    {
+        // If a reallocation happens, the storage is allocated using the container's allocator, which may throw exceptions on failure (for the default allocator, bad_alloc is thrown if the allocation request does not succeed).
+        if (count <= m_size - 1)
+        {
+            for (size_type i = m_size - 1; i >= count; i--)
+            {
+                m_data[i].~T();
+                m_size--;
+            }
+        }
+        else
+        {
+            if(count > m_capacity)
+                this->allocateAndCopy(count);
+            for(size_type i = m_size; i < count; i++)
+            {
+                m_data[i++] = value;
+            }
+        }
+    };
 
-    void swap( Vector& other )
+    void swap(Vector &other)
     {
         Vector tmp;
-        
+
         tmp = *this;
         *this = other;
         other = tmp;
