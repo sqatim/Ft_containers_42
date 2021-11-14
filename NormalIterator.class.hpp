@@ -14,25 +14,26 @@ public:
     typedef typename iterator_traits<iterator_type>::pointer pointer;
     typedef typename iterator_traits<iterator_type>::reference reference;
 
-
 protected:
     iterator_type m_current;
 
 public:
     Normal_iterator() : m_current(){};
-    Normal_iterator(iterator_type x) : m_current(x){};
-    Normal_iterator(const Normal_iterator<Iter> &other) { this->m_current = other->m_current; };
+    Normal_iterator(iterator_type x) : m_current(x) {};
+    Normal_iterator(const Normal_iterator<Iter> &other)
+    {
+        this->m_current = other.m_current;
+    };
     Normal_iterator &operator=(const Normal_iterator<Iter> &other)
     {
         if (this != other)
-            this->m_current = other.base();
+            this->m_current = other.m_current;
         return (*this);
     };
     iterator_type base() const { return this->m_current; };
     reference operator*() const
     {
-        iterator_type tmp = m_current;
-        return *(--tmp);
+        return (*m_current);
     };
     pointer operator->() const
     {
@@ -40,46 +41,46 @@ public:
     };
     reference operator[](difference_type n) const
     {
-        return this->base()[n - 1];
+        return this->m_current[n];
     };
     Normal_iterator &operator++()
-    {
-        --m_current;
-        return *this;
-    };
-    Normal_iterator &operator--()
     {
         ++m_current;
         return *this;
     };
+    Normal_iterator &operator--()
+    {
+        --m_current;
+        return *this;
+    };
     Normal_iterator operator++(int)
     {
-        iterator_type copy = *m_current;
-        --(*m_current);
+        Normal_iterator copy = *this;
+        ++(*this);
         return copy;
     };
     Normal_iterator operator--(int)
     {
-        iterator_type copy = *m_current;
-        ++(*m_current);
+        Normal_iterator copy = *this;
+        --(*this);
         return copy;
     };
     Normal_iterator operator-(difference_type n) const
     {
-        return Normal_iterator(this->base() + n);
+        return Normal_iterator(this->m_current - n);
     };
     Normal_iterator operator+(difference_type n) const
     {
-        return Normal_iterator(this->base() - n);
+        return Normal_iterator(this->m_current + n);
     };
     Normal_iterator &operator+=(difference_type n)
     {
-        m_current = this->base() - n;
+        m_current = this->m_current + n;
         return *this;
     };
     Normal_iterator &operator-=(difference_type n)
     {
-        m_current = this->base() + n;
+        m_current = this->m_current - n;
         return *this;
     };
 };
@@ -87,14 +88,14 @@ public:
 template <class Iterator>
 Normal_iterator<Iterator> operator+(typename Normal_iterator<Iterator>::difference_type n, const Normal_iterator<Iterator> &rev_it)
 {
-    rev_it.m_current = rev_it.base() - n;
+    rev_it.m_current = rev_it.base() + n;
     return *rev_it;
 }
 
 template <class Iterator>
 Normal_iterator<Iterator> operator-(typename Normal_iterator<Iterator>::difference_type n, const Normal_iterator<Iterator> &rev_it)
 {
-    rev_it.m_current = rev_it.base() + n;
+    rev_it.m_current = rev_it.base() - n;
     return *rev_it;
 }
 

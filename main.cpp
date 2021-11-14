@@ -7,8 +7,8 @@
 #include "Vector.class.hpp"
 // class Vector
 // {
-// public:
-//     int x;
+// puitlic:
+//   it int x;
 //     Vector(): x(20)
 //     {
 
@@ -121,26 +121,90 @@ public:
 //     // std::cout << s[0] << std::endl;
 // }
 
+// int main()
+// {
+//     std::vector<int> myvector;
+//     int sum(0);
+//     myvector.push_back(100);
+//     myvector.push_back(200);
+//     myvector.push_back(300);
+//     myvector.push_back(300);
+//     std::cout << "size: " << myvector.size() << std::endl;
+//     // myvector.pop_back();
+//     myvector.resize(10);
+//     // std::cout << "The elements of myvector add up to " << sum << '\n';
+//     std::vector<int>::iterator it = myvector.begin();
+//     // std::cout << myvector[0] << std::endl;
+//     for (std::vector<int>::iterator it = myvector.begin(); it < myvector.end(); it++)
+//     {
+//         // std::cout << "said" << std::endl;
+//         std::cout << *it << std::endl;
+//     }
+//     std::cout << myvector.capacity() << std::endl;
+
+//     return 0;
+// }
+
+// int main()
+// {
+//     std::vector<int> b;
+//     Vector<int> v;
+//     v.push_back(10);
+//     v.push_back(20);
+//     v.push_back(30);
+//     v.push_back(40);
+//     b.push_back(10);
+//     b.push_back(20);
+//     b.push_back(30);
+//     b.push_back(40);
+
+//     std::vector<int>::iterator it = b.begin();
+//     Vector<int>::iterator it1 = v.begin();
+//     std::cout << "normal_reverse_iterator: " << *it << std::endl;
+//     std::cout << "costum_reverse_iterator: " << *it1 << std::endl;
+//     std::cout << "****************************************************" << std::endl;
+//     it++;
+//     it1++;
+//     std::cout << "normal_reverse_iterator: " << *it << std::endl;
+//     std::cout << "costum_reverse_iterator: " << *it1 << std::endl;
+//     std::cout << "****************************************************" << std::endl;
+//     it++;
+//     it1++;
+//     std::cout << "normal_reverse_iterator: " << *it << std::endl;
+//     std::cout << "costum_reverse_iterator: " << *it1 << std::endl;
+//     std::cout << "****************************************************" << std::endl;
+//     it++;
+//     it1++;
+//     std::cout << "normal_reverse_iterator: " << *it << std::endl;
+//     std::cout << "costum_reverse_iterator: " << *it1 << std::endl;
+//     return (0);
+// }
+
 int main()
 {
-    std::vector<int> myvector;
-    int sum(0);
-    myvector.push_back(100);
-    myvector.push_back(200);
-    myvector.push_back(300);
-    myvector.push_back(300);
-    std::cout << "size: " << myvector.size() << std::endl;
-    // myvector.pop_back();
-    myvector.resize(10);
-    // std::cout << "The elements of myvector add up to " << sum << '\n';
-    std::vector<int>::iterator it = myvector.begin();
-    // std::cout << myvector[0] << std::endl;
-    for (std::vector<int>::iterator it = myvector.begin(); it < myvector.end(); it++)
-    {
-        // std::cout << "said" << std::endl;
-        std::cout << *it << std::endl;
-    }
-    std::cout << myvector.capacity() << std::endl;
+    Vector<int> v1;
+    v1.push_back(10);
+    v1.push_back(20);
+    Vector<int> v2;
+    v2.push_back(100);
+    v2.push_back(90);
 
-    return 0;
+    std::cout << "************ v1 ************" << std::endl;
+    std::cout << v1[0] << std::endl;
+    std::cout << v1[1] << std::endl;
+    std::cout << "************ v2 ************" << std::endl;
+    std::cout << v2[0] << std::endl;
+    std::cout << v2[1] << std::endl;
+    std::cout << "************ swap ************" << std::endl;
+    v1.swap(v2);
+    std::cout << "************ v1 ************" << std::endl;
+    std::cout << v1[0] << std::endl;
+    std::cout << v1[1] << std::endl;
+    std::cout << "************ v2 ************" << std::endl;
+    std::cout << v2[0] << std::endl;
+    std::cout << v2[1] << std::endl;
+
+    std::cout << "************ size v1 ************" << std::endl;
+    // std::cout << v1.() << std::endl;
+    return (0);
 }

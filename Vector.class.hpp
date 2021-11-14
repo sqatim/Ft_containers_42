@@ -4,6 +4,7 @@
 // The explicit keyword in C++ is used to mark constructors to not implicitly convert types.
 #include <iostream>
 #include "NormalIterator.class.hpp"
+#include "ReverseIterator.class.hpp"
 
 template <class T, class Alloc = std::allocator<T> >
 class Vector
@@ -11,21 +12,25 @@ class Vector
 public:
     typedef T value_type;
     typedef Alloc allocator_type;
-    typedef value_type &reference;
-    typedef const value_type &const_reference;
+    typedef typename allocator_type::reference reference;
+    typedef typename allocator_type::const_reference const_reference;
     typedef typename allocator_type::pointer pointer;
     typedef typename allocator_type::const_pointer const_pointer;
     typedef size_t size_type;
-    typedef Normal_iterator<T> iterator;
+    typedef Normal_iterator<pointer> iterator;
+    typedef const iterator const_iterator;
+    typedef Reverse_iterator<pointer> reverse_iterator;
+    typedef const reverse_iterator const_reverse_iterator;
 
 private:
-    T *m_data;
+    pointer m_data;
     allocator_type m_allocator;
     size_type m_capacity;
     size_type m_size;
+
     void allocateAndCopy(size_type n)
     {
-        T *tmp = m_allocator.alloc(n);
+        T *tmp = m_allocator.allocate(n);
         for (size_type i = 0; i < m_size; i++)
         {
             tmp[i] = m_data[i];
@@ -154,9 +159,9 @@ public:
         }
         else
         {
-            if(count > m_capacity)
+            if (count > m_capacity)
                 this->allocateAndCopy(count);
-            for(size_type i = m_size; i < count; i++)
+            for (size_type i = m_size; i < count; i++)
             {
                 m_data[i++] = value;
             }
@@ -172,7 +177,23 @@ public:
         other = tmp;
     }
 
-    ~Vector(){};
+    // Iterators
+    iterator begin() { return iterator(m_data); };
+    const_iterator begin() const { return iterator(m_data); };
+
+    iterator end() { return iterator(m_data + m_size);}
+    const_iterator end() const { return iterator(m_data + m_size);}
+
+    reverse_iterator rbegin() { return (reverse_iterator(m_data + m_size)); };
+    const_reverse_iterator rbegin() const { return (reverse_iterator(m_data + m_size)); };
+
+    reverse_iterator rend() { return reverse_iterator(m_data); };
+    const_reverse_iterator rend() const { return reverse_iterator(m_data); };
+    // const_itera
+    ~Vector(){
+        // std::alloca 
+        // m_allocator.deallocate(m_data, m_capacity); 
+        };
 };
 
 #endif
