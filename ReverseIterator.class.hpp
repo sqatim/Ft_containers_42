@@ -28,7 +28,7 @@ public:
     Reverse_iterator(const Reverse_iterator<Iter> &other) { this->m_current = other.m_current; };
     Reverse_iterator &operator=(const Reverse_iterator<Iter> &other)
     {
-        if (this != other)
+        if (this != &other)
             this->m_current = other.base();
         return (*this);
     };

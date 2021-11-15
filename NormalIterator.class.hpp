@@ -26,7 +26,7 @@ public:
     };
     Normal_iterator &operator=(const Normal_iterator<Iter> &other)
     {
-        if (this != other)
+        if (this != &other)
             this->m_current = other.m_current;
         return (*this);
     };

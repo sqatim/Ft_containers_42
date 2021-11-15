@@ -180,31 +180,70 @@ public:
 //     return (0);
 // }
 
+// int main()
+// {
+//     Vector<int> v1;
+//     v1.push_back(10);
+//     v1.push_back(20);
+//     Vector<int> v2;
+//     v2.push_back(100);
+//     v2.push_back(90);
+
+//     std::cout << "************ v1 ************" << std::endl;
+//     std::cout << v1[0] << std::endl;
+//     std::cout << v1[1] << std::endl;
+//     std::cout << "************ v2 ************" << std::endl;
+//     std::cout << v2[0] << std::endl;
+//     std::cout << v2[1] << std::endl;
+//     std::cout << "************ swap ************" << std::endl;
+//     v1.swap(v2);
+//     std::cout << "************ v1 ************" << std::endl;
+//     std::cout << v1[0] << std::endl;
+//     std::cout << v1[1] << std::endl;
+//     std::cout << "************ v2 ************" << std::endl;
+//     std::cout << v2[0] << std::endl;
+//     std::cout << v2[1] << std::endl;
+
+//     std::cout << "************ size v1 ************" << std::endl;
+//     // std::cout << v1.() << std::endl;
+//     return (0);
+// }
+
+void print_vec(const std::vector<int> &vec)
+{
+    std::cout << "vector of system" << std::endl;
+    for (std::vector<int>::const_iterator x = vec.begin(); x < vec.end(); x++)
+    {
+        std::cout << *x << ' ';
+    }
+    std::cout << '\n';
+}
+
+void print_vec(Vector<int> &vec)
+{
+    std::cout << "my vector" << std::endl;
+    for (Vector<int>::iterator x = vec.begin(); x < vec.end(); x++)
+    {
+        std::cout << *x << ' ';
+    }
+    std::cout << '\n';
+}
+
 int main()
 {
-    Vector<int> v1;
-    v1.push_back(10);
-    v1.push_back(20);
-    Vector<int> v2;
-    v2.push_back(100);
-    v2.push_back(90);
+    Vector<int> vec(3, 100);
+    print_vec(vec);
+    std::vector<int> vec1(3, 100);
+    print_vec(vec1);
 
-    std::cout << "************ v1 ************" << std::endl;
-    std::cout << v1[0] << std::endl;
-    std::cout << v1[1] << std::endl;
-    std::cout << "************ v2 ************" << std::endl;
-    std::cout << v2[0] << std::endl;
-    std::cout << v2[1] << std::endl;
-    std::cout << "************ swap ************" << std::endl;
-    v1.swap(v2);
-    std::cout << "************ v1 ************" << std::endl;
-    std::cout << v1[0] << std::endl;
-    std::cout << v1[1] << std::endl;
-    std::cout << "************ v2 ************" << std::endl;
-    std::cout << v2[0] << std::endl;
-    std::cout << v2[1] << std::endl;
-
-    std::cout << "************ size v1 ************" << std::endl;
-    // std::cout << v1.() << std::endl;
-    return (0);
+    Vector<int>::iterator it = vec.begin();
+    --it;
+    --it;
+    vec.insert(it, 200);
+    print_vec(vec);
+    std::vector<int>::iterator it1 = vec1.begin();
+    --it1;
+    --it1;
+    vec1.insert(it1, 200);
+    print_vec(vec1);
 }

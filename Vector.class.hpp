@@ -23,7 +23,7 @@ public:
     typedef const reverse_iterator const_reverse_iterator;
 
 private:
-    pointer m_data;
+    T *m_data;
     allocator_type m_allocator;
     size_type m_capacity;
     size_type m_size;
@@ -125,10 +125,59 @@ public:
         m_size = 0;
     };
 
-    // iterator insert( iterator pos, const T& value );
+    iterator insert(iterator pos, const T &value)
+    {
+        iterator it;
+        size_type i = 0;
+
+        it = this->begin();
+
+        for (; it < pos; it++)
+        {
+            i++;
+        }
+        if (i < m_capacity)
+        {
+            T *tmp = m_allocator.allocate(m_capacity + 1);
+            size_type j = 0;
+            if (pos < this->begin())
+                j++;
+            for (int k = 0; j < m_capacity + 1; j++)
+            {
+                if (i == j)
+                    tmp[j++] = value;
+                tmp[j] = m_data[k++];
+            }
+            m_allocator.deallocate(m_data, m_capacity);
+            m_data = tmp;
+            m_capacity++;
+            m_size = m_capacity++;
+        }
+        else
+        {
+            T *tmp = m_allocator.allocate(m_capacity + 1);
+            size_type j = 0;
+            for (int k = 0; j < i + 1; j++)
+            {
+                if (i == j)
+                    tmp[j++] = value;
+                if (k < m_size)
+                    tmp[j] = m_data[k++];
+            }
+            m_allocator.deallocate(m_data, m_capacity);
+            m_data = tmp;
+            m_capacity = i + 1;
+            m_size = m_capacity;
+        }
+        return it;
+    };
     // void insert( iterator pos, size_type count, const T& value );
     // template< class InputIt >
     // void insert( iterator pos, InputIt first, InputIt last );
+
+    // template<class InputIterator>
+    // void assign(InputIterator first, InputIterator last);
+    // void assign(size_type n, const value_type&  val);
 
     // iterator erase( iterator pos );
     // iterator erase( iterator first, iterator last );
@@ -181,19 +230,21 @@ public:
     iterator begin() { return iterator(m_data); };
     const_iterator begin() const { return iterator(m_data); };
 
-    iterator end() { return iterator(m_data + m_size);}
-    const_iterator end() const { return iterator(m_data + m_size);}
+    iterator end() { return iterator(m_data + m_size); }
+    const_iterator end() const { return iterator(m_data + m_size); }
 
     reverse_iterator rbegin() { return (reverse_iterator(m_data + m_size)); };
     const_reverse_iterator rbegin() const { return (reverse_iterator(m_data + m_size)); };
 
     reverse_iterator rend() { return reverse_iterator(m_data); };
     const_reverse_iterator rend() const { return reverse_iterator(m_data); };
+
+    allocator_type get_allocator() const { return (this->m_allocator); };
     // const_itera
     ~Vector(){
-        // std::alloca 
-        // m_allocator.deallocate(m_data, m_capacity); 
-        };
+        // std::alloca
+        // m_allocator.deallocate(m_data, m_capacity);
+    };
 };
 
 #endif
