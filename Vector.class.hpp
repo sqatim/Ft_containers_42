@@ -125,6 +125,25 @@ public:
         m_size = 0;
     };
 
+    void insertFunction(iterator pos, size_type capacity)
+    {
+        T *tmp = m_allocator.allocate(capacity);
+        size_type j = 0;
+        if (pos < this->begin())
+            j++;
+        for (int k = 0; j < capacity + 1; j++)
+        {
+            if (i == j)
+                tmp[j++] = value;
+            if (k < m_size)
+                tmp[j] = m_data[k++];
+        }
+        m_allocator.deallocate(m_data, m_capacity);
+        m_data = tmp;
+        m_capacity = capacity;
+        m_size = capacity;
+    }
+
     iterator insert(iterator pos, const T &value)
     {
         iterator it;
@@ -138,6 +157,7 @@ public:
         }
         if (i < m_capacity)
         {
+            //insertFunction(pos, m_capacity + 1);
             T *tmp = m_allocator.allocate(m_capacity + 1);
             size_type j = 0;
             if (pos < this->begin())
@@ -155,7 +175,8 @@ public:
         }
         else
         {
-            T *tmp = m_allocator.allocate(m_capacity + 1);
+            //insertFunction(pos, i + 1);
+            T *tmp = m_allocator.allocate(i + 1);
             size_type j = 0;
             for (int k = 0; j < i + 1; j++)
             {
@@ -171,7 +192,11 @@ public:
         }
         return it;
     };
-    // void insert( iterator pos, size_type count, const T& value );
+
+    void insert( iterator pos, size_type count, const T& value )
+    {
+        
+    };
     // template< class InputIt >
     // void insert( iterator pos, InputIt first, InputIt last );
 
