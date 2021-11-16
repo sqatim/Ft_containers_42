@@ -211,7 +211,7 @@ public:
 
 void print_vec(const std::vector<int> &vec)
 {
-    std::cout << "vector of system" << std::endl;
+    std::cout << "vector of system\tcapacity: " << vec.capacity() << std::endl;
     for (std::vector<int>::const_iterator x = vec.begin(); x < vec.end(); x++)
     {
         std::cout << *x << ' ';
@@ -229,21 +229,51 @@ void print_vec(Vector<int> &vec)
     std::cout << '\n';
 }
 
+// int main()
+// {
+//     Vector<int> vec(3, 100);
+//     print_vec(vec);
+//     std::vector<int> vec1(3, 100);
+//     print_vec(vec1);
+
+//     Vector<int>::iterator it = vec.begin();
+//     --it;
+//     --it;
+//     vec.insert(it, 200);
+//     print_vec(vec);
+//     std::vector<int>::iterator it1 = vec1.begin();
+//     --it1;
+//     --it1;
+//     vec1.insert(it1, 200);
+//     print_vec(vec1);
+// }
+// int main ()
+// {
+//     Vector<int> vec(3,100);
+//     print_vec(vec);
+//     std::vector<int> vec1(3,100);
+//     print_vec(vec1);
+
+//     Vector<int>::iterator it = vec.begin();
+//     it++;
+//     vec.insert(it,2,300);
+//     print_vec(vec);
+//     std::vector<int>::iterator it1 = vec1.begin();
+//     it1++;
+//     vec1.insert(it1,2,300);
+//     print_vec(vec1);
+
+// }
+
 int main()
 {
-    Vector<int> vec(3, 100);
-    print_vec(vec);
-    std::vector<int> vec1(3, 100);
-    print_vec(vec1);
-
-    Vector<int>::iterator it = vec.begin();
-    --it;
-    --it;
-    vec.insert(it, 200);
-    print_vec(vec);
-    std::vector<int>::iterator it1 = vec1.begin();
-    --it1;
-    --it1;
-    vec1.insert(it1, 200);
-    print_vec(vec1);
+    std::vector<int> myvector(3, 100);
+    myvector.push_back(200);
+    myvector.push_back(200);
+    // myvector.push_back(300);
+    // myvector.push_back(400);
+    // std::vector<int> myvector(3, 100);
+    int myarray[] = {501, 502, 503};
+    myvector.insert(myvector.begin() + 10, myarray, myarray + 2);
+    print_vec(myvector);
 }
