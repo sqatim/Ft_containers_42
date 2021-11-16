@@ -221,7 +221,7 @@ void print_vec(const std::vector<int> &vec)
 
 void print_vec(Vector<int> &vec)
 {
-    std::cout << "my vector" << std::endl;
+    std::cout << "vector of mine\tcapacity:vector " << vec.capacity() << std::endl;
     for (Vector<int>::iterator x = vec.begin(); x < vec.end(); x++)
     {
         std::cout << *x << ' ';
@@ -265,15 +265,119 @@ void print_vec(Vector<int> &vec)
 
 // }
 
+// int main()
+// {
+//     /*--------------------------- System ---------------------------*/
+//     std::vector<int> vector(3, 100);
+//     vector.push_back(200);
+//     vector.push_back(200);
+//     std::cout << "their capacity: " << vector.capacity() << std::endl;
+//     /*--------------------------- Mine ---------------------------*/
+//     Vector<int> myvector(3, 100);
+//     myvector.push_back(200);
+//     myvector.push_back(200);
+//     std::cout << "my capacity: " << vector.capacity() << std::endl;
+
+//     int myarray[] = {501, 502, 503};
+//     vector.insert(vector.begin()+ 5 , myarray, myarray + 5);
+//     myvector.insert(myvector.begin()+ 5, myarray, myarray + 5);
+//     print_vec(vector);
+//     print_vec(myvector);
+// }
+// myvector.push_back(300);
+// myvector.push_back(400);
+// std::vector<int> myvector(3, 100);
+
+// int main()
+// {
+//     std::vector<int> first;
+//     Vector<int> myFirst;
+//     // std::vector<int> second;
+//     // std::vector<int> third;
+//     // /* ------------------- Mine -------------------*/
+
+//     first.push_back(50);
+//     myFirst.push_back(50);
+//     /* ------------------- Mine -------------------*/
+//     myFirst.assign(10, 100);
+//     print_vec(myFirst);
+//     /* ------------------- System -------------------*/
+//     first.assign(10, 100);
+//     print_vec(first);
+// }
+
+// int main()
+// {
+//     std::vector<int> first;
+//     Vector<int> myFirst;
+//     std::vector<int> second;
+//     Vector<int> mySecond;
+//     std::vector<int> third;
+
+//     //   first.assign (7,100);           // 7 ints with a value of 100
+//     /* ----------------- system ----------------- */
+//     first.push_back(10);
+//     first.push_back(20);
+//     first.push_back(30);
+//     first.push_back(40);
+//     std::vector<int>::iterator it;
+//     it = first.begin();
+//     second.assign(it, it + 1);
+//     print_vec(second);
+
+//     /* ----------------- mine ----------------- */
+//     myFirst.push_back(10);
+//     myFirst.push_back(20);
+//     myFirst.push_back(30);
+//     myFirst.push_back(40);
+//     Vector<int>::iterator it1;
+//     it1 = myFirst.begin();
+//     mySecond.assign(it, it + 1);
+//     print_vec(mySecond);
+// }
+
+// int main()
+// {
+
+//     //     /* ----------------- system ----------------- */
+//     std::vector<int> vector;
+//     std::vector<int>::iterator it;
+
+//     // set some values (from 1 to 10)
+//     // for (int i = 1; i <= 10; i++)
+//         vector.push_back(10);
+//     it = vector.erase(vector.begin() + 0);
+//     print_vec(vector);
+//     //     /* ----------------- mine ----------------- */
+
+//     Vector<int> myvector;
+//     Vector<int>::iterator it1;
+
+//     // set some values (from 1 to 10)
+//     // for (int i = 1; i <= 10; i++)
+//         myvector.push_back(10);
+//     it1 = myvector.erase(myvector.begin() + 0);
+//     print_vec(myvector);
+//     return (0);
+// }
+
 int main()
 {
-    std::vector<int> myvector(3, 100);
-    myvector.push_back(200);
-    myvector.push_back(200);
-    // myvector.push_back(300);
-    // myvector.push_back(400);
-    // std::vector<int> myvector(3, 100);
-    int myarray[] = {501, 502, 503};
-    myvector.insert(myvector.begin() + 10, myarray, myarray + 2);
-    print_vec(myvector);
+    /* -------------- system -------------- */
+    std::vector<int> vector;
+    for (int i = 1; i <= 10; i++)
+        vector.push_back(i);
+    vector.erase(vector.begin(), vector.begin() + 0);
+    print_vec(vector);
+
+    /* -------------- mine -------------- */
+    Vector<int> myVector;
+    for (int i = 1; i <= 10; i++)
+        myVector.push_back(i);
+    // myVector.erase(myVector.begin(), 3);
+    // myVector.erase(3);
+    // myVector.erase(myVector.begin(), myVector.begin() + 0);
+    // print_vec(myVector);
+
+    return 0;
 }
