@@ -3,17 +3,28 @@
 
 #include <iostream>
 
-struct input_iterator_tag { };
-struct output_iterator_tag { };
-struct forward_iterator_tag : public input_iterator_tag{ };
-struct bidirectional_iterator_tag : public forward_iterator_tag{ };
-struct random_iterator_tag : public bidirectional_iterator_tag{ };
-struct contiguous_iterator_tag : public random_iterator_tag{ };
+struct input_iterator_tag
+{
+};
+struct output_iterator_tag
+{
+};
+struct forward_iterator_tag : public input_iterator_tag
+{
+};
+struct bidirectional_iterator_tag : public forward_iterator_tag
+{
+};
+struct random_iterator_tag : public bidirectional_iterator_tag
+{
+};
+struct contiguous_iterator_tag : public random_iterator_tag
+{
+};
 
-
-
-template <class Category, class T, class Distance, class Pointer = T*, class Reference = T&>
-struct iterator{
+template <class Category, class T, class Distance, class Pointer = T *, class Reference = T &>
+struct iterator
+{
 public:
     typedef T value_type;
     typedef Distance difference_type;
@@ -22,7 +33,7 @@ public:
     typedef Category iterator_category;
 };
 
-template<class Iterator>
+template <class Iterator>
 struct iterator_traits
 {
     typedef typename Iterator::difference_type difference_type;
@@ -30,18 +41,32 @@ struct iterator_traits
     typedef typename Iterator::pointer pointer;
     typedef typename Iterator::reference reference;
     typedef typename Iterator::iterator_category iterator_category;
+    // iterator_traits() { std::cout << "iterator_traits1" << std::endl; };
 };
 
-template<class T>
-struct iterator_traits<T*>
+template <class T>
+struct iterator_traits<T *>
 {
     typedef std::ptrdiff_t difference_type;
     typedef T value_type;
-    typedef T* pointer;
-    typedef T& reference;
-    typedef struct random_access_iterator_tag iterator_category;
+    typedef T *pointer;
+    typedef T &reference;
+    typedef std::random_access_iterator_tag iterator_category;
+    // iterator_traits() { std::cout << "iterator_traits2" << std::endl; };
 };
-
-
+template <class T>
+struct iterator_traits<const T *>
+{
+    typedef std::ptrdiff_t difference_type;
+    typedef T value_type;
+    typedef const T *pointer;
+    typedef const T &reference;
+    typedef std::random_access_iterator_tag iterator_category;
+    // iterator_traits() { std::cout << "iterator_traits3" << std::endl; };
+    // iterator_traits &operator=(const iterator_traits<T> &other)
+    // {
+    //     std::cout << "ala asahbi" << std::endl;
+    // };
+};
 
 #endif

@@ -4,7 +4,13 @@
 #include "iterator.hpp"
 
 template <class Iter>
-class Normal_iterator
+class Normal_iterator : public iterator<
+                            typename iterator_traits<Iter>::iterator_category,
+                            typename iterator_traits<Iter>::value_type,
+                            typename iterator_traits<Iter>::difference_type,
+                            typename iterator_traits<Iter>::pointer,
+                            typename iterator_traits<Iter>::reference>
+
 {
 public:
     typedef Iter iterator_type;
@@ -19,7 +25,7 @@ protected:
 
 public:
     Normal_iterator() : m_current(){};
-    Normal_iterator(iterator_type x) : m_current(x) {};
+    Normal_iterator(iterator_type x) : m_current(x){};
     Normal_iterator(const Normal_iterator<Iter> &other)
     {
         this->m_current = other.m_current;

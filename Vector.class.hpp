@@ -18,9 +18,9 @@ public:
 	typedef typename allocator_type::const_pointer const_pointer;
 	typedef size_t size_type;
 	typedef Normal_iterator<pointer> iterator;
-	typedef const iterator const_iterator;
+	typedef Normal_iterator<const_pointer> const_iterator;
 	typedef Reverse_iterator<pointer> reverse_iterator;
-	typedef const reverse_iterator const_reverse_iterator;
+	typedef const Reverse_iterator<const_pointer> const_reverse_iterator;
 
 private:
 	T *m_data;
@@ -35,7 +35,10 @@ private:
 		{
 			tmp[i] = m_data[i];
 		}
-		m_allocator.deallocate(m_data, m_capacity);
+		if (m_capacity > 0)
+		{
+			m_allocator.deallocate(m_data, m_capacity);
+		}
 		m_data = tmp;
 		m_capacity = n;
 	};
@@ -44,16 +47,12 @@ public:
 	// Constructs:
 
 	//Construit l'allocateur par défaut. Étant donné que l'allocateur par défaut est sans état, les constructeurs n'ont aucun effet visible.
-	explicit Vector(const allocator_type &alloc = allocator_type()) : m_capacity(0), m_size(0)
-	{
-		m_allocator = const_cast<allocator_type &>(alloc);
-		m_data = m_allocator.allocate(0);
-	};
+	explicit Vector(const allocator_type &alloc = allocator_type()) : m_data(NULL), m_capacity(0), m_size(0), m_allocator(alloc){};
 
 	explicit Vector(size_type n, const value_type &val = value_type(),
-					const allocator_type &alloc = allocator_type()) : m_capacity(n), m_size(n)
+					const allocator_type &alloc = allocator_type()) : m_capacity(n), m_size(n), m_allocator(alloc)
 	{
-		m_allocator = const_cast<allocator_type &>(alloc);
+		// m_allocator = const_cast<allocator_type &>(alloc);
 		m_data = m_allocator.allocate(n);
 		for (int i = 0; i < n; i++)
 		{
@@ -426,14 +425,14 @@ public:
 		else
 		{
 			tmp = first;
-			for(;tmp < last; tmp++)
+			for (; tmp < last; tmp++)
 				i++;
 			j = 0;
 			for (int k = 0; k < m_size; first++)
 			{
 				tmp = this->begin();
 				if (tmp == first)
-					k +=i ;
+					k += i;
 				m_data[j++] = m_data[k++];
 			}
 			m_size -= i;
@@ -492,19 +491,24 @@ public:
 	const_iterator begin() const { return iterator(m_data); };
 
 	iterator end() { return iterator(m_data + m_size); }
-	const_iterator end() const { return iterator(m_data + m_size); }
+	const_iterator end() const { return const_iterator(m_data + m_size); }
 
 	reverse_iterator rbegin() { return (reverse_iterator(m_data + m_size)); };
-	const_reverse_iterator rbegin() const { return (reverse_iterator(m_data + m_size)); };
+	const_reverse_iterator rbegin() const 
+	{ 
+		std::cout << "rbegin" << std::endl; 
+		return (reverse_iterator(m_data + m_size));
+	}; 
 
 	reverse_iterator rend() { return reverse_iterator(m_data); };
 	const_reverse_iterator rend() const { return reverse_iterator(m_data); };
 
 	allocator_type get_allocator() const { return (this->m_allocator); };
 	// const_itera
-	~Vector(){
-		// std::alloca
-		// m_allocator.deallocate(m_data, m_capacity);
+	~Vector()
+	{
+		if (m_capacity > 0)
+			m_allocator.deallocate(m_data, m_capacity);
 	};
 };
 
