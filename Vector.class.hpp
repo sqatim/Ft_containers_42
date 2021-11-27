@@ -89,6 +89,7 @@ public:
 		if (n > m_capacity)
 		{
 			this->allocateAndCopy(n);
+			std::cout << "-/-_-/-"<< m_capacity << std::endl;
 		}
 	};
 
@@ -458,13 +459,13 @@ public:
 	void resize(size_type count, T value = T())
 	{
 		// If a reallocation happens, the storage is allocated using the container's allocator, which may throw exceptions on failure (for the default allocator, bad_alloc is thrown if the allocation request does not succeed).
-		if (count <= m_size - 1)
+		if (count <= m_size)
 		{
-			for (size_type i = m_size - 1; i >= count; i--)
+			for (int i = (int)m_size; i >= (int)count; i--)
 			{
 				m_data[i].~T();
-				m_size--;
 			}
+			m_size = count;
 		}
 		else
 		{
@@ -474,6 +475,7 @@ public:
 			{
 				m_data[i++] = value;
 			}
+			m_size = count;
 		}
 	};
 
@@ -494,11 +496,11 @@ public:
 	const_iterator end() const { return const_iterator(m_data + m_size); }
 
 	reverse_iterator rbegin() { return (reverse_iterator(m_data + m_size)); };
-	const_reverse_iterator rbegin() const 
-	{ 
-		std::cout << "rbegin" << std::endl; 
+	const_reverse_iterator rbegin() const
+	{
+		std::cout << "rbegin" << std::endl;
 		return (reverse_iterator(m_data + m_size));
-	}; 
+	};
 
 	reverse_iterator rend() { return reverse_iterator(m_data); };
 	const_reverse_iterator rend() const { return reverse_iterator(m_data); };
