@@ -6,7 +6,7 @@
 #include "NormalIterator.class.hpp"
 #include "ReverseIterator.class.hpp"
 
-template <class T, class Alloc = std::allocator<T> >
+template <class T, class Alloc = std::allocator<T>>
 class Vector
 {
 public:
@@ -89,7 +89,7 @@ public:
 		if (n > m_capacity)
 		{
 			this->allocateAndCopy(n);
-			std::cout << "-/-_-/-"<< m_capacity << std::endl;
+			std::cout << "-/-_-/-" << m_capacity << std::endl;
 		}
 	};
 
@@ -102,13 +102,17 @@ public:
 
 	reference at(size_type n)
 	{
-		// hta n9ad liha exception dyal man ba3d fash katfout size dyal vector;
-		return (m_data[n]);
+		if (n < m_size)
+			return (m_data[n]);
+		else
+			throw std::out_of_range("vector::_M_range_check: __n (which is " + std::to_string(n) +") >= this->size() (which is " + std::to_string(this->m_size) + ")");
 	};
 	const_reference at(size_type n) const
 	{
-		// hta n9ad liha exception dyal man ba3d fash katfout size dyal vector;
-		return (m_data[n]);
+		if (n < m_size)
+			return (m_data[n]);
+		else
+			throw std::out_of_range("vector::_M_range_check: __n (which is " + std::to_string(n) +") >= this->size() (which is " + std::to_string(this->m_size) + ")");
 	};
 
 	reference front() { return (m_data[0]); };
