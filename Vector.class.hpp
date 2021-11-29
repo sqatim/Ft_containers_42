@@ -5,6 +5,7 @@
 #include <iostream>
 #include "NormalIterator.class.hpp"
 #include "ReverseIterator.class.hpp"
+#include <cstddef>
 
 template <class T, class Alloc = std::allocator<T>>
 class Vector
@@ -28,17 +29,17 @@ private:
 	size_type m_capacity;
 	size_type m_size;
 
-	void allocateAndCopy(size_type n)
+	void allocateAndCopy(size_type n, size_type size)
 	{
-		T *tmp = m_allocator.allocate(n);
-		for (size_type i = 0; i < m_size; i++)
+		T *tmp;
+
+		tmp = m_allocator.allocate(n);
+		for (size_type i = 0; i < size; i++)
 		{
 			tmp[i] = m_data[i];
 		}
 		if (m_capacity > 0)
-		{
 			m_allocator.deallocate(m_data, m_capacity);
-		}
 		m_data = tmp;
 		m_capacity = n;
 	};
@@ -88,8 +89,7 @@ public:
 		// If the size requested is greater than the maximum size (vector::max_size), a length_error exception is thrown.
 		if (n > m_capacity)
 		{
-			this->allocateAndCopy(n);
-			std::cout << "-/-_-/-" << m_capacity << std::endl;
+			this->allocateAndCopy(n, m_size);
 		}
 	};
 
@@ -105,14 +105,14 @@ public:
 		if (n < m_size)
 			return (m_data[n]);
 		else
-			throw std::out_of_range("vector::_M_range_check: __n (which is " + std::to_string(n) +") >= this->size() (which is " + std::to_string(this->m_size) + ")");
+			throw std::out_of_range("vector::_M_range_check: __n (which is " + std::to_string(n) + ") >= this->size() (which is " + std::to_string(this->m_size) + ")");
 	};
 	const_reference at(size_type n) const
 	{
 		if (n < m_size)
 			return (m_data[n]);
 		else
-			throw std::out_of_range("vector::_M_range_check: __n (which is " + std::to_string(n) +") >= this->size() (which is " + std::to_string(this->m_size) + ")");
+			throw std::out_of_range("vector::_M_range_check: __n (which is " + std::to_string(n) + ") >= this->size() (which is " + std::to_string(this->m_size) + ")");
 	};
 
 	reference front() { return (m_data[0]); };
@@ -129,72 +129,41 @@ public:
 		m_size = 0;
 	};
 
-	void insertFunction(iterator pos, size_type capacity, size_type i, const T &value)
+	void insertAllocation(size_type capacity, std::ptrdiff_t len, const T &value)
 	{
-		T *tmp = m_allocator.allocate(capacity);
+		T *tmp;
 		size_type j = 0;
-		if (pos < this->begin())
-			j++;
-		for (int k = 0; j < capacity + 1; j++)
+		tmp = m_allocator.allocate(capacity);
+		for (int k = 0; j < m_size + 1; j++)
 		{
-			if (i == j)
+			if (len == j)
 				tmp[j++] = value;
-			if (k < m_size)
-				tmp[j] = m_data[k++];
+			tmp[j] = m_data[k++];
 		}
 		m_allocator.deallocate(m_data, m_capacity);
 		m_data = tmp;
 		m_capacity = capacity;
-		m_size = capacity;
+		m_size++;
 	}
 
 	iterator insert(iterator pos, const T &value)
 	{
-		iterator it;
-		size_type i = 0;
+		// hna ma khasnish nfout end ! akhir element n9dar nzid momkin ikun fal end
+		std::ptrdiff_t len;
+		T *tmp;
+		size_type k;
 
-		it = this->begin();
-
-		for (; it < pos; it++)
+		len = pos.base() - this->begin().base();
+		if (len <=(std::ptrdiff_t) m_size && m_size < m_capacity)
 		{
-			i++;
+			for (k = m_size; len < (std::ptrdiff_t)k; k--)
+				m_data[k] = m_data[k - 1];
+			m_data[k] = value;
+			m_size++;
 		}
-		if (i < m_capacity)
-		{
-			//insertFunction(pos, m_capacity + 1);
-			T *tmp = m_allocator.allocate(m_capacity + 1);
-			size_type j = 0;
-			if (pos < this->begin())
-				j++;
-			for (int k = 0; j < m_capacity + 1; j++)
-			{
-				if (i == j)
-					tmp[j++] = value;
-				tmp[j] = m_data[k++];
-			}
-			m_allocator.deallocate(m_data, m_capacity);
-			m_data = tmp;
-			m_capacity++;
-			m_size = m_capacity++;
-		}
-		else
-		{
-			//insertFunction(pos, i + 1);
-			T *tmp = m_allocator.allocate(i + 1);
-			size_type j = 0;
-			for (int k = 0; j < i + 1; j++)
-			{
-				if (i == j)
-					tmp[j++] = value;
-				if (k < m_size)
-					tmp[j] = m_data[k++];
-			}
-			m_allocator.deallocate(m_data, m_capacity);
-			m_data = tmp;
-			m_capacity = i + 1;
-			m_size = m_capacity;
-		}
-		return it;
+		else if (len <= m_size && m_size >= m_capacity)
+			insertAllocation(m_capacity * 2, len, value);
+		return this->begin() + len;
 	};
 
 	void insert(iterator pos, size_type count, const T &value)
@@ -310,8 +279,8 @@ public:
 	template <class InputIterator>
 	void assign(InputIterator first, InputIterator last)
 	{
+		//   v1.assign(3, 100); nnormalement hadi khasha dkhul fal function lakhra
 		T *tmp;
-		size_type size;
 		size_type counter;
 
 		if (first < last)
@@ -319,67 +288,48 @@ public:
 			this->clear();
 			counter = 0;
 			for (InputIterator tmp = first; tmp < last; tmp++)
-			{
 				counter++;
-			}
 			if (m_capacity < counter)
 			{
 				tmp = m_allocator.allocate(counter);
-				for (int i = 0; i < counter; i++)
-				{
-					tmp[i] = *first;
-					first++;
-				}
-				m_allocator.deallocate(m_data, m_capacity);
+				for (int i = 0; i < counter; first++)
+					tmp[i++] = *first;
+				if (m_capacity > 0)
+					m_allocator.deallocate(m_data, m_capacity);
 				m_data = tmp;
 				m_capacity = counter;
-				m_size = counter;
 			}
 			else
-			{
-				for (int i = 0; i < counter; i++)
-				{
-					m_data[i] = *first;
-					first++;
-				}
-				m_size = counter;
-			}
+				for (int i = 0; i < counter; first++)
+					m_data[i++] = *first;
+			m_size = counter;
 		}
 	}
 
 	void assign(size_type n, const value_type &val)
 	{
 		T *tmp;
-		size_type size;
-		if (n >= 0)
+		size_t i;
+
+		i = 0;
+		this->clear();
+		if (m_capacity < n)
 		{
-			if (m_capacity <= n)
+			if (n > 0)
 			{
-				this->clear();
-				if (n > 0)
-				{
-					tmp = m_allocator.allocate(n);
-					for (int i = 0; i < n; i++)
-					{
-						tmp[i] = val;
-					}
-					if (m_capacity > 0)
-						m_allocator.deallocate(m_data, m_capacity);
-					m_data = tmp;
-					m_capacity = n;
-					m_size = n;
-				}
-			}
-			else
-			{
-				this->clear();
-				for (int i = 0; i < n; i++)
-				{
-					m_data[i] = val;
-				}
-				m_size = n;
+				tmp = m_allocator.allocate(n);
+				while (i < n)
+					tmp[i++] = val;
+				if (m_capacity > 0)
+					m_allocator.deallocate(m_data, m_capacity);
+				m_data = tmp;
+				m_capacity = n;
 			}
 		}
+		else
+			while (i < n)
+				m_data[i++] = val;
+		m_size = n;
 	}
 
 	iterator erase(iterator pos)
@@ -448,9 +398,9 @@ public:
 	void push_back(const T &value)
 	{
 		if (m_capacity == 0)
-			this->allocateAndCopy(1);
+			this->allocateAndCopy(1, m_size);
 		if (m_size >= m_capacity)
-			this->allocateAndCopy(m_capacity * 2);
+			this->allocateAndCopy(m_capacity * 2, m_size);
 		m_data[m_size++] = value;
 	};
 
@@ -466,19 +416,15 @@ public:
 		if (count <= m_size)
 		{
 			for (int i = (int)m_size; i >= (int)count; i--)
-			{
 				m_data[i].~T();
-			}
 			m_size = count;
 		}
 		else
 		{
 			if (count > m_capacity)
-				this->allocateAndCopy(count);
+				this->allocateAndCopy(count, m_size);
 			for (size_type i = m_size; i < count; i++)
-			{
-				m_data[i++] = value;
-			}
+				m_data[i] = value;
 			m_size = count;
 		}
 	};
