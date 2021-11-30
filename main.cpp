@@ -66,14 +66,16 @@ int main()
 {
     try
     {
-        int array[] = {300, 400, 500, 200};
+        int array[] = {100, 200, 300, 400};
         /*-----------------------System-----------------------*/
         std::vector<int> v0;
         v0.reserve(2);
         v0.push_back(1);
+        v0.push_back(2);
+        v0.push_back(3);
         std::vector<int>::iterator it0 = v0.begin();
-        v0.insert(it0, array, array + 1);
-        it0 = v0.begin();
+        std::vector<int>::iterator it01 = v0.erase(it0 , it0 + 3);
+        std::cout <<"just check in " <<*it01 << std::endl;
         container(v0, it0);
 
         std::cout << "################################################################################" << std::endl;
@@ -83,9 +85,11 @@ int main()
         Vector<int> v1;
         v1.reserve(2);
         v1.push_back(1);
+        v1.push_back(2);
+        v1.push_back(3);
         Vector<int>::iterator it1 = v1.begin();
-        v1.insert(it1, array, array + 1);
-        it1 = v1.begin();
+        Vector<int>::iterator it11 = v1.erase(it1 +0, it1 + 2);
+        std::cout <<"just check in " <<*it11 << std::endl;
         myContainer(v1, it1);
     }
     catch (const std::exception &e)

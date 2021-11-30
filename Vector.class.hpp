@@ -47,7 +47,7 @@ private:
 public:
 	// Constructs:
 
-	//Construit l'allocateur par défaut. Étant donné que l'allocateur par défaut est sans état, les constructeurs n'ont aucun effet visible.
+	// Construit l'allocateur par défaut. Étant donné que l'allocateur par défaut est sans état, les constructeurs n'ont aucun effet visible.
 	explicit Vector(const allocator_type &alloc = allocator_type()) : m_data(NULL), m_capacity(0), m_size(0), m_allocator(alloc){};
 
 	explicit Vector(size_type n, const value_type &val = value_type(),
@@ -312,64 +312,32 @@ public:
 
 	iterator erase(iterator pos)
 	{
-		iterator begin = this->begin();
-		bool check = false;
+		iterator begin;
 		size_type i = 0;
-		size_type j = 0;
+		std::ptrdiff_t lenToPos;
 
-		for (; begin < this->end(); begin++)
-		{
-			if (begin == pos)
-			{
-				check = true;
-				break;
-			}
-			i++;
-		}
-		if (check == false && this->begin() == pos)
-			check = true;
-		if (check == true)
-		{
-			begin = this->begin();
-			if (m_size == 1)
-				this->clear();
-			else
-			{
-				j = 0;
-				for (int k = 0; k < m_size; begin++)
-				{
-					if (begin == pos)
-						k++;
-					m_data[j++] = m_data[k++];
-				}
-				m_size--;
-			}
-		}
+		lenToPos = pos.base() - this->begin().base();
+		begin = this->begin();
+		for (i = 0; i < lenToPos; begin++, i++)
+			m_data[i] = m_data[i];
+		m_size--;
+		for (; i != m_size; i++)
+			m_data[i] = m_data[i + 1];
 		return begin;
 	}
 
 	iterator erase(iterator first, iterator last)
 	{
-		size_type j = 0;
-		size_type i = 0;
-		iterator tmp;
-		if (first < this->begin() || last > this->end())
-			std::cout << "alla aa sahbu" << std::endl;
-		else
-		{
-			tmp = first;
-			for (; tmp < last; tmp++)
-				i++;
-			j = 0;
-			for (int k = 0; k < m_size; first++)
-			{
-				tmp = this->begin();
-				if (tmp == first)
-					k += i;
-				m_data[j++] = m_data[k++];
-			}
-			m_size -= i;
-		}
+		size_type i;
+		std::ptrdiff_t start;
+		std::ptrdiff_t len;
+		start = first.base() - this->begin().base();
+		len = last.base() - first.base();
+		for (i = 0; i < start; first++, i++)
+			m_data[i] = m_data[i];
+		m_size -= len;
+		for (; i != m_size; i++)
+			m_data[i] = m_data[i + len];
 		return (first);
 	};
 
@@ -409,11 +377,10 @@ public:
 
 	void swap(Vector &other)
 	{
-		Vector tmp;
-
-		tmp = *this;
-		*this = other;
-		other = tmp;
+		std::swap(m_size, other.m_size);
+		std::swap(m_capacity, other.m_capacity);
+		std::swap(m_data, other.m_data);
+		std::swap(m_allocator, other.m_allocator);
 	}
 
 	// Iterators
@@ -441,5 +408,42 @@ public:
 			m_allocator.deallocate(m_data, m_capacity);
 	};
 };
+
+template <class T, class Alloc>
+void swap(Vector<T, Alloc> &x, Vector<T, Alloc> &y)
+{
+	x.swap(y);
+}
+
+// template <class T, class Alloc>
+//   bool operator== (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs)
+//   {
+// 	  return
+//   }
+// template <class T, class Alloc>
+//   bool operator!= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs)
+//   {
+// 	  return
+//   }
+// template <class T, class Alloc>
+//   bool operator<  (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs)
+//   {
+// 	  return
+//   }
+// template <class T, class Alloc>
+//   bool operator<= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs)
+//   {
+// 	  return
+//   }
+// template <class T, class Alloc>
+//   bool operator>  (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs)
+//   {
+// 	  return
+//   }
+// template <class T, class Alloc>
+//   bool operator>= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs)
+//   {
+// 	  return
+//   }
 
 #endif
