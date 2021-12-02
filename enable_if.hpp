@@ -2,12 +2,14 @@
 #define ENABLE_IF_HPP
 
 #include <iostream>
+#include "NormalIterator.class.hpp"
+#include "iterator.hpp"
 
-template<class T>
+template <class T>
 struct is_integral
 {
     typedef bool value_type;
-    const value_type value = false;
+    const static value_type value = false;
 };
 
 template <>
@@ -100,5 +102,19 @@ struct is_integral<unsigned long long int>
     typedef bool value_type;
     const static value_type value = true;
 };
+
+template <bool cond, class T = void>
+struct enable_if
+{
+};
+
+
+
+template <class T>
+struct enable_if<true, T>
+{
+    typedef T type;
+};
+
 
 #endif

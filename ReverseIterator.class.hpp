@@ -103,6 +103,12 @@ Reverse_iterator<Iterator> operator-(typename Reverse_iterator<Iterator>::differ
     rev_it.m_current = rev_it.base() + n;
     return *rev_it;
 }
+// TODO operator-
+template <class Iterator>
+typename Reverse_iterator<Iterator>::difference_type operator-(const Reverse_iterator<Iterator> &lhs, const Reverse_iterator<Iterator> &rhs)
+{
+    return lhs.base() - rhs.base();
+}
 
 template <class Iterator>
 bool operator==(const Reverse_iterator<Iterator> &lhs,

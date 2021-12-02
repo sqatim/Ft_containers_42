@@ -5,6 +5,7 @@
 #include <iostream>
 #include "NormalIterator.class.hpp"
 #include "ReverseIterator.class.hpp"
+#include "enable_if.hpp"
 #include <cstddef>
 
 namespace ft
@@ -205,7 +206,7 @@ namespace ft
 		};
 
 		template <class InputIt>
-		void insertAllocationGeneric(std::ptrdiff_t len, InputIt first, InputIt last)
+		void insertAllocationGeneric(std::ptrdiff_t len, InputIt &first, InputIt &last)
 		{
 			T *tmp;
 			size_type j;
@@ -230,7 +231,7 @@ namespace ft
 		}
 
 		template <class InputIt>
-		void insert(iterator pos, InputIt first, InputIt last)
+		void insert(iterator pos, typename enable_if<!is_integral<InputIt>::value, InputIt>::type first, InputIt last)
 		{
 			size_type i;
 			size_type k;

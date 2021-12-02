@@ -24,7 +24,7 @@ H_FLAG= -I $(HDR_PATH)
 
 # FLAGS= -Wall -Wextra -Werror
 
-COMP= clang++ 
+COMP= clang++
 
 all: $(NAME)
 

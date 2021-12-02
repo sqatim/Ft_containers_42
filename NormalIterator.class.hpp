@@ -105,6 +105,14 @@ Normal_iterator<Iterator> operator-(typename Normal_iterator<Iterator>::differen
     return *rev_it;
 }
 
+// TODO operator-
+template <class Iterator>
+typename Normal_iterator<Iterator>::difference_type operator- (const Normal_iterator<Iterator>& lhs, const Normal_iterator<Iterator>& rhs)
+{
+    return lhs.base() -  rhs.base(); 
+}
+
+
 template <class Iterator>
 bool operator==(const Normal_iterator<Iterator> &lhs,
                 const Normal_iterator<Iterator> &rhs)

@@ -6,7 +6,7 @@
 
 #include "Vector.class.hpp"
 
-void printIterator(Vector<int>::iterator it, Vector<int>::iterator end)
+void printIterator(ft::vector<int>::iterator it, ft::vector<int>::iterator end)
 {
     while (it != end)
     {
@@ -43,7 +43,7 @@ void container(std::vector<int> &v, const std::vector<int>::iterator &it)
     return;
 }
 
-void myContainer(Vector<int> &v, Vector<int>::iterator &it)
+void myContainer(ft::vector<int> &v, ft::vector<int>::iterator &it)
 {
     std::cout << "----------------------- MINE -----------------------" << std::endl;
     std::cout << "size: " << v.size() << std::endl;
@@ -74,23 +74,31 @@ int main()
         v0.push_back(2);
         v0.push_back(3);
         std::vector<int>::iterator it0 = v0.begin();
-        std::vector<int>::iterator it01 = v0.erase(it0 , it0 + 3);
-        std::cout <<"just check in " <<*it01 << std::endl;
+        v0.insert(it0, 2, 300);
+        it0 = v0.begin();
         container(v0, it0);
 
         std::cout << "################################################################################" << std::endl;
 
         /*----------------------- MINE -----------------------*/
 
-        Vector<int> v1;
-        v1.reserve(2);
-        v1.push_back(1);
-        v1.push_back(2);
-        v1.push_back(3);
-        Vector<int>::iterator it1 = v1.begin();
-        Vector<int>::iterator it11 = v1.erase(it1 +0, it1 + 2);
-        std::cout <<"just check in " <<*it11 << std::endl;
+        ft::vector<int> v1;
+        ft::vector<int> v2;
+        v2.push_back(1000);
+        v2.push_back(2000);
+        v2.push_back(3000);
+        ft::vector<int>::iterator it2 = v2.begin();
+        v1.reserve(10);
+        // v1.push_back(1);
+        // v1.push_back(2);
+        // v1.push_back(3);
+        ft::vector<int>::iterator it1 = v1.begin();
+        // v1.insert(it1, array, array + 2);
+        // v1.insert(it1, it2,it2 + 2);
+        v1.insert(it1, 2, 100);
+        it1 = v1.begin();
         myContainer(v1, it1);
+        // v1.printo(it1);
     }
     catch (const std::exception &e)
     {
