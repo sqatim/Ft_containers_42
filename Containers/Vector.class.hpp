@@ -3,9 +3,9 @@
 
 // The explicit keyword in C++ is used to mark constructors to not implicitly convert types.
 #include <iostream>
-#include "NormalIterator.class.hpp"
-#include "ReverseIterator.class.hpp"
-#include "enable_if.hpp"
+#include "../Iterators/NormalIterator.class.hpp"
+#include "../Iterators/ReverseIterator.class.hpp"
+#include "../NeededTemplates/enable_if.hpp"
 #include <cstddef>
 
 namespace ft
@@ -26,7 +26,7 @@ namespace ft
 		typedef Reverse_iterator<pointer> reverse_iterator;
 		typedef const Reverse_iterator<const_pointer> const_reverse_iterator;
 
-	private:
+	protected:
 		T *m_data;
 		allocator_type m_allocator;
 		size_type m_capacity;
