@@ -12,7 +12,7 @@ OBJ_PATH= Objects
 SRC_NAME= main.cpp\
 
 HDR_CONTAINERS_NAME= Vector.class.hpp\
-				Map.class.hpp\
+				# Map.class.hpp\
 
 HDR_ITERATORS_NAME= iterator.hpp\
 				NormalIterator.class.hpp\
