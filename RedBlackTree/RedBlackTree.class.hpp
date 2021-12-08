@@ -45,7 +45,8 @@ private:
                 parent->m_right = node;
                 node->m_parent = parent;
                 node->m_isLeftChild = false;
-                // return;
+                checkColor(node);
+                return;
             }
             add(parent->m_right, node);
         }
@@ -56,13 +57,13 @@ private:
                 parent->m_left = node;
                 node->m_parent = parent;
                 node->m_isLeftChild = true;
-                // return;
+                checkColor(node);
+                return;
             }
             add(parent->m_left, node);
         }
-
+        // std::cout << node->m_key << std::endl;
         // }
-        checkColor(node);
     }
 
     void checkColor(Node *node)
@@ -83,25 +84,27 @@ private:
     {
         if (node->m_parent->m_isLeftChild) //  Uncle ==> node->m_parent->m_parent->m_right
         {
+            std::cout << node << std::endl;
             if (!node->m_parent->m_parent->m_right || node->m_parent->m_parent->m_right->m_black)
                 return rotation(node);
-            // if(node->m_parent->m_parent->m_right)
-            // {
-            node->m_parent->m_parent->m_right->m_black = true;
-            node->m_parent->m_parent->m_black = false;
-            node->m_parent->m_black = true;
-            // }
+            if (node->m_parent->m_parent->m_right)
+            {
+                node->m_parent->m_parent->m_right->m_black = true;
+                node->m_parent->m_parent->m_black = false;
+                node->m_parent->m_black = true;
+            }
             return;
         }
         //  Uncle ==> node->m_parent->m_parent->m_left
         if (!node->m_parent->m_parent->m_left || node->m_parent->m_parent->m_left->m_black)
             return rotation(node);
-        // if(node->m_parent->m_parent->m_left)
-        // {
-        node->m_parent->m_parent->m_left->m_black = true;
-        node->m_parent->m_parent->m_black = false;
-        node->m_parent->m_black = true;
-        // }
+        std::cout << node->m_value << std::endl;
+        if (node->m_parent->m_parent->m_left)
+        {
+            node->m_parent->m_parent->m_left->m_black = true;
+            node->m_parent->m_parent->m_black = false;
+            node->m_parent->m_black = true;
+        }
         return;
     }
 
@@ -111,114 +114,118 @@ private:
         {
             if (node->m_parent->m_isLeftChild)
             {
-                rightRotation(&node->m_parent->m_parent);
+                rightRotation(node->m_parent->m_parent);
                 node->m_black = false;
                 node->m_parent->m_black = true;
                 // hta nzid wahad condion dyal hna f 7alat makant null
-                node->m_parent->m_right->m_black = false;
+                if (node->m_parent->m_right)
+                    node->m_parent->m_right->m_black = false;
                 return;
             }
-            rightLeftRotation(&node->m_parent->m_parent);
+            rightLeftRotation(node->m_parent->m_parent);
             node->m_black = true;
             node->m_right->m_black = false;
             node->m_left->m_black = false;
             return;
         }
-        if (node->m_parent->m_isLeftChild)
+        if (!node->m_parent->m_isLeftChild)
         {
-            leftRotation(&node->m_parent->m_parent);
+            leftRotation(node->m_parent->m_parent);
             node->m_black = false;
             node->m_parent->m_black = true;
             // hta nzid wahad condion dyal hna f 7alat makant null
-            node->m_parent->m_left->m_black = false;
+            if (node->m_parent->m_left)
+                node->m_parent->m_left->m_black = false;
             return;
         }
-        leftRightRotation(&node->m_parent->m_parent);
+        leftRightRotation(node->m_parent->m_parent);
         node->m_black = true;
         node->m_right->m_black = false;
         node->m_left->m_black = false;
         return;
     }
 
-    void leftRotation(Node **node)
+    void leftRotation(Node *node)
     {
         Node *tmp;
-        tmp = (*node)->m_right;
+        tmp = node->m_right;
 
-        (*node)->m_right = tmp->m_left;
-        if ((*node)->m_right != NULL)
+        node->m_right = tmp->m_left;
+        if (node->m_right != NULL)
         {
-            (*node)->m_right->m_parent = *node;
-            (*node)->m_right->m_isLeftChild = false;
+            node->m_right->m_parent = node;
+            node->m_right->m_isLeftChild = false;
         }
-
-        if ((*node)->m_parent == NULL) // *node is root
+        if (node->m_parent == NULL) // *node is root
         {
             m_root = tmp;
             tmp->m_parent = NULL;
         }
         else
         {
-            tmp->m_parent = (*node)->m_parent;
-            if ((*node)->m_isLeftChild)
+            tmp->m_parent = node->m_parent;
+            if (node->m_isLeftChild)
             {
                 tmp->m_isLeftChild = true;
-                (*node)->m_parent->m_left = tmp;
+                tmp->m_parent->m_left = tmp;
             }
             else
             {
                 tmp->m_isLeftChild = false;
-                (*node)->m_parent->m_right = tmp;
+                tmp->m_parent->m_right = tmp;
             }
         }
-        (*node)->m_isLeftChild = true;
-        (*node)->m_parent = tmp;
+        tmp->m_left = node;
+        node->m_isLeftChild = true;
+        node->m_parent = tmp;
     }
-    void rightRotation(Node **node)
+
+    void rightRotation(Node *node)
     {
         Node *tmp;
-        tmp = (*node)->m_left;
+        tmp = node->m_left;
 
-        (*node)->m_left = tmp->m_right;
-        if ((*node)->m_left != NULL)
+        node->m_left = tmp->m_right;
+        if (node->m_left != NULL)
         {
-            (*node)->m_left->m_parent = *node;
-            (*node)->m_left->m_isLeftChild = true;
+            node->m_left->m_parent = node;
+            node->m_left->m_isLeftChild = true;
         }
 
-        if ((*node)->m_parent == NULL) // *node is root
+        if (node->m_parent == NULL) // *node is root
         {
             m_root = tmp;
             tmp->m_parent = NULL;
         }
         else
         {
-            tmp->m_parent = (*node)->m_parent;
-            if ((*node)->m_isLeftChild)
+            tmp->m_parent = node->m_parent;
+            if (node->m_isLeftChild)
             {
                 tmp->m_isLeftChild = true;
-                (*node)->m_parent->m_left = tmp;
+                node->m_parent->m_left = tmp;
             }
             else
             {
                 tmp->m_isLeftChild = false;
-                (*node)->m_parent->m_right = tmp;
+                tmp->m_parent->m_right = tmp;
             }
         }
-        (*node)->m_isLeftChild = false;
-        (*node)->m_parent = tmp;
+        tmp->m_right = node;
+        node->m_isLeftChild = false;
+        node->m_parent = tmp;
     }
 
-    void leftRightRotation(Node **node)
+    void leftRightRotation(Node *node)
     {
-        leftRotation(&(*node)->m_left);
-        rightRotation(&(*node));
+        leftRotation(node->m_left);
+        rightRotation(node);
     }
 
-    void rightLeftRotation(Node **node)
+    void rightLeftRotation(Node *node)
     {
-        rightRotation(&(*node)->m_right);
-        leftRotation(&(*node));
+        rightRotation(node->m_right);
+        leftRotation(node);
     }
 
     int height(Node *ptr)
@@ -378,8 +385,9 @@ public:
             tmp->m_parent->m_left = tmp->m_left; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
             if (tmp->m_left)
                 tmp->m_left->m_parent = tmp->m_parent;
-            leftRotation(&tmp->m_parent);
+            leftRotation(tmp->m_parent);
             tmp->m_parent->m_black = false;
+            colorToRed(tmp->m_parent->m_right); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
             tmp->m_parent->m_parent->m_black = true;
             tmp->m_parent->m_parent->m_right->m_black = false;
         }
@@ -390,12 +398,21 @@ public:
                 tmp->m_right->m_parent = tmp->m_parent;
             rightRotation(&tmp->m_parent);
             tmp->m_parent->m_black = false;
+            colorToRed(tmp->m_parent->m_left); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
             tmp->m_parent->m_parent->m_black = true;
             tmp->m_parent->m_parent->m_left->m_black = false;
         }
         delete (*node);
     }
-
+    void colorToRed(Node *node)
+    {
+        if (node == NULL)
+            return;
+        colorToRed(node->m_left);
+        node->m_black = false;
+        checkColor(node); // t9dar takhud liya time bzaf
+        colorToRed(node->m_right);
+    }
     void caseThree(Node **node)
     {
         Node *tmp = *node;
@@ -420,7 +437,7 @@ public:
                     tmp->m_parent->m_left = tmp->m_left; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
                     if (tmp->m_left)
                         tmp->m_left->m_parent = tmp->m_parent;
-                    leftRotation(&tmp->m_parent);
+                    leftRotation(tmp->m_parent);
                     tmp->m_parent->m_black = false;
                     tmp->m_parent->m_parent->m_black = true;
                     tmp->m_parent->m_parent->m_right->m_black = false;
@@ -499,6 +516,10 @@ public:
                 std::cout << "Color: " << BLACK << "black" << DEFAULT << std::endl;
             else if (!parent->m_black)
                 std::cout << "Color: " << RED << "Red" << DEFAULT << std::endl;
+            if (parent->m_right)
+                std::cout << "Right Child: [" << parent->m_right->m_value << "]" << std::endl;
+            if (parent->m_left)
+                std::cout << "Left Child: [" << parent->m_left->m_value << "]" << std::endl;
             print(parent->m_right);
         }
     }
