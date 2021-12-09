@@ -68,12 +68,14 @@ private:
 
     void checkColor(Node *node)
     {
+        if (node == NULL) // had f7alatma badalt  tbadal root kan protecti biha
+            return;
         if (node == m_root)
         {
             node->m_black = true;
             return;
         }
-        if (!node->m_black && !node->m_parent->m_black)
+        if (!node->m_black && !node->m_parent->m_black) // hna fen kayna segfault
         {
             correctTree(node);
         }
@@ -150,6 +152,7 @@ private:
         Node *tmp;
         tmp = node->m_right;
 
+        std::cout << GREEN << "                                 [" << RED << "LEFT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
         node->m_right = tmp->m_left;
         if (node->m_right != NULL)
         {
@@ -186,6 +189,7 @@ private:
         tmp = node->m_left;
 
         node->m_left = tmp->m_right;
+        std::cout << GREEN << "                                 [" << RED << "RIGHT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
         if (node->m_left != NULL)
         {
             node->m_left->m_parent = node;
@@ -203,7 +207,7 @@ private:
             if (node->m_isLeftChild)
             {
                 tmp->m_isLeftChild = true;
-                node->m_parent->m_left = tmp;
+                tmp->m_parent->m_left = tmp;
             }
             else
             {
@@ -218,12 +222,14 @@ private:
 
     void leftRightRotation(Node *node)
     {
+        std::cout << GREEN << "                                 [" << RED << "LEFTRIGHT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
         leftRotation(node->m_left);
         rightRotation(node);
     }
 
     void rightLeftRotation(Node *node)
     {
+        std::cout << GREEN << "                                 [" << RED << "RIGHTLEFT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
         rightRotation(node->m_right);
         leftRotation(node);
     }
@@ -247,6 +253,7 @@ private:
     {
         while (ptr && ptr->m_right != NULL)
             ptr = ptr->m_right;
+            std::cout << RED << "shamil lghzal predecessor" << ptr->m_value << DEFAULT << std::endl;
         return ptr;
     }
 
@@ -254,6 +261,7 @@ private:
     {
         while (ptr && ptr->m_left != NULL)
             ptr = ptr->m_left;
+            std::cout << RED << "shamil lghzal succesor " << ptr->m_value << DEFAULT << std::endl;
         return ptr;
     }
 
@@ -296,16 +304,18 @@ public:
             else
                 std::cout << "[delete] a RED node --- " << parent->m_value << std::endl;
             if (!parent->m_black)
-                caseOne(&parent);
+            {
+                caseOne(parent);
+            }
             // // delete (*parent);
-            if (parent->m_black)
+            else if (parent->m_black)
             {
                 // hta n3awd ntcheki wash les parent != null
                 if ((parent->m_isLeftChild && parent->m_parent->m_right && parent->m_parent->m_right->m_black == false) ||
                     (!parent->m_isLeftChild && parent->m_parent->m_left && parent->m_parent->m_left->m_black == false))
-                    caseTwo(&parent); // f7alat makan sibling [RED]
+                    caseTwo(parent); // f7alat makan sibling [RED]
                 else
-                    caseThree(&parent);
+                    caseThree(parent);
             }
             // delete (parent);
             return (NULL);
@@ -316,7 +326,7 @@ public:
             parent->m_left = deleteNode(key, parent->m_left);
         else
         {
-            if (height(parent->m_left) > height(parent->m_right))
+            if (height(parent->m_left) >= height(parent->m_right))
             {
                 q = inorderPredecessor(parent->m_left);
                 parent->m_key = q->m_key;
@@ -333,7 +343,7 @@ public:
         }
         return (parent);
     }
-    void caseOne(Node **node)
+    void caseOne(Node *node)
     {
         /*
         **                [B]
@@ -342,12 +352,14 @@ public:
         **                     \
         **                     [R] (delete a red node)
         */
-        Node *tmp = *node;
-        if (!(*node)->m_right && !(*node)->m_left)
-            ;
-        else if ((*node)->m_right)
+        Node *tmp = node;
+        if (!node->m_right && !node->m_left)
         {
-            if ((*node)->m_isLeftChild)
+            // std::cout << "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" << std::endl;
+        }
+        else if (node->m_right)
+        {
+            if (node->m_isLeftChild)
             {
                 tmp->m_parent->m_left = tmp->m_right;
                 tmp->m_right->m_isLeftChild = true;
@@ -359,9 +371,9 @@ public:
             }
             tmp->m_right->m_parent = tmp->m_parent;
         }
-        else if ((*node)->m_left)
+        else if (node->m_left)
         {
-            if ((*node)->m_isLeftChild)
+            if (node->m_isLeftChild)
             {
                 tmp->m_parent->m_left = tmp->m_left;
                 tmp->m_left->m_isLeftChild = true;
@@ -373,12 +385,12 @@ public:
             }
             tmp->m_left->m_parent = tmp->m_parent;
         }
-        delete (*node);
+        delete node;
     }
 
-    void caseTwo(Node **node)
+    void caseTwo(Node *node)
     {
-        Node *tmp = *node;
+        Node *tmp = node;
 
         if (tmp->m_isLeftChild)
         {
@@ -396,13 +408,13 @@ public:
             tmp->m_parent->m_right = tmp->m_right; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
             if (tmp->m_right)
                 tmp->m_right->m_parent = tmp->m_parent;
-            rightRotation(&tmp->m_parent);
+            rightRotation(tmp->m_parent);
             tmp->m_parent->m_black = false;
             colorToRed(tmp->m_parent->m_left); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
             tmp->m_parent->m_parent->m_black = true;
             tmp->m_parent->m_parent->m_left->m_black = false;
         }
-        delete (*node);
+        delete (node);
     }
     void colorToRed(Node *node)
     {
@@ -413,9 +425,9 @@ public:
         checkColor(node); // t9dar takhud liya time bzaf
         colorToRed(node->m_right);
     }
-    void caseThree(Node **node)
+    void caseThree(Node *node)
     {
-        Node *tmp = *node;
+        Node *tmp = node;
 
         if (tmp->m_isLeftChild)
         {
@@ -424,7 +436,7 @@ public:
             {
                 tmp->m_parent->m_right->m_black = false;
                 tmp->m_parent->m_black = true;
-                delete (*node);
+                delete (node);
                 tmp->m_parent->m_left = tmp->m_left; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
                 if (tmp->m_left)
                     tmp->m_left->m_parent = tmp->m_parent;
@@ -447,12 +459,12 @@ public:
                     tmp->m_parent->m_left = tmp->m_left; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
                     if (tmp->m_left)
                         tmp->m_left->m_parent = tmp->m_parent;
-                    rightLeftRotation(&tmp->m_parent);
+                    rightLeftRotation(tmp->m_parent);
                     tmp->m_parent->m_black = false;
                     tmp->m_parent->m_parent->m_black = true;
                     tmp->m_parent->m_parent->m_right->m_black = false;
                 }
-                delete (*node);
+                delete (node);
             }
         }
         else if (!tmp->m_isLeftChild)
@@ -462,7 +474,7 @@ public:
             {
                 tmp->m_parent->m_left->m_black = false;
                 tmp->m_parent->m_black = true;
-                delete (*node);
+                delete (node);
                 tmp->m_parent->m_right = tmp->m_right; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
                 if (tmp->m_right)
                     tmp->m_right->m_parent = tmp->m_parent;
@@ -475,7 +487,7 @@ public:
                     tmp->m_parent->m_right = tmp->m_right; // hadi mamt2kdsh manha : ma3raftsh wash anakhud right ola right
                     if (tmp->m_right)
                         tmp->m_right->m_parent = tmp->m_parent;
-                    rightRotation(&tmp->m_parent);
+                    rightRotation(tmp->m_parent);
                     tmp->m_parent->m_black = false;
                     tmp->m_parent->m_parent->m_black = true;
                     tmp->m_parent->m_parent->m_left->m_black = false;
@@ -485,12 +497,12 @@ public:
                     tmp->m_parent->m_right = tmp->m_right; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
                     if (tmp->m_right)
                         tmp->m_right->m_parent = tmp->m_parent;
-                    leftRightRotation(&tmp->m_parent);
+                    leftRightRotation(tmp->m_parent);
                     tmp->m_parent->m_black = false;
                     tmp->m_parent->m_parent->m_black = true;
                     tmp->m_parent->m_parent->m_left->m_black = false;
                 }
-                delete (*node);
+                delete (node);
             }
         }
     }
