@@ -282,66 +282,61 @@ public:
         return;
     }
 
-    Node *deleteNode(key_type key)
+    void deleteNode(key_type key)
     {
-        return (deleteNode(key, m_root));
+        deleteNode(key, &m_root);
     }
-    Node *deleteNode(key_type key, Node *parent)
+    void deleteNode(key_type key, Node **parent)
     {
         Node *q;
-        if (parent == NULL)
+        if ((*parent) == NULL)
+            return;
+        if (!(*parent)->m_left && !(*parent)->m_right)
         {
-            return NULL;
-        }
-        if (!parent->m_left && !parent->m_right)
-        {
-            if (parent == m_root)
-            {
+            if ((*parent) == m_root)
                 m_root = NULL;
-            }
-            if (parent->m_black)
-                std::cout << "[delete] a BLACK node --- " << parent->m_value << std::endl;
+            if ((*parent)->m_black)
+                std::cout << "[delete] a BLACK node --- " << (*parent)->m_value << std::endl;
             else
-                std::cout << "[delete] a RED node --- " << parent->m_value << std::endl;
-            if (!parent->m_black)
+                std::cout << "[delete] a RED node --- " << (*parent)->m_value << std::endl;
+            if (!(*parent)->m_black)
+                caseOne((*parent));
+            // // delete (*(*parent));
+            else if ((*parent)->m_black)
             {
-                caseOne(parent);
-            }
-            // // delete (*parent);
-            else if (parent->m_black)
-            {
-                // hta n3awd ntcheki wash les parent != null
-                if ((parent->m_isLeftChild && parent->m_parent->m_right && parent->m_parent->m_right->m_black == false) ||
-                    (!parent->m_isLeftChild && parent->m_parent->m_left && parent->m_parent->m_left->m_black == false))
-                    caseTwo(parent); // f7alat makan sibling [RED]
+                // hta n3awd ntcheki wash les (*parent) != null
+                if (((*parent)->m_isLeftChild && (*parent)->m_parent->m_right && (*parent)->m_parent->m_right->m_black == false) ||
+                    (!(*parent)->m_isLeftChild && (*parent)->m_parent->m_left && (*parent)->m_parent->m_left->m_black == false))
+                    caseTwo((*parent)); // f7alat makan sibling [RED]
                 else
-                    caseThree(parent);
+                    caseThree((*parent));
             }
-            // delete (parent);
-            return (NULL);
+            *parent = NULL;
+            // delete ((*parent));
+            return;
         }
-        if (key > parent->m_key)
-            parent->m_right = deleteNode(key, parent->m_right);
-        else if (key < parent->m_key)
-            parent->m_left = deleteNode(key, parent->m_left);
+        if (key > (*parent)->m_key)
+            deleteNode(key, &(*parent)->m_right);
+        else if (key < (*parent)->m_key)
+            deleteNode(key, &(*parent)->m_left);
         else
         {
-            if (height(parent->m_left) >= height(parent->m_right))
+            if (height((*parent)->m_left) >= height((*parent)->m_right))
             {
-                q = inorderPredecessor(parent->m_left);
-                parent->m_key = q->m_key;
-                parent->m_value = q->m_value;
-                parent->m_left = deleteNode(q->m_key, parent->m_left);
+                q = inorderPredecessor((*parent)->m_left);
+                (*parent)->m_key = q->m_key;
+                (*parent)->m_value = q->m_value;
+                deleteNode(q->m_key, &(*parent)->m_left);
             }
             else
             {
-                q = inorderSuccessor(parent->m_right);
-                parent->m_key = q->m_key;
-                parent->m_value = q->m_value;
-                parent->m_right = deleteNode(q->m_key, parent->m_right);
+                q = inorderSuccessor((*parent)->m_right);
+                (*parent)->m_key = q->m_key;
+                (*parent)->m_value = q->m_value;
+                deleteNode(q->m_key, &(*parent)->m_right);
             }
         }
-        return (parent);
+        return;
     }
     void caseOne(Node *node)
     {
@@ -428,11 +423,12 @@ public:
     void caseThree(Node *node)
     {
         Node *tmp = node;
+        Node *tmpParent = node->m_parent;
 
         if (tmp->m_isLeftChild)
         {
             if ((!tmp->m_parent->m_right->m_left && !tmp->m_parent->m_right->m_right) ||
-                (tmp->m_parent->m_right->m_left->m_black && tmp->m_parent->m_right->m_right->m_black))
+                (tmp->m_parent->m_right->m_left->m_black && tmp->m_parent->m_right->m_right->m_black)) // kan checki wash childs dyal sibling wash b2 black
             {
                 tmp->m_parent->m_right->m_black = false;
                 tmp->m_parent->m_black = true;
@@ -460,9 +456,9 @@ public:
                     if (tmp->m_left)
                         tmp->m_left->m_parent = tmp->m_parent;
                     rightLeftRotation(tmp->m_parent);
-                    tmp->m_parent->m_black = false;
-                    tmp->m_parent->m_parent->m_black = true;
-                    tmp->m_parent->m_parent->m_right->m_black = false;
+                    tmp->m_parent->m_black = true;
+                    tmp->m_parent->m_parent->m_black = false;
+                    tmp->m_parent->m_parent->m_right->m_black = true;
                 }
                 delete (node);
             }
