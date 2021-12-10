@@ -1,6 +1,8 @@
 #ifndef REDBLACKTREE_CLASS_HPP
 #define REDBLACKTREE_CLASS_HPP
 
+#include <iostream>
+
 #define RED "\033[1;31m"
 #define BLACK "\033[1;30m"
 #define GREEN "\033[1;32m"
@@ -8,30 +10,36 @@
 #define DEFAULT "\033[0m"
 
 template <class K, class T>
-class RedBlackTree
+struct NodeBase
 {
-public:
+    // Member Types:
     typedef K key_type;
     typedef T mapped_type;
 
-private:
-    class Node
+    key_type m_key;
+    mapped_type m_value;
+    NodeBase *m_left;
+    NodeBase *m_right;
+    NodeBase *m_parent;
+    bool m_isLeftChild;
+    bool m_black;
+    NodeBase(key_type key, mapped_type value) : m_key(key), m_value(value), m_left(0),
+                                            m_right(0), m_parent(0), m_isLeftChild(false), m_black(false)
     {
+    }
+};
 
-    public:
-        key_type m_key;
-        mapped_type m_value;
-        Node *m_left;
-        Node *m_right;
-        Node *m_parent;
-        bool m_isLeftChild;
-        bool m_black;
-        Node(key_type key, mapped_type value) : m_key(key), m_value(value), m_left(0),
-                                                m_right(0), m_parent(0), m_isLeftChild(false), m_black(false)
-        {
-        }
-    };
+// template<typename Tp>
 
+template <class Key, class T, class Compare= std::less<Key>, class Alloc = std::allocator<std::pair<const Key,T>> >
+class RedBlackTree
+{
+public:
+    typedef Key key_type;
+    typedef T mapped_type;
+    typedef NodeBase<key_type, mapped_type> Node;
+
+private:
     Node *m_root;
     int m_size;
 
@@ -253,7 +261,7 @@ private:
     {
         while (ptr && ptr->m_right != NULL)
             ptr = ptr->m_right;
-            std::cout << RED << "shamil lghzal predecessor" << ptr->m_value << DEFAULT << std::endl;
+        std::cout << RED << "shamil lghzal predecessor" << ptr->m_value << DEFAULT << std::endl;
         return ptr;
     }
 
@@ -261,7 +269,7 @@ private:
     {
         while (ptr && ptr->m_left != NULL)
             ptr = ptr->m_left;
-            std::cout << RED << "shamil lghzal succesor " << ptr->m_value << DEFAULT << std::endl;
+        std::cout << RED << "shamil lghzal succesor " << ptr->m_value << DEFAULT << std::endl;
         return ptr;
     }
 
