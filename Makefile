@@ -9,10 +9,10 @@ HDR_NEEDED_PATH= NeededTemplates
 OBJ_PATH= Objects
 
 #*************************NAME*************************#
-SRC_NAME= main.cpp\
+SRC_NAME= mainMap.cpp\
 
 HDR_CONTAINERS_NAME= Vector.class.hpp\
-				# Map.class.hpp\
+				Map.class.hpp\
 
 HDR_ITERATORS_NAME= iterator.hpp\
 				NormalIterator.class.hpp\

@@ -4,15 +4,8 @@
 #include "iterator.hpp"
 
 template <class Iter>
-class Reverse_iterator : public iterator<
-                             typename iterator_traits<Iter>::iterator_category,
-                             typename iterator_traits<Iter>::value_type,
-                             typename iterator_traits<Iter>::difference_type,
-                             typename iterator_traits<Iter>::pointer,
-                             typename iterator_traits<Iter>::reference>
-
+class Reverse_iterator
 {
-
 public:
     typedef Iter iterator_type;
     typedef typename iterator_traits<iterator_type>::iterator_category iterator_category;

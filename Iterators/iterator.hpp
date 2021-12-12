@@ -22,7 +22,7 @@ struct contiguous_iterator_tag : public random_iterator_tag
 {
 };
 
-template <class Category, class T, class Distance, class Pointer = T *, class Reference = T &>
+template <class Category, class T, class Distance = std::ptrdiff_t, class Pointer = T *, class Reference = T &>
 struct iterator
 {
 public:

@@ -9,35 +9,99 @@
 #define YELLOW "\033[1;33m"
 #define DEFAULT "\033[0m"
 
-template <class K, class T>
+#include "../Iterators/iterator.hpp"
+
+template <class T>
 struct NodeBase
 {
     // Member Types:
-    typedef K key_type;
-    typedef T mapped_type;
+    // typedef K key_type;
+    // typedef T mapped_type;
+    typedef T value_type;
 
-    key_type m_key;
-    mapped_type m_value;
+    value_type m_pair; // FIXME hta nbadlha b type pair li creat ana
     NodeBase *m_left;
     NodeBase *m_right;
     NodeBase *m_parent;
     bool m_isLeftChild;
     bool m_black;
-    NodeBase(key_type key, mapped_type value) : m_key(key), m_value(value), m_left(0),
-                                            m_right(0), m_parent(0), m_isLeftChild(false), m_black(false)
+    NodeBase(value_type pair) : m_pair(pair), m_left(0),
+                                                m_right(0), m_parent(0), m_isLeftChild(false), m_black(false)
     {
     }
 };
 
 // template<typename Tp>
+template <class Iter>
+class RedBlackTreeIterator
+{
+public:
+    typedef Iter iterator_type;
+    typedef typename std::bidirectional_iterator_tag iterator_category;
+    typedef typename iterator_traits<iterator_type>::value_type value_type;
+    typedef typename iterator_traits<iterator_type>::difference_type difference_type;
+    typedef typename iterator_traits<iterator_type>::pointer pointer;
+    typedef typename iterator_traits<iterator_type>::reference reference;
 
-template <class Key, class T, class Compare= std::less<Key>, class Alloc = std::allocator<std::pair<const Key,T>> >
+protected:
+    iterator_type m_current;
+    RedBlackTreeIterator() : m_current(){};
+    RedBlackTreeIterator(iterator_type x) : m_current(x){};
+    RedBlackTreeIterator(const RedBlackTreeIterator<iterator_type> &other)
+    {
+        this->m_current = other.m_current;
+    };
+    RedBlackTreeIterator &operator=(const RedBlackTreeIterator<iterator_type> &other)
+    {
+        if (this != &other)
+            this->m_current = other.m_current;
+        return (*this);
+    };
+    iterator_type base() const { return this->m_current; };
+    reference operator*() const
+    {
+        return (m_current->m_pair);
+    };
+    pointer operator->() const
+    {
+        return &(operator*());
+    };
+    reference operator[](difference_type n) const
+    {
+        return this->m_current[n].m_pair;
+    };
+    RedBlackTreeIterator &operator++()
+    {
+        ++m_current;
+        return *this;
+    };
+    RedBlackTreeIterator &operator--()
+    {
+        --m_current;
+        return *this;
+    };
+    RedBlackTreeIterator operator++(int)
+    {
+        RedBlackTreeIterator copy = *this;
+        ++(*this);
+        return copy;
+    };
+    RedBlackTreeIterator operator--(int)
+    {
+        RedBlackTreeIterator copy = *this;
+        --(*this);
+        return copy;
+    };
+};
+
+template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key, T> > >
 class RedBlackTree
 {
 public:
     typedef Key key_type;
     typedef T mapped_type;
-    typedef NodeBase<key_type, mapped_type> Node;
+    typedef std::pair<const key_type, mapped_type> value_type;
+    typedef NodeBase<value_type> Node;
 
 private:
     Node *m_root;
@@ -46,7 +110,7 @@ private:
     // methodes;
     void add(Node *parent, Node *node, std::less<key_type> less = std::less<key_type>())
     {
-        if (less(parent->m_key, node->m_key))
+        if (less(parent->m_pair.first, node->m_pair.first))
         {
             if (parent->m_right == NULL)
             {
@@ -58,7 +122,7 @@ private:
             }
             add(parent->m_right, node);
         }
-        else if (less(node->m_key, parent->m_key))
+        else if (less(node->m_pair.first, parent->m_pair.first))
         {
             if (parent->m_left == NULL)
             {
@@ -70,7 +134,7 @@ private:
             }
             add(parent->m_left, node);
         }
-        // std::cout << node->m_key << std::endl;
+        // std::cout << node->m_pair.first << std::endl;
         // }
     }
 
@@ -108,7 +172,7 @@ private:
         //  Uncle ==> node->m_parent->m_parent->m_left
         if (!node->m_parent->m_parent->m_left || node->m_parent->m_parent->m_left->m_black)
             return rotation(node);
-        std::cout << node->m_value << std::endl;
+        std::cout << node->m_pair.second << std::endl;
         if (node->m_parent->m_parent->m_left)
         {
             node->m_parent->m_parent->m_left->m_black = true;
@@ -127,7 +191,6 @@ private:
                 rightRotation(node->m_parent->m_parent);
                 node->m_black = false;
                 node->m_parent->m_black = true;
-                // hta nzid wahad condion dyal hna f 7alat makant null
                 if (node->m_parent->m_right)
                     node->m_parent->m_right->m_black = false;
                 return;
@@ -143,7 +206,6 @@ private:
             leftRotation(node->m_parent->m_parent);
             node->m_black = false;
             node->m_parent->m_black = true;
-            // hta nzid wahad condion dyal hna f 7alat makant null
             if (node->m_parent->m_left)
                 node->m_parent->m_left->m_black = false;
             return;
@@ -261,7 +323,7 @@ private:
     {
         while (ptr && ptr->m_right != NULL)
             ptr = ptr->m_right;
-        std::cout << RED << "shamil lghzal predecessor" << ptr->m_value << DEFAULT << std::endl;
+        std::cout << RED << "shamil lghzal predecessor" << ptr->m_pair.second << DEFAULT << std::endl;
         return ptr;
     }
 
@@ -269,12 +331,13 @@ private:
     {
         while (ptr && ptr->m_left != NULL)
             ptr = ptr->m_left;
-        std::cout << RED << "shamil lghzal succesor " << ptr->m_value << DEFAULT << std::endl;
+        std::cout << RED << "shamil lghzal succesor " << ptr->m_pair.second << DEFAULT << std::endl;
         return ptr;
     }
 
 public:
     RedBlackTree() : m_root(0), m_size(0){};
+    // RedBlackTree() :
     void insert(key_type key, mapped_type value)
     {
         Node *node = new Node(key, value);
@@ -304,9 +367,9 @@ public:
             if ((*parent) == m_root)
                 m_root = NULL;
             if ((*parent)->m_black)
-                std::cout << "[delete] a BLACK node --- " << (*parent)->m_value << std::endl;
+                std::cout << "[delete] a BLACK node --- " << (*parent)->m_pair.second << std::endl;
             else
-                std::cout << "[delete] a RED node --- " << (*parent)->m_value << std::endl;
+                std::cout << "[delete] a RED node --- " << (*parent)->m_pair.second << std::endl;
             if (!(*parent)->m_black)
                 caseOne((*parent));
             // // delete (*(*parent));
@@ -323,25 +386,25 @@ public:
             // delete ((*parent));
             return;
         }
-        if (key > (*parent)->m_key)
+        if (key > (*parent)->m_pair.first)
             deleteNode(key, &(*parent)->m_right);
-        else if (key < (*parent)->m_key)
+        else if (key < (*parent)->m_pair.first)
             deleteNode(key, &(*parent)->m_left);
         else
         {
             if (height((*parent)->m_left) >= height((*parent)->m_right))
             {
                 q = inorderPredecessor((*parent)->m_left);
-                (*parent)->m_key = q->m_key;
-                (*parent)->m_value = q->m_value;
-                deleteNode(q->m_key, &(*parent)->m_left);
+                (*parent)->m_pair.first = q->m_pair.first;
+                (*parent)->m_pair.second = q->m_pair.second;
+                deleteNode(q->m_pair.first, &(*parent)->m_left);
             }
             else
             {
                 q = inorderSuccessor((*parent)->m_right);
-                (*parent)->m_key = q->m_key;
-                (*parent)->m_value = q->m_value;
-                deleteNode(q->m_key, &(*parent)->m_right);
+                (*parent)->m_pair.first = q->m_pair.first;
+                (*parent)->m_pair.second = q->m_pair.second;
+                deleteNode(q->m_pair.first, &(*parent)->m_right);
             }
         }
         return;
@@ -523,7 +586,7 @@ public:
             std::cout << "-------------------------------------------" << std::endl;
             if (parent == m_root)
                 std::cout << YELLOW << "************ ROOT ************" << DEFAULT << std::endl;
-            std::cout << parent->m_key << ": " << parent->m_value << std::endl;
+            std::cout << parent->m_pair.first << ": " << parent->m_pair.second << std::endl;
             if (parent->m_isLeftChild)
                 std::cout << "Which Child: " << GREEN << "LEFT" << DEFAULT << std::endl;
             else if (!parent->m_isLeftChild)
@@ -533,9 +596,9 @@ public:
             else if (!parent->m_black)
                 std::cout << "Color: " << RED << "Red" << DEFAULT << std::endl;
             if (parent->m_right)
-                std::cout << "Right Child: [" << parent->m_right->m_value << "]" << std::endl;
+                std::cout << "Right Child: [" << parent->m_right->m_pair.second << "]" << std::endl;
             if (parent->m_left)
-                std::cout << "Left Child: [" << parent->m_left->m_value << "]" << std::endl;
+                std::cout << "Left Child: [" << parent->m_left->m_pair.second << "]" << std::endl;
             print(parent->m_right);
         }
     }

@@ -24,8 +24,8 @@ namespace ft
 		typedef std::ptrdiff_t difference_type;
 		typedef Normal_iterator<pointer> iterator;
 		typedef Normal_iterator<const_pointer> const_iterator;
-		typedef Reverse_iterator<pointer> reverse_iterator;
-		typedef Reverse_iterator<const_pointer> const_reverse_iterator;
+		typedef Reverse_iterator<iterator> reverse_iterator;
+		typedef Reverse_iterator<const_iterator> const_reverse_iterator;
 
 	protected:
 		T *m_data;

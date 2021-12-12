@@ -4,17 +4,11 @@
 #include "iterator.hpp"
 
 template <class Iter>
-class Normal_iterator : public iterator<
-                            typename iterator_traits<Iter>::iterator_category,
-                            typename iterator_traits<Iter>::value_type,
-                            typename iterator_traits<Iter>::difference_type,
-                            typename iterator_traits<Iter>::pointer,
-                            typename iterator_traits<Iter>::reference>
-
+class Normal_iterator
 {
 public:
     typedef Iter iterator_type;
-    typedef typename iterator_traits<iterator_type>::iterator_category iterator_category;
+    typedef typename std::random_access_iterator_tag iterator_category;
     typedef typename iterator_traits<iterator_type>::value_type value_type;
     typedef typename iterator_traits<iterator_type>::difference_type difference_type;
     typedef typename iterator_traits<iterator_type>::pointer pointer;
