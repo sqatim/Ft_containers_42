@@ -26,32 +26,31 @@ struct NodeBase
     bool m_isLeftChild;
     bool m_black;
     NodeBase(value_type pair) : m_pair(pair), m_left(0),
-                                                m_right(0), m_parent(0), m_isLeftChild(false), m_black(false)
+                                m_right(0), m_parent(0), m_isLeftChild(false), m_black(false)
     {
     }
 };
 
 // template<typename Tp>
-template <class Iter>
+template <class Iter, class pair>
 class RedBlackTreeIterator
 {
 public:
     typedef Iter iterator_type;
     typedef typename std::bidirectional_iterator_tag iterator_category;
-    typedef typename iterator_traits<iterator_type>::value_type value_type;
-    typedef typename iterator_traits<iterator_type>::difference_type difference_type;
-    typedef typename iterator_traits<iterator_type>::pointer pointer;
-    typedef typename iterator_traits<iterator_type>::reference reference;
-
-protected:
+    typedef typename Iterator_traits<iterator_type>::value_type value_type;
+    typedef typename Iterator_traits<iterator_type>::difference_type difference_type;
+    typedef typename Iterator_traits<pair *>::pointer pointer;
+    typedef typename Iterator_traits<pair *>::reference reference;
     iterator_type m_current;
+
     RedBlackTreeIterator() : m_current(){};
     RedBlackTreeIterator(iterator_type x) : m_current(x){};
-    RedBlackTreeIterator(const RedBlackTreeIterator<iterator_type> &other)
+    RedBlackTreeIterator(const RedBlackTreeIterator &other)
     {
         this->m_current = other.m_current;
     };
-    RedBlackTreeIterator &operator=(const RedBlackTreeIterator<iterator_type> &other)
+    RedBlackTreeIterator &operator=(const RedBlackTreeIterator &other)
     {
         if (this != &other)
             this->m_current = other.m_current;
@@ -60,7 +59,7 @@ protected:
     iterator_type base() const { return this->m_current; };
     reference operator*() const
     {
-        return (m_current->m_pair);
+        return (*m_current).m_pair;
     };
     pointer operator->() const
     {
@@ -108,7 +107,7 @@ private:
     int m_size;
 
     // methodes;
-    void add(Node *parent, Node *node, std::less<key_type> less = std::less<key_type>())
+    int add(Node *parent, Node *node, std::less<key_type> less = std::less<key_type>())
     {
         if (less(parent->m_pair.first, node->m_pair.first))
         {
@@ -118,9 +117,9 @@ private:
                 node->m_parent = parent;
                 node->m_isLeftChild = false;
                 checkColor(node);
-                return;
+                return (1);
             }
-            add(parent->m_right, node);
+            return add(parent->m_right, node);
         }
         else if (less(node->m_pair.first, parent->m_pair.first))
         {
@@ -130,10 +129,12 @@ private:
                 node->m_parent = parent;
                 node->m_isLeftChild = true;
                 checkColor(node);
-                return;
+                return (1);
             }
-            add(parent->m_left, node);
+            return add(parent->m_left, node);
         }
+        else
+            return (0);
         // std::cout << node->m_pair.first << std::endl;
         // }
     }
@@ -336,21 +337,23 @@ private:
     }
 
 public:
+    Node *getRoot() { return (m_root); };
     RedBlackTree() : m_root(0), m_size(0){};
     // RedBlackTree() :
-    void insert(key_type key, mapped_type value)
+    int insert(const std::pair<key_type, mapped_type> &value)
     {
-        Node *node = new Node(key, value);
+        int k = 0;
+        Node *node = new Node(value);
         if (m_root == NULL)
         {
             m_root = node;
             m_root->m_black = true;
             m_size++;
-            return;
+            return 1;
         }
-        add(m_root, node);
+        k = add(m_root, node);
         m_size++;
-        return;
+        return (k);
     }
 
     void deleteNode(key_type key)

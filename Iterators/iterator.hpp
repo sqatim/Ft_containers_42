@@ -23,7 +23,7 @@ struct contiguous_iterator_tag : public random_iterator_tag
 };
 
 template <class Category, class T, class Distance = std::ptrdiff_t, class Pointer = T *, class Reference = T &>
-struct iterator
+struct Iterator
 {
 public:
     typedef T value_type;
@@ -34,7 +34,7 @@ public:
 };
 
 template <class Iterator>
-struct iterator_traits
+struct Iterator_traits
 {
     typedef typename Iterator::difference_type difference_type;
     typedef typename Iterator::value_type value_type;
@@ -45,7 +45,7 @@ struct iterator_traits
 };
 
 template <class T>
-struct iterator_traits<T *>
+struct Iterator_traits<T *>
 {
     typedef std::ptrdiff_t difference_type;
     typedef T value_type;
@@ -55,7 +55,7 @@ struct iterator_traits<T *>
     // iterator_traits() { std::cout << "iterator_traits2" << std::endl; };
 };
 template <class T>
-struct iterator_traits<const T *>
+struct Iterator_traits<const T *>
 {
     typedef std::ptrdiff_t difference_type;
     typedef T value_type;
