@@ -112,9 +112,9 @@ namespace ft
         //     m_tree.insert(value);
 
         // };
-        int insert(const value_type &value)
+        std::pair<Node*, bool> insert(const value_type &value)
         {
-            int k = 0;
+            std::pair<Node*, bool> k;
             k = m_tree.insert(value);
             m_root = m_tree.getRoot();
             return k;

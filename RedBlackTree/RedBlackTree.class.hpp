@@ -135,7 +135,7 @@ private:
     int m_size;
 
     // methodes;
-    int add(Node *parent, Node *node, std::less<key_type> less = std::less<key_type>())
+    std::pair<Node *, bool> add(Node *parent, Node *node, std::less<key_type> less = std::less<key_type>())
     {
         if (less(parent->m_pair.first, node->m_pair.first))
         {
@@ -145,7 +145,7 @@ private:
                 node->m_parent = parent;
                 node->m_isLeftChild = false;
                 checkColor(node);
-                return (1);
+                return std::make_pair(node, true);
             }
             return add(parent->m_right, node);
         }
@@ -157,12 +157,14 @@ private:
                 node->m_parent = parent;
                 node->m_isLeftChild = true;
                 checkColor(node);
-                return (1);
+                return std::make_pair(node, true);
+                // return (1);
             }
             return add(parent->m_left, node);
         }
         else
-            return (0);
+            return std::make_pair(parent, false);
+        // return (0);
         // std::cout << node->m_pair.first << std::endl;
         // }
     }
@@ -372,16 +374,16 @@ public:
     Node *getRoot() { return (m_root); };
     RedBlackTree() : m_root(0), m_size(0){};
     // RedBlackTree() :
-    int insert(const std::pair<key_type, mapped_type> &value)
+    std::pair<Node *, bool> insert(const std::pair<key_type, mapped_type> &value)
     {
-        int k = 0;
+        std::pair<Node *, bool> k;
         Node *node = new Node(value);
         if (m_root == NULL)
         {
             m_root = node;
             m_root->m_black = true;
             m_size++;
-            return 1;
+            return std::make_pair(node, true);
         }
         k = add(m_root, node);
         m_size++;
