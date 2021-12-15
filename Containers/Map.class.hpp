@@ -65,6 +65,11 @@ namespace ft
         allocator_type m_allocator;
 
     public:
+
+        void print()
+        {
+            m_tree.print(m_root);
+        }
         explicit map(const key_compare &comp = key_compare(),
                      const allocator_type &alloc = allocator_type()) : m_root(NULL){
                                                                            // m_allocator
@@ -88,7 +93,7 @@ namespace ft
             tmp = m_root;
             while (tmp->m_left)
             {
-                std::cout << "************************************" << std::endl;
+                // std::cout << "************************************" << std::endl;
                 tmp = tmp->m_left;
             }
             return (tmp);

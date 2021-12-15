@@ -71,12 +71,40 @@ public:
     };
     RedBlackTreeIterator &operator++()
     {
-        ++m_current;
+        iterator_type tmp;
+        if (m_current->m_right != NULL)
+        {
+            m_current = m_current->m_right;
+            while (m_current->m_left)
+                m_current = m_current->m_left;
+            return (*this);
+        }
+        tmp = m_current;
+        m_current = m_current->m_parent;
+        while (m_current && m_current->m_right == tmp)
+        {
+            tmp = m_current;
+            m_current = m_current->m_right;
+        }
         return *this;
     };
     RedBlackTreeIterator &operator--()
     {
-        --m_current;
+        iterator_type tmp;
+        if (m_current->m_left != NULL)
+        {
+            m_current = m_current->m_left;
+            while (m_current->m_left)
+                m_current = m_current->m_left;
+            return (*this);
+        }
+        tmp = m_current;
+        m_current = m_current->m_parent;
+        while (m_current && m_current->m_left == tmp)
+        {
+            tmp = m_current;
+            m_current = m_current->m_left;
+        }
         return *this;
     };
     RedBlackTreeIterator operator++(int)
@@ -159,7 +187,7 @@ private:
     {
         if (node->m_parent->m_isLeftChild) //  Uncle ==> node->m_parent->m_parent->m_right
         {
-            std::cout << node << std::endl;
+            // std::cout << node << std::endl;
             if (!node->m_parent->m_parent->m_right || node->m_parent->m_parent->m_right->m_black)
                 return rotation(node);
             if (node->m_parent->m_parent->m_right)
@@ -172,8 +200,12 @@ private:
         }
         //  Uncle ==> node->m_parent->m_parent->m_left
         if (!node->m_parent->m_parent->m_left || node->m_parent->m_parent->m_left->m_black)
+        {
+            if (!node->m_parent->m_parent->m_left)
+                std::cout << "fen a jemi" << std::endl;
             return rotation(node);
-        std::cout << node->m_pair.second << std::endl;
+        }
+        // std::cout << node->m_pair.second << std::endl;
         if (node->m_parent->m_parent->m_left)
         {
             node->m_parent->m_parent->m_left->m_black = true;
