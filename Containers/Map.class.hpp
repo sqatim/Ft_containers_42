@@ -65,7 +65,6 @@ namespace ft
         allocator_type m_allocator;
 
     public:
-
         void print()
         {
             m_tree.print(m_root);
@@ -85,6 +84,8 @@ namespace ft
             {
             }
         };
+
+        // iterators;
 
         iterator begin()
         {
@@ -107,18 +108,44 @@ namespace ft
                 tmp = tmp->left;
             return (tmp);
         };
+
+        iterator end()
+        {
+            Node *tmp = m_tree.getEnd();
+            return tmp;
+        };
+        const_iterator end() const;
         // std::pair<iterator, bool> insert(const value_type &value)
         // {
         //     m_tree.insert(value);
 
         // };
-        std::pair<Node*, bool> insert(const value_type &value)
+
+        // Modifiers
+
+        std::pair<Node *, bool> insert(const value_type &value)
         {
-            std::pair<Node*, bool> k;
+            std::pair<Node *, bool> k;
             k = m_tree.insert(value);
             m_root = m_tree.getRoot();
             return k;
         };
+
+        iterator insert(iterator position, const value_type &val)
+        {
+            std::pair<Node *, bool> result;
+            result = m_tree.insert(val);
+            m_root = m_tree.getRoot();
+            return result.first;
+        };
+        // template <class InputIterator>
+        // void insert(InputIterator first, InputIterator last)
+        // {
+        //     std::cout << "sdasdsadsadsasda" << std::endl;
+        //     for (; first != last; first++)
+        //         m_tree.insert(*first);
+        //     m_root = m_tree.getRoot();
+        // }
     };
 
 }

@@ -121,6 +121,20 @@ public:
     };
 };
 
+// template <class Iter>
+// bool operator==(const RedBlackTreeIterator<class Iter> &lhs,
+//                 const RedBlackTreeIterator<class Iter> &rhs)
+// {
+//     return lhs.base() == rhs.base();
+// }
+
+// template <class Iter>
+// bool operator!=(const RedBlackTreeIterator<class Iter> &lhs,
+//                 const RedBlackTreeIterator<class Iter> &rhs)
+// {
+//     return lhs.base() != rhs.base();
+// }
+
 template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key, T> > >
 class RedBlackTree
 {
@@ -132,6 +146,7 @@ public:
 
 private:
     Node *m_root;
+    Node *m_end;
     int m_size;
 
     // methodes;
@@ -380,8 +395,11 @@ public:
         Node *node = new Node(value);
         if (m_root == NULL)
         {
+            Node *m_end = new Node(value);
+            m_end->m_left = m_root;
             m_root = node;
             m_root->m_black = true;
+            m_root->m_isLeftChild = true;
             m_size++;
             return std::make_pair(node, true);
         }
@@ -613,6 +631,10 @@ public:
     Node *getRoot() const
     {
         return (m_root);
+    }
+    Node *getEnd() const
+    {
+        return (m_end);
     }
 
     void print(Node *parent)

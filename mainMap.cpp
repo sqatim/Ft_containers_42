@@ -46,33 +46,24 @@ int main()
     // int tab[] = {10, 20, 30, 40};
     // ft::map<int, int> map(tab, tab + 3);
     ft::map<int, std::string> map;
-    std::pair<ft::map<int, std::string>::iterator, bool> var;
-    map.insert(std::make_pair(1, "samir"));
-    map.insert(std::make_pair(0, "oussama"));
-    map.insert(std::make_pair(2, "achraf"));
-    var = map.insert(std::make_pair(3, "amine"));
-    std::cout << std::boolalpha << var.second << std::endl;
-    std::cout << (var.first)->first << std::endl;
-    std::cout << (var.first)->second << std::endl;
-    // map.print();
-    // int ss = map.insert(std::make_pair(4, "said"));
-    // ft::map<int, std::string>::iterator it = map.begin();
-    // std::cout << "************************" << std::endl;
-    // std::cout << "          " << it->second << std::endl;
-    // it++;
-    // std::cout << "          " << it->second << std::endl;
-    // it++;
-    // std::cout << "          " << it->second << std::endl;
-    // it--;
-    // std::cout << "          " << it->second << std::endl;
-    // it++;
-    // std::cout << "          " << it->second << std::endl;
-    // std::cout << "ss ==> " << ss << std::endl;
-    // std::cout << "samir" << std::endl;
-    // std::map<int, std::string>::iterator it = map.begin();
-    // std::cout << std::boolalpha << ss.second << std::endl;
-    // std::cout << (*ss.first).second << std::endl;
+    ft::map<int, std::string> map1;
+    ft::map<int, std::string>::iterator it;
+    // std::pair<ft::map<int, std::string>::iterator, bool> var;
+    // map.insert(std::make_pair(1, "samir"));
+    // map.insert(std::make_pair(0, "oussama"));
+    // map.insert(std::make_pair(2, "achraf"));
+    // it = map.insert(map.begin(), std::make_pair(3, "amine"));
+
+    // std::cout << it->first << std::endl;
     // std::cout << it->second << std::endl;
+    // map1.insert(map.begin(), map.end());
+
+    // std::cout << "wa shamir" << std::endl;
+    // it = map1.begin();
+    // for (; it != map.end(); it++)
+    // {
+    //     std::cout << "it[" << it->first << "] ==> " << it->second << std::endl;
+    // }
 
     return (0);
 }
