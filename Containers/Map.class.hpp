@@ -50,8 +50,8 @@ namespace ft
         typedef typename allocator_type::const_reference const_reference;
         typedef typename allocator_type::pointer pointer;
         typedef typename allocator_type::const_pointer const_pointer;
-        typedef RedBlackTreeIterator<pointer, value_type> iterator;
-        typedef RedBlackTreeIterator<const_pointer, value_type> const_iterator;
+        typedef RedBlackTreeIterator<pointer> iterator;
+        typedef RedBlackTreeIterator<const_pointer> const_iterator;
         typedef Reverse_iterator<iterator> reverse_iterator;
         typedef Reverse_iterator<const_iterator> const_reverse_iterator;
         typedef std::ptrdiff_t difference_type;
@@ -115,11 +115,6 @@ namespace ft
             return tmp;
         };
         const_iterator end() const;
-        // std::pair<iterator, bool> insert(const value_type &value)
-        // {
-        //     m_tree.insert(value);
-
-        // };
 
         // Modifiers
 
@@ -138,14 +133,17 @@ namespace ft
             m_root = m_tree.getRoot();
             return result.first;
         };
-        // template <class InputIterator>
-        // void insert(InputIterator first, InputIterator last)
-        // {
-        //     std::cout << "sdasdsadsadsasda" << std::endl;
-        //     for (; first != last; first++)
-        //         m_tree.insert(*first);
-        //     m_root = m_tree.getRoot();
-        // }
+        template <class InputIterator>
+        void insert(InputIterator first, InputIterator last)
+        {
+            // std::cout << "sdasdsadsadsasda" << std::endl;
+            for (; first != last; first++)
+            {
+                m_tree.insert(*first);
+            }
+
+            m_root = m_tree.getRoot();
+        }
     };
 
 }

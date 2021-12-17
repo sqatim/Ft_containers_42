@@ -47,20 +47,29 @@ int main()
     // ft::map<int, int> map(tab, tab + 3);
     ft::map<int, std::string> map;
     ft::map<int, std::string> map1;
-    ft::map<int, std::string>::iterator it;
+    // ft::map<int, std::string>::iterator it;
     // std::pair<ft::map<int, std::string>::iterator, bool> var;
-    // map.insert(std::make_pair(1, "samir"));
-    // map.insert(std::make_pair(0, "oussama"));
-    // map.insert(std::make_pair(2, "achraf"));
+    map.insert(std::make_pair(1, "samir"));
+    map.insert(std::make_pair(0, "oussama"));
+    map.insert(std::make_pair(2, "achraf"));
+    map.insert(std::make_pair(3, "amine"));
+    map.insert(std::make_pair(4, "youssef"));
+    map.insert(std::make_pair(-1, "anas"));
+    ft::map<int, std::string>::iterator it;
+    // it--;
+    // std::cout << it->first << std::endl;
+    // std::cout << it->second << std::endl;
     // it = map.insert(map.begin(), std::make_pair(3, "amine"));
 
     // std::cout << it->first << std::endl;
     // std::cout << it->second << std::endl;
-    // map1.insert(map.begin(), map.end());
+    map1.insert(map.begin(), map.end());
 
     // std::cout << "wa shamir" << std::endl;
-    // it = map1.begin();
-    // for (; it != map.end(); it++)
+    it = map1.begin();
+    map1.print();
+    // map1.print();
+    // for (; it != map1.end(); it++)
     // {
     //     std::cout << "it[" << it->first << "] ==> " << it->second << std::endl;
     // }

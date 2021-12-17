@@ -10,6 +10,7 @@
 #define DEFAULT "\033[0m"
 
 #include "../Iterators/iterator.hpp"
+#include <typeinfo>
 
 template <class T>
 struct NodeBase
@@ -25,14 +26,19 @@ struct NodeBase
     NodeBase *m_parent;
     bool m_isLeftChild;
     bool m_black;
+    std::string m_end;  // hta nhaydha
+    std::string m_root; // hta nhaydha
+    NodeBase() : m_left(0), m_right(0), m_parent(0), m_isLeftChild(false), m_black(false), m_end("Not the end"), m_root("not root")
+    {
+    }
     NodeBase(value_type pair) : m_pair(pair), m_left(0),
-                                m_right(0), m_parent(0), m_isLeftChild(false), m_black(false)
+                                m_right(0), m_parent(0), m_isLeftChild(false), m_black(false), m_end("Not the end"), m_root("not root")
     {
     }
 };
 
 // template<typename Tp>
-template <class Iter, class pair>
+template <class Iter>
 class RedBlackTreeIterator
 {
 public:
@@ -40,8 +46,8 @@ public:
     typedef typename std::bidirectional_iterator_tag iterator_category;
     typedef typename Iterator_traits<iterator_type>::value_type value_type;
     typedef typename Iterator_traits<iterator_type>::difference_type difference_type;
-    typedef typename Iterator_traits<pair *>::pointer pointer;
-    typedef typename Iterator_traits<pair *>::reference reference;
+    typedef typename Iterator_traits<typename value_type::value_type *>::pointer pointer;
+    typedef typename Iterator_traits<typename value_type::value_type *>::reference reference;
     iterator_type m_current;
 
     RedBlackTreeIterator() : m_current(){};
@@ -84,7 +90,7 @@ public:
         while (m_current && m_current->m_right == tmp)
         {
             tmp = m_current;
-            m_current = m_current->m_right;
+            m_current = m_current->m_parent;
         }
         return *this;
     };
@@ -94,8 +100,8 @@ public:
         if (m_current->m_left != NULL)
         {
             m_current = m_current->m_left;
-            while (m_current->m_left)
-                m_current = m_current->m_left;
+            while (m_current->m_right)
+                m_current = m_current->m_right;
             return (*this);
         }
         tmp = m_current;
@@ -103,7 +109,7 @@ public:
         while (m_current && m_current->m_left == tmp)
         {
             tmp = m_current;
-            m_current = m_current->m_left;
+            m_current = m_current->m_parent;
         }
         return *this;
     };
@@ -121,19 +127,19 @@ public:
     };
 };
 
-// template <class Iter>
-// bool operator==(const RedBlackTreeIterator<class Iter> &lhs,
-//                 const RedBlackTreeIterator<class Iter> &rhs)
-// {
-//     return lhs.base() == rhs.base();
-// }
+template <class Iter>
+bool operator==(const RedBlackTreeIterator<Iter> &lhs,
+                const RedBlackTreeIterator<Iter> &rhs)
+{
+    return lhs.base() == rhs.base();
+}
 
-// template <class Iter>
-// bool operator!=(const RedBlackTreeIterator<class Iter> &lhs,
-//                 const RedBlackTreeIterator<class Iter> &rhs)
-// {
-//     return lhs.base() != rhs.base();
-// }
+template <class Iter>
+bool operator!=(const RedBlackTreeIterator<Iter> &lhs,
+                const RedBlackTreeIterator<Iter> &rhs)
+{
+    return lhs.base() != rhs.base();
+}
 
 template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key, T> > >
 class RedBlackTree
@@ -186,8 +192,10 @@ private:
 
     void checkColor(Node *node)
     {
-        if (node == NULL) // had f7alatma badalt  tbadal root kan protecti biha
+        if (node == NULL || m_root == m_end) // had f7alatma badalt  tbadal root kan protecti biha
+        {
             return;
+        }
         if (node == m_root)
         {
             node->m_black = true;
@@ -219,8 +227,9 @@ private:
         if (!node->m_parent->m_parent->m_left || node->m_parent->m_parent->m_left->m_black)
         {
             if (!node->m_parent->m_parent->m_left)
-                std::cout << "fen a jemi" << std::endl;
-            return rotation(node);
+            {
+                return rotation(node);
+            }
         }
         // std::cout << node->m_pair.second << std::endl;
         if (node->m_parent->m_parent->m_left)
@@ -279,8 +288,9 @@ private:
             node->m_right->m_parent = node;
             node->m_right->m_isLeftChild = false;
         }
-        if (node->m_parent == NULL) // *node is root
+        if (node->m_parent == m_end) // *node is root
         {
+            std::cout << "i am here" << std::endl;
             m_root = tmp;
             tmp->m_parent = NULL;
         }
@@ -316,7 +326,7 @@ private:
             node->m_left->m_isLeftChild = true;
         }
 
-        if (node->m_parent == NULL) // *node is root
+        if (node->m_parent == m_end) // *node is root
         {
             m_root = tmp;
             tmp->m_parent = NULL;
@@ -395,9 +405,13 @@ public:
         Node *node = new Node(value);
         if (m_root == NULL)
         {
-            Node *m_end = new Node(value);
-            m_end->m_left = m_root;
+            m_end = new Node();
+            m_end->m_black = true;
+            m_end->m_end = "the end";
             m_root = node;
+            m_root->m_root = "i am the root";
+            m_end->m_left = m_root;
+            m_root->m_parent = m_end;
             m_root->m_black = true;
             m_root->m_isLeftChild = true;
             m_size++;
