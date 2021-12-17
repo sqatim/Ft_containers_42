@@ -141,7 +141,7 @@ bool operator!=(const RedBlackTreeIterator<Iter> &lhs,
     return lhs.base() != rhs.base();
 }
 
-template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key, T> > >
+template <class Key, class T, class Compare, class Alloc>
 class RedBlackTree
 {
 public:
@@ -149,6 +149,8 @@ public:
     typedef T mapped_type;
     typedef std::pair<const key_type, mapped_type> value_type;
     typedef NodeBase<value_type> Node;
+    typedef Alloc allocator_type;
+    typedef Compare key_compare;
 
 private:
     Node *m_root;
@@ -156,9 +158,9 @@ private:
     int m_size;
 
     // methodes;
-    std::pair<Node *, bool> add(Node *parent, Node *node, std::less<key_type> less = std::less<key_type>())
+    std::pair<Node *, bool> add(Node *parent, Node *node, key_compare &compare)
     {
-        if (less(parent->m_pair.first, node->m_pair.first))
+        if (compare(parent->m_pair.first, node->m_pair.first))
         {
             if (parent->m_right == NULL)
             {
@@ -168,9 +170,9 @@ private:
                 checkColor(node);
                 return std::make_pair(node, true);
             }
-            return add(parent->m_right, node);
+            return add(parent->m_right, node, compare);
         }
-        else if (less(node->m_pair.first, parent->m_pair.first))
+        else if (compare(node->m_pair.first, parent->m_pair.first))
         {
             if (parent->m_left == NULL)
             {
@@ -179,15 +181,11 @@ private:
                 node->m_isLeftChild = true;
                 checkColor(node);
                 return std::make_pair(node, true);
-                // return (1);
             }
-            return add(parent->m_left, node);
+            return add(parent->m_left, node, compare);
         }
         else
             return std::make_pair(parent, false);
-        // return (0);
-        // std::cout << node->m_pair.first << std::endl;
-        // }
     }
 
     void checkColor(Node *node)
@@ -226,10 +224,10 @@ private:
         //  Uncle ==> node->m_parent->m_parent->m_left
         if (!node->m_parent->m_parent->m_left || node->m_parent->m_parent->m_left->m_black)
         {
-            if (!node->m_parent->m_parent->m_left)
-            {
-                return rotation(node);
-            }
+            // if (!node->m_parent->m_parent->m_left)
+            // {
+            return rotation(node);
+            // }
         }
         // std::cout << node->m_pair.second << std::endl;
         if (node->m_parent->m_parent->m_left)
@@ -290,9 +288,9 @@ private:
         }
         if (node->m_parent == m_end) // *node is root
         {
-            std::cout << "i am here" << std::endl;
             m_root = tmp;
-            tmp->m_parent = NULL;
+            m_end->m_left = tmp;
+            tmp->m_parent = m_end;
         }
         else
         {
@@ -329,7 +327,8 @@ private:
         if (node->m_parent == m_end) // *node is root
         {
             m_root = tmp;
-            tmp->m_parent = NULL;
+            m_end->m_left = tmp;
+            tmp->m_parent = m_end;
         }
         else
         {
@@ -399,13 +398,15 @@ public:
     Node *getRoot() { return (m_root); };
     RedBlackTree() : m_root(0), m_size(0){};
     // RedBlackTree() :
-    std::pair<Node *, bool> insert(const std::pair<key_type, mapped_type> &value)
+    std::pair<Node *, bool> insert(const std::pair<key_type, mapped_type> &value, key_compare &compare, allocator_type &allocator)
     {
         std::pair<Node *, bool> k;
-        Node *node = new Node(value);
+        Node *node = allocator.allocate(1);
+        allocator.construct(node, Node(value));
         if (m_root == NULL)
         {
-            m_end = new Node();
+            m_end = allocator.allocate(1);
+            allocator.construct(m_end, Node(std::make_pair<key_type, mapped_type>(key_type(), mapped_type())));
             m_end->m_black = true;
             m_end->m_end = "the end";
             m_root = node;
@@ -417,7 +418,7 @@ public:
             m_size++;
             return std::make_pair(node, true);
         }
-        k = add(m_root, node);
+        k = add(m_root, node, compare);
         m_size++;
         return (k);
     }

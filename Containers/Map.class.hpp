@@ -17,23 +17,6 @@
 
 namespace ft
 {
-    template <class Arg1, class Arg2, class Result>
-    struct binary_function
-    {
-        typedef Arg1 first_argument_type;
-        typedef Arg2 second_argument_type;
-        typedef Result result_type;
-        result_type operator()(const first_argument_type &a, const second_argument_type &b)
-        {
-            return a == b;
-        };
-    };
-
-    template <class Arg1, class Arg2>
-    struct value_comp : public binary_function<Arg1, Arg2, bool>
-    {
-    };
-
     template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key, T> > >
     class map
     {
@@ -43,7 +26,7 @@ namespace ft
         typedef std::pair<const key_type, mapped_type> value_type;
         typedef Compare key_compare;
         typedef NodeBase<value_type> Node;
-        typedef value_comp<key_type, key_type> value_compare;
+        // typedef value_comp<key_type, key_type> value_compare;
         // khassani shi wahda hna (value_compare)
         typedef typename Alloc::template rebind<Node>::other allocator_type;
         typedef typename allocator_type::reference reference;
@@ -60,29 +43,22 @@ namespace ft
     protected:
         Node *m_root;
         key_compare m_compare;
-        RedBlackTree<key_type, mapped_type> m_tree;
+        RedBlackTree<key_type, mapped_type, key_compare, allocator_type> m_tree;
         size_type m_size;
         allocator_type m_allocator;
 
     public:
-        void print()
-        {
-            m_tree.print(m_root);
-        }
+        // Constructers
         explicit map(const key_compare &comp = key_compare(),
-                     const allocator_type &alloc = allocator_type()) : m_root(NULL){
-                                                                           // m_allocator
-                                                                       };
+                     const allocator_type &alloc = allocator_type()) : m_root(NULL), m_compare(comp), m_size(0), m_allocator(alloc){};
         template <class InputIterator>
-        map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) : m_tree()
+        map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) : m_root(NULL), m_compare(comp), m_size(0), m_allocator(alloc)
         {
-            difference_type difference;
-
-            difference = last - first;
-            std::cout << difference << std::endl;
-            for (difference_type i = 0; i < difference; i++)
+            for (; first != last; first++)
             {
+                m_tree.insert(*first, m_compare, m_allocator);
             }
+            m_root = m_tree.getRoot();
         };
 
         // iterators;
@@ -121,7 +97,7 @@ namespace ft
         std::pair<Node *, bool> insert(const value_type &value)
         {
             std::pair<Node *, bool> k;
-            k = m_tree.insert(value);
+            k = m_tree.insert(value, m_compare, m_allocator);
             m_root = m_tree.getRoot();
             return k;
         };
@@ -129,7 +105,7 @@ namespace ft
         iterator insert(iterator position, const value_type &val)
         {
             std::pair<Node *, bool> result;
-            result = m_tree.insert(val);
+            result = m_tree.insert(val, m_compare, m_allocator);
             m_root = m_tree.getRoot();
             return result.first;
         };
@@ -138,11 +114,122 @@ namespace ft
         {
             // std::cout << "sdasdsadsadsasda" << std::endl;
             for (; first != last; first++)
-            {
-                m_tree.insert(*first);
-            }
-
+                m_tree.insert(*first, m_compare, m_allocator);
             m_root = m_tree.getRoot();
+        }
+        // Operations:
+        iterator find(const key_type &k)
+        {
+            iterator it = this->begin();
+            iterator end = this->end();
+            for (; it != end; it++)
+            {
+                if (it->first == k)
+                    return it;
+            }
+            return it;
+        }
+        const_iterator find(const key_type &k) const
+        {
+            const_iterator it = this->begin();
+            const_iterator end = this->end();
+
+            for (; it != end; it++)
+            {
+                if (it->second == k)
+                    return it;
+            }
+            return it;
+        }
+
+
+        size_type count (const key_type& k) const
+        {
+            iterator it = this->begin();
+            iterator end = this->end();
+            for (; it != end; it++)
+            {
+                if (it->first == k)
+                    return 1;
+            }
+            return 0;
+        }
+
+
+        iterator lower_bound (const key_type& k ) // <= k
+        {
+            iterator it = this->begin();
+            iterator end = this->end();
+
+            for (; it != end; it++)
+            {
+                if (!m_compare(it->first,k)) // m_compare return true if it->first < k 
+                    return it;
+            }
+            return it;
+        };
+        const_iterator lower_bound (const key_type& k) const
+        {
+            const_iterator it = this->begin();
+            const_iterator end = this->end();
+
+            for (; it != end; it++)
+            {
+                if (!m_compare(it->first,k))
+                    return it;
+            }
+            return it;
+        };
+
+        iterator upper_bound (const key_type& k) // > k
+        {
+            iterator it = this->begin();
+            iterator end = this->end();
+
+            for (; it != end; it++)
+            {
+                if (m_compare(k, it->first)) //  m_compare return true if k < it->first 
+                    return it;
+            }
+            return it;
+        };
+        const_iterator upper_bound (const key_type& k) const
+        {
+            const_iterator it = this->begin();
+            const_iterator end = this->end();
+
+            for (; it != end; it++)
+            {
+                if (m_compare(k, it->first))
+                    return it;
+            }
+            return it;      
+        };
+
+
+        std::pair<iterator,iterator> equal_range (const key_type& k)
+        {
+            std::pair<iterator, iterator> pair;
+
+            pair = std::make_pair<iterator,iterator>(lower_bound(k), upper_bound(k));
+            return pair;
+        };
+        std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+        {
+            std::pair<const_iterator, const_iterator> pair;
+
+            pair = std::make_pair<const_iterator,const_iterator>(lower_bound(k), upper_bound(k));
+            return pair;
+        };
+        // Allocator:
+        allocator_type get_allocator() const
+        {
+            return (m_allocator);
+        };
+
+        void print()
+        {
+            m_tree.print(m_root);
         }
     };
 
