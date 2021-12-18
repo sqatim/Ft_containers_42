@@ -652,7 +652,7 @@ public:
     {
         return (m_end);
     }
-
+    
     size_t getSize() const
     {
         return (m_size);

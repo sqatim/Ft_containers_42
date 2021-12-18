@@ -41,50 +41,50 @@
 //     return (0);
 // }
 
-int main()
-{
-    // int tab[] = {10, 20, 30, 40};
-    // ft::map<int, int> map(tab, tab + 3);
-    ft::map<int, std::string> map;
-    ft::map<int, std::string> map1;
-    // ft::map<int, std::string>::iterator it;
-    // std::pair<ft::map<int, std::string>::iterator, bool> var;
-    map.insert(std::make_pair(1, "samir"));
-    map.insert(std::make_pair(0, "oussama"));
-    map.insert(std::make_pair(2, "achraf"));
-    map.insert(std::make_pair(3, "amine"));
-    map.insert(std::make_pair(4, "youssef"));
-    map.insert(std::make_pair(-1, "anas"));
-    ft::map<int, std::string>::iterator it;
-    // it--;
-    // std::cout << it->first << std::endl;
-    // std::cout << it->second << std::endl;
-    // it = map.insert(map.begin(), std::make_pair(3, "amine"));
+// int main()
+// {
+//     // int tab[] = {10, 20, 30, 40};
+//     // ft::map<int, int> map(tab, tab + 3);
+//     ft::map<int, std::string> map;
+//     ft::map<int, std::string> map1;
+//     // ft::map<int, std::string>::iterator it;
+//     // std::pair<ft::map<int, std::string>::iterator, bool> var;
+//     map.insert(std::make_pair(1, "samir"));
+//     map.insert(std::make_pair(0, "oussama"));
+//     map.insert(std::make_pair(2, "achraf"));
+//     map.insert(std::make_pair(3, "amine"));
+//     map.insert(std::make_pair(4, "youssef"));
+//     map.insert(std::make_pair(-1, "anas"));
+//     ft::map<int, std::string>::iterator it;
+//     // it--;
+//     // std::cout << it->first << std::endl;
+//     // std::cout << it->second << std::endl;
+//     // it = map.insert(map.begin(), std::make_pair(3, "amine"));
 
-    // std::cout << it->first << std::endl;
-    // std::cout << it->second << std::endl;
-    map1.insert(map.begin(), map.end());
+//     // std::cout << it->first << std::endl;
+//     // std::cout << it->second << std::endl;
+//     map1.insert(map.begin(), map.end());
 
-    // std::cout << "wa shamir" << std::endl;
-    it = map1.begin();
-    // map1.print();
-    std::cout << RED << "   --------------------WARNING--------------------" << DEFAULT << std::endl;
+//     // std::cout << "wa shamir" << std::endl;
+//     it = map1.begin();
+//     // map1.print();
+//     std::cout << RED << "   --------------------WARNING--------------------" << DEFAULT << std::endl;
 
-    it = map1.find(-1);
-    if (it != map1.end())
-    {
-        std::cout << it->second << std::endl;
-    }
-    else
-        std::cout << "not found" << std::endl;
-    // map1.print();
-    // for (; it != map1.end(); it++)
-    // {
-    //     std::cout << "it[" << it->first << "] ==> " << it->second << std::endl;
-    // }
+//     it = map1.find(-1);
+//     if (it != map1.end())
+//     {
+//         std::cout << it->second << std::endl;
+//     }
+//     else
+//         std::cout << "not found" << std::endl;
+//     // map1.print();
+//     // for (; it != map1.end(); it++)
+//     // {
+//     //     std::cout << "it[" << it->first << "] ==> " << it->second << std::endl;
+//     // }
 
-    return (0);
-}
+//     return (0);
+// }
 
 // int main()
 // {
@@ -96,3 +96,31 @@ int main()
 // }
 
 
+int main ()
+{
+  ft::map<char,int> mymap;
+  ft::map<char,int>::iterator itlow,itup;
+
+  mymap.insert(std::make_pair('a',20));
+  mymap.insert(std::make_pair('b',40));
+  mymap.insert(std::make_pair('c',60));
+  mymap.insert(std::make_pair('d',80));
+  mymap.insert(std::make_pair('f',100));
+
+//   itlow=mymap.lower_bound ('b');  // itlow points to b
+//   itup=mymap.upper_bound ('e');   // itup points to e (not d!)
+
+//   mymap.erase(itlow,itup);        // erases [itlow,itup)
+
+    // std::cout << mymap['l'] << std::endl;
+    std::cout << std::boolalpha << mymap.empty() << std::endl;
+    std::cout  << mymap.max_size() << std::endl;
+    // mymap.print();
+    // std::cout << "first: " << itlow->first << "\t second: " << itlow->second << std::endl;
+    // std::cout << "first: " << itup->first << "\t second: " << itup->second << std::endl;
+  // print content:
+//   for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+    // std::cout << it->first << " => " << it->second << '\n';
+
+  return 0;
+}

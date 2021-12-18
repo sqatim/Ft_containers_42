@@ -105,11 +105,41 @@ namespace ft
             Node *tmp = m_tree.getEnd();
             return tmp;
         };
-        const_iterator end() const;
+        const_iterator end() const
+        {
+            const Node *tmp = m_tree.getEnd();
+            return tmp;
+        };
+
+        // Capacity
+        bool empty() const
+        {
+            if(m_size == 0)
+                return true;
+            return false;
+        };
+
+        size_type size() const
+        {
+            return m_size;
+        }
+
+        size_type max_size() const
+        {
+            return m_allocator.max_size();
+        }
+
 
         // Element Access
         mapped_type &operator[](const key_type &k)
         {
+            iterator it;
+
+            it = this->find(k);
+            if (it != this->end())
+                return (it->second);
+            it = this->insert(it,std::make_pair(k, mapped_type()));
+            return (it->second);
         }
 
         // Modifiers
@@ -157,17 +187,7 @@ namespace ft
         };
 
         // Operations:
-        // iterator find(const key_type &k)
-        // {
-        //     iterator it = this->begin();
-        //     iterator end = this->end();
-        //     for (; it != end; it++)
-        //     {
-        //         if (it->first == k)
-        //             return it;
-        //     }
-        //     return it;
-        // }
+
         iterator find(const key_type &k)
         {
             Node *ptr = m_root;
@@ -177,7 +197,7 @@ namespace ft
             {
                 // std::cout << "i am here" << std::endl;
                 // std::cout << YELLOW << ptr->m_pair.first << DEFAULT << std::endl;
-                std::cout << "first: " << RED << ptr->m_pair.first << "\t second: " << YELLOW << ptr->m_pair.second << std::endl;
+                // std::cout << "first: " << RED << ptr->m_pair.first << "\t second: " << YELLOW << ptr->m_pair.second << std::endl;
                 if (m_compare(ptr->m_pair.first, k))
                     ptr = ptr->m_right;
                 else if (m_compare(k, ptr->m_pair.first))
@@ -212,62 +232,84 @@ namespace ft
 
         size_type count(const key_type &k) const
         {
-            iterator it = this->begin();
-            iterator end = this->end();
-
             if (this->find(k) != this->end())
                 return 1;
             return 0;
         }
 
-        iterator lower_bound(const key_type &k) // <= k
+        iterator lower_bound(const key_type &k) // k >=
         {
-            iterator it = this->begin();
-            iterator end = this->end();
-
-            for (; it != end; it++)
+            Node *ptr = m_root;
+            iterator it;
+            while (ptr && m_compare(ptr->m_pair.first, k))
             {
-                if (!m_compare(it->first, k)) // m_compare return true if it->first < k
-                    return it;
+                if (m_compare(ptr->m_pair.first, k))
+                    ptr = ptr->m_right;
+                else if (m_compare(k, ptr->m_pair.first))
+                    ptr = ptr->m_left;
             }
-            return it;
+            if (ptr != NULL)
+            {
+                it = ptr;
+                return (it);
+            }
+            return this->end();
         };
+
         const_iterator lower_bound(const key_type &k) const
         {
-            const_iterator it = this->begin();
-            const_iterator end = this->end();
-
-            for (; it != end; it++)
+            Node *ptr = m_root;
+            const_iterator it;
+            while (ptr && m_compare(ptr->m_pair.first, k))
             {
-                if (!m_compare(it->first, k))
-                    return it;
+                if (m_compare(ptr->m_pair.first, k))
+                    ptr = ptr->m_right;
+                else if (m_compare(k, ptr->m_pair.first))
+                    ptr = ptr->m_left;
             }
-            return it;
+            if (ptr != NULL)
+            {
+                it = ptr;
+                return (it);
+            }
+            return this->end();
         };
 
-        iterator upper_bound(const key_type &k) // > k
+        iterator upper_bound(const key_type &k) // k <
         {
-            iterator it = this->begin();
-            iterator end = this->end();
-
-            for (; it != end; it++)
+            Node *ptr = m_root;
+            iterator it;
+            while (ptr && !m_compare(k, ptr->m_pair.first))
             {
-                if (m_compare(k, it->first)) //  m_compare return true if k < it->first
-                    return it;
+                if (m_compare(ptr->m_pair.first, k) || ptr->m_pair.first == k)
+                    ptr = ptr->m_right;
+                else if (m_compare(k, ptr->m_pair.first))
+                    ptr = ptr->m_left;
             }
-            return it;
+            if (ptr != NULL)
+            {
+                it = ptr;
+                return (it);
+            }
+            return this->end();
         };
         const_iterator upper_bound(const key_type &k) const
         {
-            const_iterator it = this->begin();
-            const_iterator end = this->end();
-
-            for (; it != end; it++)
+            Node *ptr = m_root;
+            const_iterator it;
+            while (ptr && !m_compare(k, ptr->m_pair.first))
             {
-                if (m_compare(k, it->first))
-                    return it;
+                if (m_compare(ptr->m_pair.first, k) || ptr->m_pair.first == k)
+                    ptr = ptr->m_right;
+                else if (m_compare(k, ptr->m_pair.first))
+                    ptr = ptr->m_left;
             }
-            return it;
+            if (ptr != NULL)
+            {
+                it = ptr;
+                return (it);
+            }
+            return this->end();
         };
 
         std::pair<iterator, iterator> equal_range(const key_type &k)
