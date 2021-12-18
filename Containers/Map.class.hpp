@@ -26,7 +26,6 @@ namespace ft
         typedef std::pair<const key_type, mapped_type> value_type;
         typedef Compare key_compare;
         typedef NodeBase<value_type> Node;
-        // typedef value_comp<key_type, key_type> value_compare;
         // khassani shi wahda hna (value_compare)
         typedef typename Alloc::template rebind<Node>::other allocator_type;
         typedef typename allocator_type::reference reference;
@@ -40,6 +39,21 @@ namespace ft
         typedef std::ptrdiff_t difference_type;
         typedef size_t size_type;
 
+        struct value_compare
+        {
+        protected:
+            Compare m_comp;
+
+        public:
+            value_compare(Compare c) : m_comp(c) {}
+            typedef bool result_type;
+            typedef value_type first_argument_type;
+            typedef value_type second_argument_type;
+            result_type operator()(const first_argument_type &x, const second_argument_type &y) const
+            {
+                return m_comp(x.first, y.first);
+            }
+        };
     protected:
         Node *m_root;
         key_compare m_compare;
@@ -117,6 +131,18 @@ namespace ft
                 m_tree.insert(*first, m_compare, m_allocator);
             m_root = m_tree.getRoot();
         }
+
+        // Observers:
+        key_compare key_comp() const
+        {
+            return (m_compare);
+        }
+
+        value_compare value_comp() const {
+            value_compare compare(key_comp());
+            return compare;
+        };
+
         // Operations:
         iterator find(const key_type &k)
         {
@@ -142,8 +168,7 @@ namespace ft
             return it;
         }
 
-
-        size_type count (const key_type& k) const
+        size_type count(const key_type &k) const
         {
             iterator it = this->begin();
             iterator end = this->end();
@@ -155,45 +180,44 @@ namespace ft
             return 0;
         }
 
-
-        iterator lower_bound (const key_type& k ) // <= k
+        iterator lower_bound(const key_type &k) // <= k
         {
             iterator it = this->begin();
             iterator end = this->end();
 
             for (; it != end; it++)
             {
-                if (!m_compare(it->first,k)) // m_compare return true if it->first < k 
+                if (!m_compare(it->first, k)) // m_compare return true if it->first < k
                     return it;
             }
             return it;
         };
-        const_iterator lower_bound (const key_type& k) const
+        const_iterator lower_bound(const key_type &k) const
         {
             const_iterator it = this->begin();
             const_iterator end = this->end();
 
             for (; it != end; it++)
             {
-                if (!m_compare(it->first,k))
+                if (!m_compare(it->first, k))
                     return it;
             }
             return it;
         };
 
-        iterator upper_bound (const key_type& k) // > k
+        iterator upper_bound(const key_type &k) // > k
         {
             iterator it = this->begin();
             iterator end = this->end();
 
             for (; it != end; it++)
             {
-                if (m_compare(k, it->first)) //  m_compare return true if k < it->first 
+                if (m_compare(k, it->first)) //  m_compare return true if k < it->first
                     return it;
             }
             return it;
         };
-        const_iterator upper_bound (const key_type& k) const
+        const_iterator upper_bound(const key_type &k) const
         {
             const_iterator it = this->begin();
             const_iterator end = this->end();
@@ -203,24 +227,24 @@ namespace ft
                 if (m_compare(k, it->first))
                     return it;
             }
-            return it;      
+            return it;
         };
 
-
-        std::pair<iterator,iterator> equal_range (const key_type& k)
+        std::pair<iterator, iterator> equal_range(const key_type &k)
         {
             std::pair<iterator, iterator> pair;
 
-            pair = std::make_pair<iterator,iterator>(lower_bound(k), upper_bound(k));
+            pair = std::make_pair<iterator, iterator>(lower_bound(k), upper_bound(k));
             return pair;
         };
-        std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+        std::pair<const_iterator, const_iterator> equal_range(const key_type &k) const
         {
             std::pair<const_iterator, const_iterator> pair;
 
-            pair = std::make_pair<const_iterator,const_iterator>(lower_bound(k), upper_bound(k));
+            pair = std::make_pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k));
             return pair;
         };
+
         // Allocator:
         allocator_type get_allocator() const
         {

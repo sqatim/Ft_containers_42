@@ -85,3 +85,14 @@ int main()
 
     return (0);
 }
+
+// int main()
+// {
+//     std::pair<int, std::string> pair1(3,"samir");
+//     std::pair<int, std::string> pair2(1,"oussama");
+//     ft::map<int, std::string> map;
+//     std::cout << std::boolalpha << map.value_comp()(pair1, pair2) << std::endl;
+//     return (0);
+// }
+
+
