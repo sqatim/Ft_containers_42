@@ -66,16 +66,20 @@ namespace ft
         // Constructers
         explicit map(const key_compare &comp = key_compare(),
                      const allocator_type &alloc = allocator_type()) : m_root(NULL), m_compare(comp), m_size(0), m_allocator(alloc){};
+
         template <class InputIterator>
         map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) : m_root(NULL), m_compare(comp), m_size(0), m_allocator(alloc)
         {
             for (; first != last; first++)
-            {
                 m_tree.insert(*first, m_compare, m_allocator);
-            }
             m_root = m_tree.getRoot();
         };
 
+        map (const map& x)
+        {
+            *this = x;
+            return ;
+        };
         // iterators;
 
         iterator begin()
