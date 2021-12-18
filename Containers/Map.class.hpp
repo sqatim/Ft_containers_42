@@ -75,10 +75,10 @@ namespace ft
             m_root = m_tree.getRoot();
         };
 
-        map (const map& x)
+        map(const map &x)
         {
             *this = x;
-            return ;
+            return;
         };
         // iterators;
 
@@ -365,6 +365,23 @@ namespace ft
         void print()
         {
             m_tree.print(m_root);
+        }
+
+        ~map()
+        {
+            if (m_size > 0)
+                deleteNodes(m_tree.getEnd());
+        }
+
+    private:
+        void deleteNodes(Node *node)
+        {
+            if (node != NULL)
+            {
+                deleteNodes(node->m_left);
+                deleteNodes(node->m_right);
+                m_allocator.deallocate(node, 1);
+            }
         }
     };
 
