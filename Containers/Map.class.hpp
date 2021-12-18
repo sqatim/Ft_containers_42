@@ -54,6 +54,7 @@ namespace ft
                 return m_comp(x.first, y.first);
             }
         };
+
     protected:
         Node *m_root;
         key_compare m_compare;
@@ -106,6 +107,11 @@ namespace ft
         };
         const_iterator end() const;
 
+        // Element Access
+        mapped_type &operator[](const key_type &k)
+        {
+        }
+
         // Modifiers
 
         std::pair<Node *, bool> insert(const value_type &value)
@@ -113,6 +119,7 @@ namespace ft
             std::pair<Node *, bool> k;
             k = m_tree.insert(value, m_compare, m_allocator);
             m_root = m_tree.getRoot();
+            m_size = m_tree.getSize();
             return k;
         };
 
@@ -121,6 +128,7 @@ namespace ft
             std::pair<Node *, bool> result;
             result = m_tree.insert(val, m_compare, m_allocator);
             m_root = m_tree.getRoot();
+            m_size = m_tree.getSize();
             return result.first;
         };
         template <class InputIterator>
@@ -128,8 +136,12 @@ namespace ft
         {
             // std::cout << "sdasdsadsadsasda" << std::endl;
             for (; first != last; first++)
+            {
                 m_tree.insert(*first, m_compare, m_allocator);
+                // std::cout << "first: "<< RED << first->first << "\t second: "<< YELLOW << first->second << std::endl;
+            }
             m_root = m_tree.getRoot();
+            m_size = m_tree.getSize();
         }
 
         // Observers:
@@ -138,45 +150,73 @@ namespace ft
             return (m_compare);
         }
 
-        value_compare value_comp() const {
+        value_compare value_comp() const
+        {
             value_compare compare(key_comp());
             return compare;
         };
 
         // Operations:
+        // iterator find(const key_type &k)
+        // {
+        //     iterator it = this->begin();
+        //     iterator end = this->end();
+        //     for (; it != end; it++)
+        //     {
+        //         if (it->first == k)
+        //             return it;
+        //     }
+        //     return it;
+        // }
         iterator find(const key_type &k)
         {
-            iterator it = this->begin();
-            iterator end = this->end();
-            for (; it != end; it++)
+            Node *ptr = m_root;
+            iterator it;
+            // std::cout << GREEN << m_size << DEFAULT << std::endl;
+            while (ptr)
             {
-                if (it->first == k)
-                    return it;
+                // std::cout << "i am here" << std::endl;
+                // std::cout << YELLOW << ptr->m_pair.first << DEFAULT << std::endl;
+                std::cout << "first: " << RED << ptr->m_pair.first << "\t second: " << YELLOW << ptr->m_pair.second << std::endl;
+                if (m_compare(ptr->m_pair.first, k))
+                    ptr = ptr->m_right;
+                else if (m_compare(k, ptr->m_pair.first))
+                    ptr = ptr->m_left;
+                else
+                {
+                    it = ptr;
+                    return (it);
+                }
             }
-            return it;
+            return this->end();
         }
+
         const_iterator find(const key_type &k) const
         {
-            const_iterator it = this->begin();
-            const_iterator end = this->end();
-
-            for (; it != end; it++)
+            Node *ptr = m_root;
+            const_iterator it;
+            while (ptr)
             {
-                if (it->second == k)
-                    return it;
+                if (m_compare(ptr->m_pair.first, k))
+                    ptr = ptr->m_right;
+                else if (m_compare(k, ptr->m_pair.first))
+                    ptr = ptr->m_left;
+                else
+                {
+                    it = ptr;
+                    return (it);
+                }
             }
-            return it;
+            return this->end();
         }
 
         size_type count(const key_type &k) const
         {
             iterator it = this->begin();
             iterator end = this->end();
-            for (; it != end; it++)
-            {
-                if (it->first == k)
-                    return 1;
-            }
+
+            if (this->find(k) != this->end())
+                return 1;
             return 0;
         }
 

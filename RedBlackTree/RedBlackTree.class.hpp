@@ -155,7 +155,7 @@ public:
 private:
     Node *m_root;
     Node *m_end;
-    int m_size;
+    size_t m_size;
 
     // methodes;
     std::pair<Node *, bool> add(Node *parent, Node *node, key_compare &compare)
@@ -164,6 +164,7 @@ private:
         {
             if (parent->m_right == NULL)
             {
+                m_size++;
                 parent->m_right = node;
                 node->m_parent = parent;
                 node->m_isLeftChild = false;
@@ -176,6 +177,7 @@ private:
         {
             if (parent->m_left == NULL)
             {
+                m_size++;
                 parent->m_left = node;
                 node->m_parent = parent;
                 node->m_isLeftChild = true;
@@ -419,7 +421,6 @@ public:
             return std::make_pair(node, true);
         }
         k = add(m_root, node, compare);
-        m_size++;
         return (k);
     }
 
@@ -650,6 +651,11 @@ public:
     Node *getEnd() const
     {
         return (m_end);
+    }
+
+    size_t getSize() const
+    {
+        return (m_size);
     }
 
     void print(Node *parent)

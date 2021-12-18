@@ -67,10 +67,10 @@ int main()
 
     // std::cout << "wa shamir" << std::endl;
     it = map1.begin();
-    map1.print();
+    // map1.print();
     std::cout << RED << "   --------------------WARNING--------------------" << DEFAULT << std::endl;
 
-    it = map1.lower_bound(1);
+    it = map1.find(-1);
     if (it != map1.end())
     {
         std::cout << it->second << std::endl;
