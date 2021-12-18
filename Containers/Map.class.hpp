@@ -32,8 +32,8 @@ namespace ft
         typedef typename allocator_type::const_reference const_reference;
         typedef typename allocator_type::pointer pointer;
         typedef typename allocator_type::const_pointer const_pointer;
-        typedef RedBlackTreeIterator<pointer> iterator;
-        typedef RedBlackTreeIterator<const_pointer> const_iterator;
+        typedef RedBlackTreeIterator<pointer, value_type> iterator;
+        typedef RedBlackTreeIterator<pointer, const value_type> const_iterator;
         typedef Reverse_iterator<iterator> reverse_iterator;
         typedef Reverse_iterator<const_iterator> const_reverse_iterator;
         typedef std::ptrdiff_t difference_type;
@@ -84,10 +84,7 @@ namespace ft
 
             tmp = m_root;
             while (tmp->m_left)
-            {
-                // std::cout << "************************************" << std::endl;
                 tmp = tmp->m_left;
-            }
             return (tmp);
         };
         const_iterator begin() const
@@ -111,10 +108,39 @@ namespace ft
             return tmp;
         };
 
+        reverse_iterator rbegin()
+        {
+            Node *tmp;
+
+            tmp = m_root;
+            while (tmp->m_right)
+                tmp = tmp->m_right;
+            return (tmp);
+        };
+        const_reverse_iterator rbegin() const
+        {
+            Node *tmp;
+
+            tmp = m_root;
+            while (tmp->m_right)
+                tmp = tmp->m_right;
+            return (tmp);
+        };
+        reverse_iterator rend()
+        {
+            Node *tmp = m_tree.getEnd();
+            return tmp;
+        };
+        const_reverse_iterator rend() const
+        {
+            const Node *tmp = m_tree.getEnd();
+            return tmp;
+        };
+
         // Capacity
         bool empty() const
         {
-            if(m_size == 0)
+            if (m_size == 0)
                 return true;
             return false;
         };
@@ -129,7 +155,6 @@ namespace ft
             return m_allocator.max_size();
         }
 
-
         // Element Access
         mapped_type &operator[](const key_type &k)
         {
@@ -138,7 +163,7 @@ namespace ft
             it = this->find(k);
             if (it != this->end())
                 return (it->second);
-            it = this->insert(it,std::make_pair(k, mapped_type()));
+            it = this->insert(it, std::make_pair(k, mapped_type()));
             return (it->second);
         }
 

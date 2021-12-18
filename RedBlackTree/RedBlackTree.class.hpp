@@ -38,7 +38,7 @@ struct NodeBase
 };
 
 // template<typename Tp>
-template <class Iter>
+template <class Iter, class Pair>
 class RedBlackTreeIterator
 {
 public:
@@ -46,8 +46,8 @@ public:
     typedef typename std::bidirectional_iterator_tag iterator_category;
     typedef typename Iterator_traits<iterator_type>::value_type value_type;
     typedef typename Iterator_traits<iterator_type>::difference_type difference_type;
-    typedef typename Iterator_traits<typename value_type::value_type *>::pointer pointer;
-    typedef typename Iterator_traits<typename value_type::value_type *>::reference reference;
+    typedef typename Iterator_traits<Pair *>::pointer pointer;
+    typedef typename Iterator_traits<Pair *>::reference reference;
     iterator_type m_current;
 
     RedBlackTreeIterator() : m_current(){};
@@ -127,16 +127,16 @@ public:
     };
 };
 
-template <class Iter>
-bool operator==(const RedBlackTreeIterator<Iter> &lhs,
-                const RedBlackTreeIterator<Iter> &rhs)
+template <class Iter, class Pair>
+bool operator==(const RedBlackTreeIterator<Iter, Pair> &lhs,
+                const RedBlackTreeIterator<Iter, Pair> &rhs)
 {
     return lhs.base() == rhs.base();
 }
 
-template <class Iter>
-bool operator!=(const RedBlackTreeIterator<Iter> &lhs,
-                const RedBlackTreeIterator<Iter> &rhs)
+template <class Iter, class Pair>
+bool operator!=(const RedBlackTreeIterator<Iter, Pair> &lhs,
+                const RedBlackTreeIterator<Iter, Pair> &rhs)
 {
     return lhs.base() != rhs.base();
 }
@@ -652,7 +652,7 @@ public:
     {
         return (m_end);
     }
-    
+
     size_t getSize() const
     {
         return (m_size);
