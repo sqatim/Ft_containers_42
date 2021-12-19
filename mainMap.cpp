@@ -97,26 +97,24 @@
 
 int main()
 {
-  ft::map<char, int> mymap;
-  ft::map<char, int> mymap1;
-  std::pair<char, int> pair;
-  std::pair<char, int> pair1;
-  pair = std::make_pair('s', 30);
-  pair1 = pair;
-  ft::map<char, int>::iterator itlow, itup;
+  ft::map<int, std::string> mymap;
+  ft::map<int, std::string> mymap1;
+  std::pair<int, std::string> pair;
+  std::pair<int, std::string> pair1;
 
-  mymap.insert(ft::make_pair('a', 20));
-  mymap.insert(ft::make_pair('b', 40));
-  mymap.insert(ft::make_pair('c', 60));
-  mymap.insert(ft::make_pair('d', 80));
-  mymap.insert(ft::make_pair('f', 100));
+  mymap.insert(ft::make_pair(1, "samir"));
+  mymap.insert(ft::make_pair(0, "oussama"));
+  mymap.insert(ft::make_pair(2, "ayoub"));
+  // std::cout << mymap.size() << std::endl;
 
-  mymap.print();
+  // mymap.print();
   // std::cout << pair.first << " " << pair.second << std::endl;
   // std::cout << pair1.first << " " << pair1.second << std::endl;
+  mymap1[10];
   mymap1 = mymap;
-  // mymap.print();
-  std::cout << RED << "------------------ NEW -------------------" << DEFAULT << std::endl;
   mymap1.print();
+  // std::cout << RED << "------------------ NEW -------------------" << DEFAULT << std::endl;
+  // mymap1.print();
+  // std::cout << mymap1.size() << std::endl;
   return 0;
 }

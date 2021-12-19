@@ -84,11 +84,14 @@ namespace ft
 
         map &operator=(const map &x)
         {
-            if(this != &x)
+            if (this != &x)
             {
-                if (m_size > 0)
-                    deleteNodes(m_tree.getEnd());
-                m_tree.reallocation(m_tree.getEnd(), x.m_tree.getEnd(), NULL);
+                // khasni ndeletihum f destructor dyal tree;
+                // if (m_size > 0)
+                //     deleteNodes(m_tree.getEnd());
+                this->m_tree = x.getTree();
+                m_root = this->m_tree.getRoot();
+                m_size = this->m_tree.getSize();
             }
             return (*this);
         }
@@ -369,6 +372,11 @@ namespace ft
         };
 
         // Allocator:
+
+        const RDTree& getTree() const
+        {
+            return (m_tree);
+        }
         allocator_type get_allocator() const
         {
             return (m_allocator);
@@ -381,19 +389,7 @@ namespace ft
 
         ~map()
         {
-            if (m_size > 0)
-                deleteNodes(m_tree.getEnd());
-        }
-
-    private:
-        void deleteNodes(Node *node)
-        {
-            if (node != NULL)
-            {
-                deleteNodes(node->m_left);
-                deleteNodes(node->m_right);
-                m_allocator.deallocate(node, 1);
-            }
+            // ~m_tree();
         }
     };
 

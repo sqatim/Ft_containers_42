@@ -398,6 +398,16 @@ private:
         return ptr;
     }
 
+    void freeNodes(Node *node)
+    {
+        if (node != NULL)
+        {
+            freeNodes(node->m_left);
+            freeNodes(node->m_right);
+            m_allocator.deallocate(node, 1);
+        }
+    }
+
 public:
     Node *getRoot() { return (m_root); };
     RedBlackTree() : m_root(0), m_end(0), m_size(0){};
@@ -434,14 +444,14 @@ public:
         else
         {
             node = m_allocator.allocate(1);
+            m_allocator.construct(node, Node(x->m_pair));
             node->m_black = x->m_black;
             node->m_isLeftChild = x->m_isLeftChild;
-            // std::cout <<
-            node->m_pair = x->m_pair;
             node->m_parent = parent;
             parent = node;
             node->m_left = reallocation(node->m_left, x->m_left, parent);
             node->m_right = reallocation(node->m_right, x->m_right, parent);
+            m_size++;
             return node;
         }
     }
@@ -449,7 +459,23 @@ public:
     {
         if (this != &x)
         {
-            reallocation(m_end, x, NULL);
+            if (m_size > 0)
+                this->~RedBlackTree();
+            m_size = 0;
+            m_end = reallocation(m_end, x.getEnd(), NULL);
+            if (m_end != NULL)
+            {
+                m_size--;
+                m_root = m_end->m_left;
+                m_root->m_parent = m_end;
+                std::cout << RED << "------------------warning**********************" << DEFAULT << std::endl;
+                std::cout << m_root->m_right->m_pair.second << std::endl;
+                std::cout << RED << "------------------warning**********************" << DEFAULT << std::endl;
+            }
+            else
+            {
+                m_root = NULL;
+            }
         }
         return *this;
     }
@@ -710,6 +736,12 @@ public:
                 std::cout << "Left Child: [" << parent->m_left->m_pair.second << "]" << std::endl;
             print(parent->m_right);
         }
+    }
+
+    ~RedBlackTree()
+    {
+        if (m_size > 0)
+            freeNodes(this->m_end);
     }
 };
 
