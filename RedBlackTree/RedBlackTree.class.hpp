@@ -10,6 +10,7 @@
 #define DEFAULT "\033[0m"
 
 #include "../Iterators/iterator.hpp"
+#include "../NeededTemplates/pair.hpp"
 #include <typeinfo>
 
 template <class T>
@@ -147,7 +148,7 @@ class RedBlackTree
 public:
     typedef Key key_type;
     typedef T mapped_type;
-    typedef std::pair<const key_type, mapped_type> value_type;
+    typedef ft::pair<const key_type, mapped_type> value_type;
     typedef NodeBase<value_type> Node;
     typedef Alloc allocator_type;
     typedef Compare key_compare;
@@ -156,9 +157,10 @@ private:
     Node *m_root;
     Node *m_end;
     size_t m_size;
+    allocator_type m_allocator;
 
     // methodes;
-    std::pair<Node *, bool> add(Node *parent, Node *node, key_compare &compare)
+    ft::pair<Node *, bool> add(Node *parent, Node *node, key_compare &compare)
     {
         if (compare(parent->m_pair.first, node->m_pair.first))
         {
@@ -169,7 +171,7 @@ private:
                 node->m_parent = parent;
                 node->m_isLeftChild = false;
                 checkColor(node);
-                return std::make_pair(node, true);
+                return ft::make_pair(node, true);
             }
             return add(parent->m_right, node, compare);
         }
@@ -182,12 +184,12 @@ private:
                 node->m_parent = parent;
                 node->m_isLeftChild = true;
                 checkColor(node);
-                return std::make_pair(node, true);
+                return ft::make_pair(node, true);
             }
             return add(parent->m_left, node, compare);
         }
         else
-            return std::make_pair(parent, false);
+            return ft::make_pair(parent, false);
     }
 
     void checkColor(Node *node)
@@ -398,17 +400,18 @@ private:
 
 public:
     Node *getRoot() { return (m_root); };
-    RedBlackTree() : m_root(0), m_size(0){};
+    RedBlackTree() : m_root(0), m_end(0), m_size(0){};
+    RedBlackTree(allocator_type &allocator) : m_root(0), m_end(0), m_size(0), m_allocator(allocator){};
     // RedBlackTree() :
-    std::pair<Node *, bool> insert(const std::pair<key_type, mapped_type> &value, key_compare &compare, allocator_type &allocator)
+    ft::pair<Node *, bool> insert(const ft::pair<key_type, mapped_type> &value, key_compare &compare, allocator_type &allocator)
     {
-        std::pair<Node *, bool> k;
+        ft::pair<Node *, bool> k;
         Node *node = allocator.allocate(1);
         allocator.construct(node, Node(value));
         if (m_root == NULL)
         {
             m_end = allocator.allocate(1);
-            allocator.construct(m_end, Node(std::make_pair<key_type, mapped_type>(key_type(), mapped_type())));
+            allocator.construct(m_end, Node(ft::make_pair<key_type, mapped_type>(key_type(), mapped_type())));
             m_end->m_black = true;
             m_end->m_end = "the end";
             m_root = node;
@@ -418,12 +421,38 @@ public:
             m_root->m_black = true;
             m_root->m_isLeftChild = true;
             m_size++;
-            return std::make_pair(node, true);
+            return ft::make_pair(node, true);
         }
         k = add(m_root, node, compare);
         return (k);
     }
 
+    Node *reallocation(Node *node, Node *x, Node *parent)
+    {
+        if (!x)
+            return NULL;
+        else
+        {
+            node = m_allocator.allocate(1);
+            node->m_black = x->m_black;
+            node->m_isLeftChild = x->m_isLeftChild;
+            // std::cout <<
+            node->m_pair = x->m_pair;
+            node->m_parent = parent;
+            parent = node;
+            node->m_left = reallocation(node->m_left, x->m_left, parent);
+            node->m_right = reallocation(node->m_right, x->m_right, parent);
+            return node;
+        }
+    }
+    RedBlackTree &operator=(const RedBlackTree &x)
+    {
+        if (this != &x)
+        {
+            reallocation(m_end, x, NULL);
+        }
+        return *this;
+    }
     void deleteNode(key_type key)
     {
         deleteNode(key, &m_root);

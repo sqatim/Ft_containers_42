@@ -95,32 +95,28 @@
 //     return (0);
 // }
 
-
-int main ()
+int main()
 {
-  ft::map<char,int> mymap;
-  ft::map<char,int>::iterator itlow,itup;
+  ft::map<char, int> mymap;
+  ft::map<char, int> mymap1;
+  std::pair<char, int> pair;
+  std::pair<char, int> pair1;
+  pair = std::make_pair('s', 30);
+  pair1 = pair;
+  ft::map<char, int>::iterator itlow, itup;
 
-  mymap.insert(std::make_pair('a',20));
-  mymap.insert(std::make_pair('b',40));
-  mymap.insert(std::make_pair('c',60));
-  mymap.insert(std::make_pair('d',80));
-  mymap.insert(std::make_pair('f',100));
+  mymap.insert(ft::make_pair('a', 20));
+  mymap.insert(ft::make_pair('b', 40));
+  mymap.insert(ft::make_pair('c', 60));
+  mymap.insert(ft::make_pair('d', 80));
+  mymap.insert(ft::make_pair('f', 100));
 
-//   itlow=mymap.lower_bound ('b');  // itlow points to b
-//   itup=mymap.upper_bound ('e');   // itup points to e (not d!)
-
-//   mymap.erase(itlow,itup);        // erases [itlow,itup)
-
-    // std::cout << mymap['l'] << std::endl;
-    std::cout << std::boolalpha << mymap.empty() << std::endl;
-    std::cout  << mymap.max_size() << std::endl;
-    // mymap.print();
-    // std::cout << "first: " << itlow->first << "\t second: " << itlow->second << std::endl;
-    // std::cout << "first: " << itup->first << "\t second: " << itup->second << std::endl;
-  // print content:
-//   for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-    // std::cout << it->first << " => " << it->second << '\n';
-
+  mymap.print();
+  // std::cout << pair.first << " " << pair.second << std::endl;
+  // std::cout << pair1.first << " " << pair1.second << std::endl;
+  mymap1 = mymap;
+  // mymap.print();
+  std::cout << RED << "------------------ NEW -------------------" << DEFAULT << std::endl;
+  mymap1.print();
   return 0;
 }
