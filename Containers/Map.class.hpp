@@ -218,6 +218,14 @@ namespace ft
             m_size = m_tree.getSize();
         }
 
+
+        void clear()
+        {
+            this->m_tree.~RedBlackTree();
+            m_root = NULL;
+            this->print();
+            m_size = 0;
+        }
         // Observers:
         key_compare key_comp() const
         {

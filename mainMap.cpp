@@ -112,7 +112,10 @@ int main()
   // std::cout << pair1.first << " " << pair1.second << std::endl;
   mymap1[10];
   mymap1 = mymap;
-  mymap1.print();
+  // mymap1.print();
+  mymap1.clear();
+  std::cout << mymap1.size() << std::endl;
+  // mymap1.print();
   // std::cout << RED << "------------------ NEW -------------------" << DEFAULT << std::endl;
   // mymap1.print();
   // std::cout << mymap1.size() << std::endl;

@@ -398,13 +398,14 @@ private:
         return ptr;
     }
 
-    void freeNodes(Node *node)
+    void freeNodes(Node **node)
     {
-        if (node != NULL)
+        if (*node != NULL)
         {
-            freeNodes(node->m_left);
-            freeNodes(node->m_right);
-            m_allocator.deallocate(node, 1);
+            freeNodes(&(*node)->m_left);
+            freeNodes(&(*node)->m_right);
+            m_allocator.deallocate((*node), 1);
+            *node = NULL;
         }
     }
 
@@ -741,7 +742,12 @@ public:
     ~RedBlackTree()
     {
         if (m_size > 0)
-            freeNodes(this->m_end);
+        {
+            freeNodes(&this->m_end);
+            m_root = NULL;
+            m_end = NULL;
+            m_size = 0;
+        }
     }
 };
 
