@@ -8,6 +8,7 @@
 #define GREEN "\033[1;32m"
 #define YELLOW "\033[1;33m"
 #define DEFAULT "\033[0m"
+#define SMILE "\U0001F600"
 
 #include "../Iterators/iterator.hpp"
 #include "../NeededTemplates/pair.hpp"
@@ -158,6 +159,7 @@ private:
     Node *m_end;
     size_t m_size;
     allocator_type m_allocator;
+    key_compare m_compare;
 
     // methodes;
     ft::pair<Node *, bool> add(Node *parent, Node *node, key_compare &compare)
@@ -386,7 +388,7 @@ private:
     {
         while (ptr && ptr->m_right != NULL)
             ptr = ptr->m_right;
-        std::cout << RED << "shamil lghzal predecessor" << ptr->m_pair.second << DEFAULT << std::endl;
+        std::cout << RED << "Inorder predecessor" << ptr->m_pair.second << DEFAULT << std::endl;
         return ptr;
     }
 
@@ -394,7 +396,7 @@ private:
     {
         while (ptr && ptr->m_left != NULL)
             ptr = ptr->m_left;
-        std::cout << RED << "shamil lghzal succesor " << ptr->m_pair.second << DEFAULT << std::endl;
+        std::cout << RED << "Inorder succesor " << ptr->m_pair.second << DEFAULT << std::endl;
         return ptr;
     }
 
@@ -412,8 +414,12 @@ private:
 public:
     Node *getRoot() { return (m_root); };
     RedBlackTree() : m_root(0), m_end(0), m_size(0){};
-    RedBlackTree(allocator_type &allocator) : m_root(0), m_end(0), m_size(0), m_allocator(allocator){};
-    // RedBlackTree() :
+    RedBlackTree(allocator_type &allocator, key_compare &compare) : m_root(0), m_end(0), m_size(0), m_allocator(allocator), m_compare(compare){};
+    RedBlackTree(const RedBlackTree &x)
+    {
+        *this = x;
+        return;
+    }
     ft::pair<Node *, bool> insert(const ft::pair<key_type, mapped_type> &value, key_compare &compare, allocator_type &allocator)
     {
         ft::pair<Node *, bool> k;
@@ -469,9 +475,9 @@ public:
                 m_size--;
                 m_root = m_end->m_left;
                 m_root->m_parent = m_end;
-                std::cout << RED << "------------------warning**********************" << DEFAULT << std::endl;
-                std::cout << m_root->m_right->m_pair.second << std::endl;
-                std::cout << RED << "------------------warning**********************" << DEFAULT << std::endl;
+                // std::cout << RED << "------------------warning**********************" << DEFAULT << std::endl;
+                // std::cout << m_root->m_right->m_pair.second << std::endl;
+                // std::cout << RED << "------------------warning**********************" << DEFAULT << std::endl;
             }
             else
             {
@@ -480,58 +486,71 @@ public:
         }
         return *this;
     }
-    void deleteNode(key_type key)
+
+    void deleteNode(Node **node)
     {
-        deleteNode(key, &m_root);
+        if ((*node) == m_end)
+            m_root = NULL;
+        if ((*node)->m_black)
+            std::cout << "[delete] a BLACK node --- " << (*node)->m_pair.second << std::endl;
+        else
+            std::cout << "[delete] a RED node --- " << (*node)->m_pair.second << std::endl;
+        if (*node == m_root)
+        {
+            delete *node;
+            delete (m_end);
+            m_end = NULL;
+        }
+        else if (!(*node)->m_black)
+            caseOne((*node));
+        else if ((*node)->m_black)
+        {
+            // hta n3awd ntcheki wash les (*node) != null
+            if (((*node)->m_isLeftChild && (*node)->m_parent->m_right && (*node)->m_parent->m_right->m_black == false) ||
+                (!(*node)->m_isLeftChild && (*node)->m_parent->m_left && (*node)->m_parent->m_left->m_black == false))
+                caseTwo((*node)); // f7alat makan sibling [RED]
+            else
+                caseThree((*node));
+        }
+        *node = NULL;
+        return;
     }
-    void deleteNode(key_type key, Node **parent)
+    void erase(key_type key)
+    {
+        erase(key, &m_root);
+    }
+
+    // void erase(value_type value)
+    // {
+    //     erase(value.first, &m_root);
+    // }
+    void erase(key_type key, Node **parent)
     {
         Node *q;
         if ((*parent) == NULL)
             return;
         if (!(*parent)->m_left && !(*parent)->m_right)
+            deleteNode(&(*parent));
+        else if (*parent && m_compare((*parent)->m_pair.first, key))
+            erase(key, &(*parent)->m_right);
+        else if (*parent && m_compare(key, (*parent)->m_pair.first))
+            erase(key, &(*parent)->m_left);
+        else if (*parent && key == (*parent)->m_pair.first)
         {
-            if ((*parent) == m_root)
-                m_root = NULL;
-            if ((*parent)->m_black)
-                std::cout << "[delete] a BLACK node --- " << (*parent)->m_pair.second << std::endl;
-            else
-                std::cout << "[delete] a RED node --- " << (*parent)->m_pair.second << std::endl;
-            if (!(*parent)->m_black)
-                caseOne((*parent));
-            // // delete (*(*parent));
-            else if ((*parent)->m_black)
-            {
-                // hta n3awd ntcheki wash les (*parent) != null
-                if (((*parent)->m_isLeftChild && (*parent)->m_parent->m_right && (*parent)->m_parent->m_right->m_black == false) ||
-                    (!(*parent)->m_isLeftChild && (*parent)->m_parent->m_left && (*parent)->m_parent->m_left->m_black == false))
-                    caseTwo((*parent)); // f7alat makan sibling [RED]
-                else
-                    caseThree((*parent));
-            }
-            *parent = NULL;
-            // delete ((*parent));
-            return;
-        }
-        if (key > (*parent)->m_pair.first)
-            deleteNode(key, &(*parent)->m_right);
-        else if (key < (*parent)->m_pair.first)
-            deleteNode(key, &(*parent)->m_left);
-        else
-        {
+            // if height is 0 in parent left we cant chose inorderPredecessor  and the opposite is tree this is why we calcul the height
             if (height((*parent)->m_left) >= height((*parent)->m_right))
             {
                 q = inorderPredecessor((*parent)->m_left);
-                (*parent)->m_pair.first = q->m_pair.first;
+                const_cast<key_type &>((*parent)->m_pair.first) = q->m_pair.first;
                 (*parent)->m_pair.second = q->m_pair.second;
-                deleteNode(q->m_pair.first, &(*parent)->m_left);
+                erase(q->m_pair.first, &(*parent)->m_left);
             }
             else
             {
                 q = inorderSuccessor((*parent)->m_right);
-                (*parent)->m_pair.first = q->m_pair.first;
+                const_cast<key_type &>((*parent)->m_pair.first) = q->m_pair.first;
                 (*parent)->m_pair.second = q->m_pair.second;
-                deleteNode(q->m_pair.first, &(*parent)->m_right);
+                erase(q->m_pair.first, &(*parent)->m_right);
             }
         }
         return;
@@ -543,13 +562,15 @@ public:
         **               /   \
         **             [B]   [B]
         **                     \
-        **                     [R] (delete a red node)
+        **                    [D|R] (delete a red node)
         */
+        std::cout << GREEN << "                    [" << SMILE << RED << "CaseOne" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         Node *tmp = node;
         if (!node->m_right && !node->m_left)
         {
             // std::cout << "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" << std::endl;
         }
+        // this else if are for when it had a one child
         else if (node->m_right)
         {
             if (node->m_isLeftChild)
@@ -583,6 +604,16 @@ public:
 
     void caseTwo(Node *node)
     {
+        /*
+        ** delete a black node that have a red sibling
+        **                [B]
+        **               /   \
+        **           [D|B]   [R] S
+        **                     \
+        **                     [R]
+        ** we Perform a rotation
+        */
+        std::cout << GREEN << "                    [" << SMILE << RED << "CaseTwo" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         Node *tmp = node;
 
         if (tmp->m_isLeftChild)
@@ -623,6 +654,7 @@ public:
         Node *tmp = node;
         Node *tmpParent = node->m_parent;
 
+        std::cout << GREEN << "                    [" << SMILE << RED << "CaseThree" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         if (tmp->m_isLeftChild)
         {
             if ((!tmp->m_parent->m_right->m_left && !tmp->m_parent->m_right->m_right) ||
@@ -664,7 +696,7 @@ public:
         else if (!tmp->m_isLeftChild)
         {
             if ((!tmp->m_parent->m_left->m_left && !tmp->m_parent->m_left->m_right) ||
-                (tmp->m_parent->m_left->m_left->m_black && tmp->m_parent->m_left->m_right->m_black))
+                ((tmp->m_parent->m_left->m_left && tmp->m_parent->m_left->m_left->m_black) && (tmp->m_parent->m_left->m_right && tmp->m_parent->m_left->m_right->m_black)))
             {
                 tmp->m_parent->m_left->m_black = false;
                 tmp->m_parent->m_black = true;
@@ -692,9 +724,9 @@ public:
                     if (tmp->m_right)
                         tmp->m_right->m_parent = tmp->m_parent;
                     leftRightRotation(tmp->m_parent);
-                    tmp->m_parent->m_black = false;
-                    tmp->m_parent->m_parent->m_black = true;
-                    tmp->m_parent->m_parent->m_left->m_black = false;
+                    tmp->m_parent->m_black = true;
+                    tmp->m_parent->m_parent->m_black = false;
+                    tmp->m_parent->m_parent->m_left->m_black = true;
                 }
                 delete (node);
             }
@@ -741,13 +773,13 @@ public:
 
     ~RedBlackTree()
     {
-        if (m_size > 0)
-        {
-            freeNodes(&this->m_end);
-            m_root = NULL;
-            m_end = NULL;
-            m_size = 0;
-        }
+        // if (m_size > 0)
+        // {
+        //     freeNodes(&this->m_end);
+        //     m_root = NULL;
+        //     m_end = NULL;
+        //     m_size = 0;
+        // }
     }
 };
 

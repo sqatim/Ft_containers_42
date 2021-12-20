@@ -95,29 +95,61 @@
 //     return (0);
 // }
 
+// int main()
+// {
+//   ft::map<int, std::string> mymap;
+//   ft::map<int, std::string> mymap1;
+//   std::pair<int, std::string> pair;
+//   std::pair<int, std::string> pair1;
+
+//   mymap.insert(ft::make_pair(1, "samir"));
+//   mymap.insert(ft::make_pair(0, "oussama"));
+//   mymap.insert(ft::make_pair(2, "ayoub"));
+
+//   mymap1.insert(ft::make_pair(5, "amine"));
+//   mymap1.insert(ft::make_pair(6, "achraf"));
+//   mymap1.insert(ft::make_pair(7, "yassir"));
+//   mymap1.insert(ft::make_pair(8, "anouar"));
+//   // mymap1 = mymap;
+//   mymap1.swap(mymap);
+//   mymap1.print();
+//   std::cout << RED << "------------------- NEW -------------------" << DEFAULT << std::endl;
+//   mymap.print();
+//   // mymap1.clear();
+//   return 0;
+// }
+
 int main()
 {
-  ft::map<int, std::string> mymap;
-  ft::map<int, std::string> mymap1;
-  std::pair<int, std::string> pair;
-  std::pair<int, std::string> pair1;
+	ft::map<int, int> map;
+	map.insert(ft::make_pair(20, 20));
+	map.insert(ft::make_pair(30, 30));
+	map.insert(ft::make_pair(4, 4));
+	map.insert(ft::make_pair(0, 0));
+	map.insert(ft::make_pair(10, 10));
+	map.insert(ft::make_pair(-5, -5));
+	map.insert(ft::make_pair(7, 7));
+	map.insert(ft::make_pair(12, 12));
+	map.insert(ft::make_pair(14, 14));
 
-  mymap.insert(ft::make_pair(1, "samir"));
-  mymap.insert(ft::make_pair(0, "oussama"));
-  mymap.insert(ft::make_pair(2, "ayoub"));
-  // std::cout << mymap.size() << std::endl;
-
-  // mymap.print();
-  // std::cout << pair.first << " " << pair.second << std::endl;
-  // std::cout << pair1.first << " " << pair1.second << std::endl;
-  mymap1[10];
-  mymap1 = mymap;
-  // mymap1.print();
-  mymap1.clear();
-  std::cout << mymap1.size() << std::endl;
-  // mymap1.print();
-  // std::cout << RED << "------------------ NEW -------------------" << DEFAULT << std::endl;
-  // mymap1.print();
-  // std::cout << mymap1.size() << std::endl;
-  return 0;
+	// ft::map<int, std::string>::iterator it = map.begin();
+	// std::cout << "first: " << RED << it->first << DEFAULT << "\t second: " << RED << it->second << DEFAULT << std::endl;
+	// std::cout << YELLOW << "   ------------------- Before -------------------" << DEFAULT << std::endl;
+	map.erase(4);
+	map.erase(7);
+	map.erase(30);
+	map.print();
+	// for (it = map.begin(); it != map.end(); it++)
+	// {
+	// 	std::cout << "first: " << RED << it->first << DEFAULT << "\t second: " << RED << it->second << DEFAULT << std::endl;
+	// }
+	// it = map.begin();
+	// it++;
+	// it++;
+ 	// map.erase(it->first);
+	// std::cout << YELLOW << "   ------------------- after -------------------" << DEFAULT << std::endl;
+	// for (it = map.begin(); it != map.end(); it++)
+	// {
+	// 	std::cout << "first: " << RED << it->first << DEFAULT << "\t second: " << RED << it->second << DEFAULT << std::endl;
+	// }
 }

@@ -66,7 +66,7 @@ namespace ft
     public:
         // Constructers
         explicit map(const key_compare &comp = key_compare(),
-                     const allocator_type &alloc = allocator_type()) : m_root(NULL), m_compare(comp), m_size(0), m_allocator(alloc), m_tree(RDTree(m_allocator)){};
+                     const allocator_type &alloc = allocator_type()) : m_root(NULL), m_compare(comp), m_size(0), m_allocator(alloc), m_tree(RDTree(m_allocator, m_compare)){};
 
         template <class InputIterator>
         map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) : m_root(NULL), m_compare(comp), m_size(0), m_allocator(alloc)
@@ -102,7 +102,7 @@ namespace ft
             Node *tmp;
 
             tmp = m_root;
-            while (tmp->m_left)
+            while (tmp && tmp->m_left)
                 tmp = tmp->m_left;
             return (tmp);
         };
@@ -111,7 +111,7 @@ namespace ft
             Node *tmp;
 
             tmp = m_root;
-            while (tmp->left)
+            while (tmp && tmp->left)
                 tmp = tmp->left;
             return (tmp);
         };
@@ -218,14 +218,28 @@ namespace ft
             m_size = m_tree.getSize();
         }
 
+        void erase(iterator position);
+        size_type erase(const key_type &k)
+        {
+            m_tree.erase(k);
+            m_root = m_tree.getRoot();
+            return (1);
+        }
+        void erase(iterator first, iterator last);
+        void swap(map &x)
+        {
+            map tmp(*this);
+            *this = x;
+            x = tmp;
+        }
 
         void clear()
         {
             this->m_tree.~RedBlackTree();
             m_root = NULL;
-            this->print();
             m_size = 0;
         }
+
         // Observers:
         key_compare key_comp() const
         {
@@ -247,9 +261,6 @@ namespace ft
             // std::cout << GREEN << m_size << DEFAULT << std::endl;
             while (ptr)
             {
-                // std::cout << "i am here" << std::endl;
-                // std::cout << YELLOW << ptr->m_pair.first << DEFAULT << std::endl;
-                // std::cout << "first: " << RED << ptr->m_pair.first << "\t second: " << YELLOW << ptr->m_pair.second << std::endl;
                 if (m_compare(ptr->m_pair.first, k))
                     ptr = ptr->m_right;
                 else if (m_compare(k, ptr->m_pair.first))
@@ -381,7 +392,7 @@ namespace ft
 
         // Allocator:
 
-        const RDTree& getTree() const
+        const RDTree &getTree() const
         {
             return (m_tree);
         }
