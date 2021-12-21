@@ -489,8 +489,8 @@ public:
 
     void deleteNode(Node **node)
     {
-        if ((*node) == m_end)
-            m_root = NULL;
+        if ((*node) == NULL)
+            return ;
         if ((*node)->m_black)
             std::cout << "[delete] a BLACK node --- " << (*node)->m_pair.second << std::endl;
         else
@@ -498,8 +498,10 @@ public:
         if (*node == m_root)
         {
             delete *node;
+            m_root = NULL;
             delete (m_end);
             m_end = NULL;
+            m_size = 0;
         }
         else if (!(*node)->m_black)
             caseOne((*node));
@@ -511,6 +513,7 @@ public:
                 caseTwo((*node)); // f7alat makan sibling [RED]
             else
                 caseThree((*node));
+            m_size--;
         }
         *node = NULL;
         return;
@@ -600,6 +603,7 @@ public:
             tmp->m_left->m_parent = tmp->m_parent;
         }
         delete node;
+        m_size--;
     }
 
     void caseTwo(Node *node)
@@ -623,9 +627,9 @@ public:
                 tmp->m_left->m_parent = tmp->m_parent;
             leftRotation(tmp->m_parent);
             tmp->m_parent->m_black = false;
-            colorToRed(tmp->m_parent->m_right); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
             tmp->m_parent->m_parent->m_black = true;
             tmp->m_parent->m_parent->m_right->m_black = false;
+            colorToRed(tmp->m_parent->m_right); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
         }
         else if (!tmp->m_isLeftChild)
         {
@@ -642,6 +646,7 @@ public:
     }
     void colorToRed(Node *node)
     {
+        // std::cout << YELLOW <<"wa shamir ra dkhalt l colortored "<< DEFAULT << std::endl;
         if (node == NULL)
             return;
         colorToRed(node->m_left);

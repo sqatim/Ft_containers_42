@@ -132,12 +132,29 @@ int main()
 	map.insert(ft::make_pair(12, 12));
 	map.insert(ft::make_pair(14, 14));
 
+	ft::map<int, int>::iterator first = map.begin();
+	ft::map<int, int>::iterator last = map.end();
+	ft::map<int, int>::iterator it;
+	
+	// map.erase(-5);
+	// map.erase(0);
+	// map.erase(4);
+	// map.erase(7);
+	// map.erase(10);
+	// map.erase(12);
+	// map.erase(14);
+	// map.erase(20);
+
+	// map.erase(30);
+	map.erase(first,--last);
+	std::cout << "m_size ==> " << map.size() << std::endl;
 	// ft::map<int, std::string>::iterator it = map.begin();
 	// std::cout << "first: " << RED << it->first << DEFAULT << "\t second: " << RED << it->second << DEFAULT << std::endl;
 	// std::cout << YELLOW << "   ------------------- Before -------------------" << DEFAULT << std::endl;
-	map.erase(4);
-	map.erase(7);
-	map.erase(30);
+	// size_t i = map.erase(10);
+	// map.erase(4);
+	// map.erase(7);
+	// map.erase(30);
 	map.print();
 	// for (it = map.begin(); it != map.end(); it++)
 	// {

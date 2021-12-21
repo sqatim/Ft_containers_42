@@ -5,6 +5,7 @@
 #include <map>
 
 #include "../NeededTemplates/pair.hpp"
+#include "Vector.class.hpp"
 // #include "../Iterators/NormalIterator.class.hpp"
 #include "../Iterators/ReverseIterator.class.hpp"
 #include "../RedBlackTree/RedBlackTree.class.hpp"
@@ -218,14 +219,30 @@ namespace ft
             m_size = m_tree.getSize();
         }
 
-        void erase(iterator position);
+        void erase(iterator position)
+        {
+            m_tree.erase(position->first);
+        }
         size_type erase(const key_type &k)
         {
             m_tree.erase(k);
             m_root = m_tree.getRoot();
+            m_size = m_tree.getSize();
             return (1);
         }
-        void erase(iterator first, iterator last);
+        void erase(iterator first, iterator last)
+        {
+            ft::vector<mapped_type> vect;
+            for (; first != last; first++)
+            {
+                vect.push_back(first->first);
+            }
+            for (size_t i = 0; i < vect.size(); i++)
+            {
+                std::cout << YELLOW << "###########" << vect.at(i) << "#########" << DEFAULT << std::endl;
+                erase(vect.at(i));
+            }
+        }
         void swap(map &x)
         {
             map tmp(*this);

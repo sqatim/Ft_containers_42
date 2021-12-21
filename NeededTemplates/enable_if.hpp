@@ -24,18 +24,18 @@ namespace ft
         typedef bool value_type;
         const static value_type value = true;
     };
-    template <>
-    struct is_integral<char16_t>
-    {
-        typedef bool value_type;
-        const static value_type value = true;
-    };
-    template <>
-    struct is_integral<char32_t>
-    {
-        typedef bool value_type;
-        const static value_type value = true;
-    };
+    // template <>
+    // struct is_integral<char16_t>
+    // {
+    //     typedef bool value_type;
+    //     const static value_type value = true;
+    // };
+    // template <>
+    // struct is_integral<char32_t>
+    // {
+    //     typedef bool value_type;
+    //     const static value_type value = true;
+    // };
     template <>
     struct is_integral<wchar_t>
     {
