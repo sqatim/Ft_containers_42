@@ -17,24 +17,19 @@
 template <class T>
 struct NodeBase
 {
-    // Member Types:
-    // typedef K key_type;
-    // typedef T mapped_type;
     typedef T value_type;
 
-    value_type m_pair; // FIXME hta nbadlha b type pair li creat ana
+    value_type m_pair;
     NodeBase *m_left;
     NodeBase *m_right;
     NodeBase *m_parent;
     bool m_isLeftChild;
     bool m_black;
-    std::string m_end;  // hta nhaydha
-    std::string m_root; // hta nhaydha
-    NodeBase() : m_left(0), m_right(0), m_parent(0), m_isLeftChild(false), m_black(false), m_end("Not the end"), m_root("not root")
+    NodeBase() : m_left(0), m_right(0), m_parent(0), m_isLeftChild(false), m_black(false)
     {
     }
     NodeBase(value_type pair) : m_pair(pair), m_left(0),
-                                m_right(0), m_parent(0), m_isLeftChild(false), m_black(false), m_end("Not the end"), m_root("not root")
+                                m_right(0), m_parent(0), m_isLeftChild(false), m_black(false)
     {
     }
 };
@@ -196,19 +191,15 @@ private:
 
     void checkColor(Node *node)
     {
-        if (node == NULL || m_root == m_end) // had f7alatma badalt  tbadal root kan protecti biha
-        {
+        if (node == NULL || m_root == m_end) // had f7alatma tbadal root kan protecti biha
             return;
-        }
         if (node == m_root)
         {
             node->m_black = true;
             return;
         }
         if (!node->m_black && !node->m_parent->m_black) // hna fen kayna segfault
-        {
             correctTree(node);
-        }
         checkColor(node->m_parent);
     }
 
@@ -235,7 +226,6 @@ private:
             return rotation(node);
             // }
         }
-        // std::cout << node->m_pair.second << std::endl;
         if (node->m_parent->m_parent->m_left)
         {
             node->m_parent->m_parent->m_left->m_black = true;
@@ -430,9 +420,7 @@ public:
             m_end = allocator.allocate(1);
             allocator.construct(m_end, Node(ft::make_pair<key_type, mapped_type>(key_type(), mapped_type())));
             m_end->m_black = true;
-            m_end->m_end = "the end";
             m_root = node;
-            m_root->m_root = "i am the root";
             m_end->m_left = m_root;
             m_root->m_parent = m_end;
             m_root->m_black = true;

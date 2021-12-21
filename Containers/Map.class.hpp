@@ -27,7 +27,6 @@ namespace ft
         typedef ft::pair<const key_type, mapped_type> value_type;
         typedef Compare key_compare;
         typedef NodeBase<value_type> Node;
-        // khassani shi wahda hna (value_compare)
         typedef typename Alloc::template rebind<Node>::other allocator_type;
         typedef typename allocator_type::reference reference;
         typedef typename allocator_type::const_reference const_reference;
@@ -87,9 +86,6 @@ namespace ft
         {
             if (this != &x)
             {
-                // khasni ndeletihum f destructor dyal tree;
-                // if (m_size > 0)
-                //     deleteNodes(m_tree.getEnd());
                 this->m_tree = x.getTree();
                 m_root = this->m_tree.getRoot();
                 m_size = this->m_tree.getSize();
@@ -225,9 +221,12 @@ namespace ft
         }
         size_type erase(const key_type &k)
         {
+            size_type tmp = m_size;
             m_tree.erase(k);
             m_root = m_tree.getRoot();
             m_size = m_tree.getSize();
+            if (tmp == m_size)
+                return (0);
             return (1);
         }
         void erase(iterator first, iterator last)

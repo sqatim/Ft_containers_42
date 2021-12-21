@@ -146,7 +146,7 @@ int main()
 	// map.erase(20);
 
 	// map.erase(30);
-	map.erase(first,--last);
+	map.erase(first,last);
 	std::cout << "m_size ==> " << map.size() << std::endl;
 	// ft::map<int, std::string>::iterator it = map.begin();
 	// std::cout << "first: " << RED << it->first << DEFAULT << "\t second: " << RED << it->second << DEFAULT << std::endl;
