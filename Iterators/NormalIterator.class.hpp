@@ -106,45 +106,44 @@ typename Normal_iterator<Iterator>::difference_type operator- (const Normal_iter
     return lhs.base() -  rhs.base(); 
 }
 
-
-template <class Iterator>
-bool operator==(const Normal_iterator<Iterator> &lhs,
-                const Normal_iterator<Iterator> &rhs)
+template <class Iterator1, class Iterator2>
+bool operator==(const Normal_iterator<Iterator1> &lhs,
+                const Normal_iterator<Iterator2> &rhs)
 {
     return lhs.base() == rhs.base();
 }
 
-template <class Iterator>
-bool operator!=(const Normal_iterator<Iterator> &lhs,
-                const Normal_iterator<Iterator> &rhs)
+template <class Iterator1, class Iterator2>
+bool operator!=(const Normal_iterator<Iterator1> &lhs,
+                const Normal_iterator<Iterator2> &rhs)
 {
     return lhs.base() != rhs.base();
 }
 
-template <class Iterator>
-bool operator<(const Normal_iterator<Iterator> &lhs,
-               const Normal_iterator<Iterator> &rhs)
+template <class Iterator1, class Iterator2>
+bool operator<(const Normal_iterator<Iterator1> &lhs,
+               const Normal_iterator<Iterator2> &rhs)
 {
     return lhs.base() < rhs.base();
 }
 
-template <class Iterator>
-bool operator<=(const Normal_iterator<Iterator> &lhs,
-                const Normal_iterator<Iterator> &rhs)
+template <class Iterator1, class Iterator2>
+bool operator<=(const Normal_iterator<Iterator1> &lhs,
+                const Normal_iterator<Iterator2> &rhs)
 {
     return lhs.base() <= rhs.base();
 }
 
-template <class Iterator>
-bool operator>(const Normal_iterator<Iterator> &lhs,
-               const Normal_iterator<Iterator> &rhs)
+template <class Iterator1, class Iterator2>
+bool operator>(const Normal_iterator<Iterator1> &lhs,
+               const Normal_iterator<Iterator2> &rhs)
 {
     return lhs.base() > rhs.base();
 }
 
-template <class Iterator>
-bool operator>=(const Normal_iterator<Iterator> &lhs,
-                const Normal_iterator<Iterator> &rhs)
+template <class Iterator1, class Iterator2>
+bool operator>=(const Normal_iterator<Iterator1> &lhs,
+                const Normal_iterator<Iterator2> &rhs)
 {
     return lhs.base() >= rhs.base();
 }
