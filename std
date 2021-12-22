@@ -1,0 +1,24 @@
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< vector tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+NAMESPACE : std
+
+relational operators
+=======================================
+
+vector Size: 3
+vector [a] contains:  [ 10 ]  [ 20 ]  [ 30 ]
+
+vector Size: 3
+vector [b] contains:  [ 10 ]  [ 20 ]  [ 30 ]
+
+vector Size: 3
+vector [c] contains:  [ 30 ]  [ 20 ]  [ 10 ]
+
+a and b are equal
+b and c are not equal
+b is less than c
+c is greater than b
+a is less than or equal to b
+a is greater than or equal to b
+=======================================

@@ -66,18 +66,44 @@ namespace ft
 			}
 		};
 
-		// template <class InputIterator>
-		// vector(InputIterator first, InputIterator last,
-		//        const allocator_type &alloc = allocator_type()){
+		template <class InputIterator>
+		vector(InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,
+			   const allocator_type &alloc = allocator_type())
+		{
+			difference_type diff = last - first;
+			m_data = m_allocator.allocate(diff);
+			for (difference_type i = 0; i < diff; i++)
+			{
+				m_data[i] = *first;
+				first++;
+			}
+			m_capacity = diff;
+			m_size = diff;
+		};
 
-		//        };
-
-		vector(const vector &x)
+		vector(const vector &x) : m_data(NULL), m_capacity(0), m_size(0), m_allocator(allocator_type())
 		{
 			*this = x;
 			return;
 		};
-
+		vector &operator=(const vector &x)
+		{
+			if (this != &x)
+			{
+				this->clear();
+				if (this->m_capacity < x.capacity())
+				{
+					m_data = this->m_allocator.allocate(x.capacity());
+					this->m_capacity = x.capacity();
+				}
+				this->m_size = x.size();
+				for (size_type i = 0; i < x.size(); i++)
+				{
+					this->m_data[i] = x[i];
+				}
+			}
+			return (*this);
+		}
 		// Capacity:
 		size_type size() const { return (m_size); };
 		size_type max_size() const { return m_allocator.max_size(); };
@@ -108,16 +134,16 @@ namespace ft
 		reference at(size_type n)
 		{
 			// if (n < m_size)
-				return (m_data[n]);
+			return (m_data[n]);
 			// else
-				// throw std::out_of_range("vector::_M_range_check: __n (which is " + std::to_string(n) + ") >= this->size() (which is " + std::to_string(this->m_size) + ")");
+			// throw std::out_of_range("vector::_M_range_check: __n (which is " + std::to_string(n) + ") >= this->size() (which is " + std::to_string(this->m_size) + ")");
 		};
 		const_reference at(size_type n) const
 		{
 			// if (n < m_size)
-				return (m_data[n]);
+			return (m_data[n]);
 			// else
-				// throw std::out_of_range("vector::_M_range_check: __n (which is " + std::to_string(n) + ") >= this->size() (which is " + std::to_string(this->m_size) + ")");
+			// throw std::out_of_range("vector::_M_range_check: __n (which is " + std::to_string(n) + ") >= this->size() (which is " + std::to_string(this->m_size) + ")");
 		};
 
 		reference front() { return (m_data[0]); };
@@ -130,7 +156,9 @@ namespace ft
 		void clear()
 		{
 			for (size_type i = 0; i < m_size; i++)
+			{
 				m_data[i].~T();
+			}
 			m_size = 0;
 		};
 
@@ -260,7 +288,7 @@ namespace ft
 		};
 
 		template <class InputIterator>
-		void assign(InputIterator first, InputIterator last)
+		void assign(InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
 		{
 			//   v1.assign(3, 100); nnormalement hadi khasha dkhul fal function lakhra
 			T *tmp;

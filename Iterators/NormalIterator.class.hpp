@@ -19,14 +19,13 @@ protected:
 
 public:
     Normal_iterator() : m_current(){};
-    Normal_iterator(iterator_type x) : m_current(x){};
-    Normal_iterator(const Normal_iterator<Iter> &other)
-    {
-        this->m_current = other.m_current;
-    };
+    Normal_iterator(iterator_type x) : m_current(x) {};
+    template<class T>
+    Normal_iterator(const Normal_iterator<T> &other) : m_current(other.base()){};
     Normal_iterator &operator=(const Normal_iterator<Iter> &other)
     {
         if (this != &other)
+            // new (this) Normal_iterator(other);
             this->m_current = other.m_current;
         return (*this);
     };
@@ -101,9 +100,9 @@ Normal_iterator<Iterator> operator-(typename Normal_iterator<Iterator>::differen
 
 // TODO operator-
 template <class Iterator>
-typename Normal_iterator<Iterator>::difference_type operator- (const Normal_iterator<Iterator>& lhs, const Normal_iterator<Iterator>& rhs)
+typename Normal_iterator<Iterator>::difference_type operator-(const Normal_iterator<Iterator> &lhs, const Normal_iterator<Iterator> &rhs)
 {
-    return lhs.base() -  rhs.base(); 
+    return lhs.base() - rhs.base();
 }
 
 template <class Iterator1, class Iterator2>

@@ -52,8 +52,8 @@ struct Iterator_traits<T *>
     typedef T *pointer;
     typedef T &reference;
     typedef std::random_access_iterator_tag iterator_category;
-    // iterator_traits() { std::cout << "iterator_traits2" << std::endl; };
 };
+
 template <class T>
 struct Iterator_traits<const T *>
 {
@@ -62,11 +62,6 @@ struct Iterator_traits<const T *>
     typedef const T *pointer;
     typedef const T &reference;
     typedef std::random_access_iterator_tag iterator_category;
-    // iterator_traits() { std::cout << "iterator_traits3" << std::endl; };
-    // iterator_traits &operator=(const iterator_traits<T> &other)
-    // {
-    //     std::cout << "ala asahbi" << std::endl;
-    // };
 };
 
 #endif
