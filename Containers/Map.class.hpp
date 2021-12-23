@@ -129,34 +129,39 @@ namespace ft
 
         reverse_iterator rbegin()
         {
-            Node *tmp;
-
-            tmp = m_root;
-            while (tmp->m_right)
-                tmp = tmp->m_right;
-            reverse_iterator it(tmp);
+            reverse_iterator it(m_tree.getEnd());
             return (it);
         };
 
         const_reverse_iterator rbegin() const
         {
-            Node *tmp;
-            tmp = m_root;
-            while (tmp->m_right)
-                tmp = tmp->m_right;
-            // it = tmp;
-            const_reverse_iterator it(it);
-            return (it);
+            const_reverse_iterator it(m_tree.getEnd());
+            return it;
         };
         reverse_iterator rend()
         {
-            reverse_iterator it(m_tree.getEnd());
+            Node *tmp;
+
+            tmp = m_root;
+            while (tmp->m_left)
+                tmp = tmp->m_left;
+            reverse_iterator it(tmp);
+            // if(it.base() == m_tree.getEnd())
+                // std::cout << "shamor" << std::endl;
+            // it--;
+            // std::cout << "##########" << it->first <<"##########" << std::endl;;
             return (it);
         };
         const_reverse_iterator rend() const
         {
-            const_reverse_iterator it(m_tree.getEnd());
-            return it;
+
+            Node *tmp;
+            tmp = m_root;
+            while (tmp->m_left)
+                tmp = tmp->m_left;
+            // it = tmp;
+            const_reverse_iterator it(it);
+            return (it);
         };
 
         // Capacity
@@ -223,7 +228,8 @@ namespace ft
 
         void erase(iterator position)
         {
-            m_tree.erase(position->first);
+            erase(position->first);
+            // this->print();
         }
         size_type erase(const key_type &k)
         {
@@ -244,9 +250,13 @@ namespace ft
             }
             for (size_t i = 0; i < vect.size(); i++)
             {
-                std::cout << YELLOW << "###########" << vect.at(i) << "#########" << DEFAULT << std::endl;
+                // std::cout << "wa shamiiiir" << std::endl;
+                // std::cout << YELLOW << "###########" << vect.at(i) << "#########" << DEFAULT << std::endl;
                 erase(vect.at(i));
+                // this->print();
+                // std::cout << "**************************************************" << std::endl;
             }
+                // exit(0);
         }
         void swap(map &x)
         {
@@ -325,17 +335,22 @@ namespace ft
         iterator lower_bound(const key_type &k) // k >=
         {
             Node *ptr = m_root;
+            Node *tmp = m_root;
             iterator it;
-            while (ptr && m_compare(ptr->m_pair.first, k))
+            while (ptr)
             {
+                if (ptr->m_pair.first >= k)
+                    tmp = ptr;
                 if (m_compare(ptr->m_pair.first, k))
                     ptr = ptr->m_right;
                 else if (m_compare(k, ptr->m_pair.first))
                     ptr = ptr->m_left;
+                else
+                    break;
             }
-            if (ptr != NULL)
+            if (tmp != NULL)
             {
-                it = ptr;
+                it = tmp;
                 return (it);
             }
             return this->end();
@@ -344,17 +359,22 @@ namespace ft
         const_iterator lower_bound(const key_type &k) const
         {
             Node *ptr = m_root;
+            Node *tmp = m_root;
             const_iterator it;
-            while (ptr && m_compare(ptr->m_pair.first, k))
+            while (ptr)
             {
+                if (ptr->m_pair.first >= k)
+                    tmp = ptr;
                 if (m_compare(ptr->m_pair.first, k))
                     ptr = ptr->m_right;
                 else if (m_compare(k, ptr->m_pair.first))
                     ptr = ptr->m_left;
+                else
+                    break;
             }
-            if (ptr != NULL)
+            if (tmp != NULL)
             {
-                it = ptr;
+                it = tmp;
                 return (it);
             }
             return this->end();
@@ -363,17 +383,24 @@ namespace ft
         iterator upper_bound(const key_type &k) // k <
         {
             Node *ptr = m_root;
+            Node *tmp = m_root;
+            key_type key = k;
             iterator it;
-            while (ptr && !m_compare(k, ptr->m_pair.first))
+            // while (ptr && !m_compare(k, ptr->m_pair.first))
+            while (ptr)
             {
-                if (m_compare(ptr->m_pair.first, k) || ptr->m_pair.first == k)
+                if (ptr->m_pair.first > k)
+                {
+                    tmp = ptr;
+                }
+                if (m_compare(ptr->m_pair.first, k) || k == ptr->m_pair.first)
                     ptr = ptr->m_right;
                 else if (m_compare(k, ptr->m_pair.first))
                     ptr = ptr->m_left;
             }
-            if (ptr != NULL)
+            if (tmp != NULL)
             {
-                it = ptr;
+                it = tmp;
                 return (it);
             }
             return this->end();

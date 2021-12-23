@@ -49,10 +49,8 @@ public:
 
     RedBlackTreeIterator() : m_current(){};
     RedBlackTreeIterator(iterator_type x) : m_current(x){};
-    template<class T, class K>
-    RedBlackTreeIterator(const RedBlackTreeIterator<T, K> &other): m_current(other.base())
-    {
-    };
+    template <class T, class K>
+    RedBlackTreeIterator(const RedBlackTreeIterator<T, K> &other) : m_current(other.base()){};
     RedBlackTreeIterator &operator=(const RedBlackTreeIterator &other)
     {
         if (this != &other)
@@ -479,11 +477,11 @@ public:
     void deleteNode(Node **node)
     {
         if ((*node) == NULL)
-            return ;
-        if ((*node)->m_black)
-            std::cout << "[delete] a BLACK node --- " << (*node)->m_pair.second << std::endl;
-        else
-            std::cout << "[delete] a RED node --- " << (*node)->m_pair.second << std::endl;
+            return;
+        // if ((*node)->m_black)
+        //     std::cout << "[delete] a BLACK node --- " << (*node)->m_pair.second << std::endl;
+        // else
+        //     std::cout << "[delete] a RED node --- " << (*node)->m_pair.second << std::endl;
         if (*node == m_root)
         {
             delete *node;
@@ -556,7 +554,7 @@ public:
         **                     \
         **                    [D|R] (delete a red node)
         */
-        std::cout << GREEN << "                    [" << SMILE << RED << "CaseOne" << GREEN << SMILE << "]" << DEFAULT << std::endl;
+        // std::cout << GREEN << "                    [" << SMILE << RED << "CaseOne" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         Node *tmp = node;
         if (!node->m_right && !node->m_left)
         {
@@ -606,7 +604,7 @@ public:
         **                     [R]
         ** we Perform a rotation
         */
-        std::cout << GREEN << "                    [" << SMILE << RED << "CaseTwo" << GREEN << SMILE << "]" << DEFAULT << std::endl;
+        // std::cout << GREEN << "                    [" << SMILE << RED << "CaseTwo" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         Node *tmp = node;
 
         if (tmp->m_isLeftChild)
@@ -627,9 +625,9 @@ public:
                 tmp->m_right->m_parent = tmp->m_parent;
             rightRotation(tmp->m_parent);
             tmp->m_parent->m_black = false;
-            colorToRed(tmp->m_parent->m_left); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
             tmp->m_parent->m_parent->m_black = true;
             tmp->m_parent->m_parent->m_left->m_black = false;
+            colorToRed(tmp->m_parent->m_left); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
         }
         delete (node);
     }
@@ -648,11 +646,13 @@ public:
         Node *tmp = node;
         Node *tmpParent = node->m_parent;
 
-        std::cout << GREEN << "                    [" << SMILE << RED << "CaseThree" << GREEN << SMILE << "]" << DEFAULT << std::endl;
+        // std::cout << GREEN << "                    [" << SMILE << RED << "CaseThree" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         if (tmp->m_isLeftChild)
         {
+                // std::cout << "wa shamiir" << std::endl;
             if ((!tmp->m_parent->m_right->m_left && !tmp->m_parent->m_right->m_right) ||
-                (tmp->m_parent->m_right->m_left->m_black && tmp->m_parent->m_right->m_right->m_black)) // kan checki wash childs dyal sibling wash b2 black
+                ((tmp->m_parent->m_right->m_left && tmp->m_parent->m_right->m_left->m_black) && (tmp->m_parent->m_right->m_right && tmp->m_parent->m_right->m_right->m_black)))  // kan checki wash childs dyal sibling wash b2 black
+                // (tmp->m_parent->m_right->m_left->m_black && tmp->m_parent->m_right->m_right->m_black))
             {
                 tmp->m_parent->m_right->m_black = false;
                 tmp->m_parent->m_black = true;
@@ -666,6 +666,7 @@ public:
             {
                 if (tmp->m_parent->m_right->m_right && !tmp->m_parent->m_right->m_right->m_black)
                 {
+                    // std::cout << "wa shamiiir" << std::endl;
                     tmp->m_parent->m_left = tmp->m_left; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
                     if (tmp->m_left)
                         tmp->m_left->m_parent = tmp->m_parent;
@@ -673,6 +674,7 @@ public:
                     tmp->m_parent->m_black = false;
                     tmp->m_parent->m_parent->m_black = true;
                     tmp->m_parent->m_parent->m_right->m_black = false;
+                    colorToRed(tmp->m_parent->m_right); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
                 }
                 else if (tmp->m_parent->m_right->m_left && !tmp->m_parent->m_right->m_left->m_black)
                 {
@@ -711,6 +713,7 @@ public:
                     tmp->m_parent->m_black = false;
                     tmp->m_parent->m_parent->m_black = true;
                     tmp->m_parent->m_parent->m_left->m_black = false;
+                    colorToRed(tmp->m_parent->m_left); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
                 }
                 else if (tmp->m_parent->m_left->m_right && !tmp->m_parent->m_left->m_right->m_black)
                 {

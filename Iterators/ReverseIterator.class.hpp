@@ -19,8 +19,11 @@ protected:
 
 public:
     Reverse_iterator() : m_current(){};
-    Reverse_iterator(iterator_type x) : m_current(x){};
-    Reverse_iterator(const Reverse_iterator<Iter> &other) { this->m_current = other.m_current; };
+    Reverse_iterator(iterator_type x) : m_current(x){
+        // std::cout << "ra dkhalt hna a shrif" << std::endl;
+        // std::cout << m_current->first << std::endl;
+    };
+    Reverse_iterator(const Reverse_iterator<Iter> &other) { this->m_current = other.base(); };
     Reverse_iterator &operator=(const Reverse_iterator<Iter> &other)
     {
         if (this != &other)
