@@ -644,7 +644,6 @@ public:
     void caseThree(Node *node)
     {
         Node *tmp = node;
-        Node *tmpParent = node->m_parent;
 
         // std::cout << GREEN << "                    [" << SMILE << RED << "CaseThree" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         if (tmp->m_isLeftChild)

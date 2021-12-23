@@ -6,12 +6,12 @@ compile_and_run()
 	obj="$1_obj"
 	tests="$2"
 	out="$1_out"
-	# if ! g++ -Wextra -Werror -Wall -std=c++98 -D NS="$1" "$tests" -o "$obj" > /dev/null 2>&1 ; then
-	if ! g++ -std=c++98 -D NS="$1" "$tests" -o "$obj" > /dev/null 2>&1 ; then
+	if ! g++ -Wextra -Werror -Wall -std=c++98 -D NS="$1" "$tests" -o "$obj" > /dev/null 2>&1 ; then
+	# if ! g++ -std=c++98 -D NS="$1" "$tests" -o "$obj" > /dev/null 2>&1 ; then
 		echo " =================== Compiling error ================="
 		echo
-		# g++ -Wextra -Werror -Wall -std=c++98 -D NS="$1" "$tests" -o "$obj"
-		g++ -std=c++98 -D NS="$1" "$tests" -o "$obj"
+		g++ -Wextra -Werror -Wall -std=c++98 -D NS="$1" "$tests" -o "$obj"
+		# g++ -std=c++98 -D NS="$1" "$tests" -o "$obj"
 		echo
 		echo " ====================================================="
 		exit 1

@@ -34,7 +34,7 @@ HDR_ALL= $(HDR_NEEDED)  $(HDR_CONTAINERS) $(HDR_ITERATORS)
 H_FLAG= -I $(HDR_CONTAINERS_PATH) -I $(HDR_ITERATORS_PATH) -I $(HDR_NEEDED_PATH)
 
 
-# FLAGS= -Wall -Wextra -Werror
+FLAGS= -Wall -Wextra -Werror
 
 COMP= clang++ -std=c++98 -g
 

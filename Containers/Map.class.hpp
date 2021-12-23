@@ -10,12 +10,6 @@
 #include "../Iterators/ReverseIterator.class.hpp"
 #include "../RedBlackTree/RedBlackTree.class.hpp"
 
-//template < class Key,                                 // map::key_type\
-           class T,                                       // map::mapped_type\
-           class Compare = less<Key>,                     // map::key_compare\
-           class Alloc = allocator<pair<const Key,T> >    // map::allocator_type\
-           > class map
-
 namespace ft
 {
     template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key, T> > >
@@ -207,6 +201,7 @@ namespace ft
 
         iterator insert(iterator position, const value_type &val)
         {
+            position = iterator();
             ft::pair<Node *, bool> result;
             result = m_tree.insert(val, m_compare);
             m_root = m_tree.getRoot();
@@ -384,15 +379,11 @@ namespace ft
         {
             Node *ptr = m_root;
             Node *tmp = m_root;
-            key_type key = k;
             iterator it;
-            // while (ptr && !m_compare(k, ptr->m_pair.first))
             while (ptr)
             {
                 if (ptr->m_pair.first > k)
-                {
                     tmp = ptr;
-                }
                 if (m_compare(ptr->m_pair.first, k) || k == ptr->m_pair.first)
                     ptr = ptr->m_right;
                 else if (m_compare(k, ptr->m_pair.first))

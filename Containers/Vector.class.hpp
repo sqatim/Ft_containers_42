@@ -30,9 +30,9 @@ namespace ft
 
 	protected:
 		T *m_data;
-		allocator_type m_allocator;
 		size_type m_capacity;
 		size_type m_size;
+		allocator_type m_allocator;
 
 		void allocateAndCopy(size_type n, size_type size)
 		{
@@ -58,17 +58,14 @@ namespace ft
 		explicit vector(size_type n, const value_type &val = value_type(),
 						const allocator_type &alloc = allocator_type()) : m_capacity(n), m_size(n), m_allocator(alloc)
 		{
-			// m_allocator = const_cast<allocator_type &>(alloc);
 			m_data = m_allocator.allocate(n);
 			for (int i = 0; i < n; i++)
-			{
 				m_data[i] = val;
-			}
 		};
 
 		template <class InputIterator>
 		vector(InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,
-			   const allocator_type &alloc = allocator_type())
+			   const allocator_type &alloc = allocator_type()): m_data(NULL), m_capacity(0), m_size(0), m_allocator(alloc)
 		{
 			difference_type diff = last - first;
 			m_data = m_allocator.allocate(diff);
@@ -239,7 +236,7 @@ namespace ft
 		void insertAllocationGeneric(std::ptrdiff_t len, InputIt &first, InputIt &last)
 		{
 			T *tmp;
-			size_type j;
+			std::ptrdiff_t j;
 			std::ptrdiff_t count;
 			size_type capacity;
 
@@ -303,7 +300,7 @@ namespace ft
 				if (m_capacity < counter)
 				{
 					tmp = m_allocator.allocate(counter);
-					for (int i = 0; i < counter; first++)
+					for (size_type i = 0; i < counter; first++)
 						tmp[i++] = *first;
 					if (m_capacity > 0)
 						m_allocator.deallocate(m_data, m_capacity);
@@ -311,7 +308,7 @@ namespace ft
 					m_capacity = counter;
 				}
 				else
-					for (int i = 0; i < counter; first++)
+					for (size_type i = 0; i < counter; first++)
 						m_data[i++] = *first;
 				m_size = counter;
 			}
