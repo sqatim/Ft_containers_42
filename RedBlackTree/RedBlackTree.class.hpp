@@ -35,7 +35,7 @@ struct NodeBase
 };
 
 // template<typename Tp>
-template <class Iter, class Pair>
+template <class Iter, class P>
 class RedBlackTreeIterator
 {
 public:
@@ -43,15 +43,15 @@ public:
     typedef typename std::bidirectional_iterator_tag iterator_category;
     typedef typename Iterator_traits<iterator_type>::value_type value_type;
     typedef typename Iterator_traits<iterator_type>::difference_type difference_type;
-    typedef typename Iterator_traits<Pair *>::pointer pointer;
-    typedef typename Iterator_traits<Pair *>::reference reference;
+    typedef typename Iterator_traits<P *>::pointer pointer;
+    typedef typename Iterator_traits<P *>::reference reference;
     iterator_type m_current;
 
     RedBlackTreeIterator() : m_current(){};
     RedBlackTreeIterator(iterator_type x) : m_current(x){};
-    RedBlackTreeIterator(const RedBlackTreeIterator &other)
+    template<class T, class K>
+    RedBlackTreeIterator(const RedBlackTreeIterator<T, K> &other): m_current(other.base())
     {
-        this->m_current = other.m_current;
     };
     RedBlackTreeIterator &operator=(const RedBlackTreeIterator &other)
     {
@@ -146,7 +146,8 @@ public:
     typedef T mapped_type;
     typedef ft::pair<const key_type, mapped_type> value_type;
     typedef NodeBase<value_type> Node;
-    typedef Alloc allocator_type;
+    typedef typename Alloc::template rebind<Node>::other allocator_type;
+    // typedef Alloc allocator_type;
     typedef Compare key_compare;
 
 private:
@@ -275,7 +276,7 @@ private:
         Node *tmp;
         tmp = node->m_right;
 
-        std::cout << GREEN << "                                 [" << RED << "LEFT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
+        // std::cout << GREEN << "                                 [" << RED << "LEFT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
         node->m_right = tmp->m_left;
         if (node->m_right != NULL)
         {
@@ -313,7 +314,7 @@ private:
         tmp = node->m_left;
 
         node->m_left = tmp->m_right;
-        std::cout << GREEN << "                                 [" << RED << "RIGHT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
+        // std::cout << GREEN << "                                 [" << RED << "RIGHT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
         if (node->m_left != NULL)
         {
             node->m_left->m_parent = node;
@@ -378,7 +379,7 @@ private:
     {
         while (ptr && ptr->m_right != NULL)
             ptr = ptr->m_right;
-        std::cout << RED << "Inorder predecessor" << ptr->m_pair.second << DEFAULT << std::endl;
+        // std::cout << RED << "Inorder predecessor" << ptr->m_pair.second << DEFAULT << std::endl;
         return ptr;
     }
 
@@ -386,7 +387,7 @@ private:
     {
         while (ptr && ptr->m_left != NULL)
             ptr = ptr->m_left;
-        std::cout << RED << "Inorder succesor " << ptr->m_pair.second << DEFAULT << std::endl;
+        // std::cout << RED << "Inorder succesor " << ptr->m_pair.second << DEFAULT << std::endl;
         return ptr;
     }
 
@@ -403,22 +404,22 @@ private:
 
 public:
     Node *getRoot() { return (m_root); };
-    RedBlackTree() : m_root(0), m_end(0), m_size(0){};
-    RedBlackTree(allocator_type &allocator, key_compare &compare) : m_root(0), m_end(0), m_size(0), m_allocator(allocator), m_compare(compare){};
+    RedBlackTree() : m_root(0), m_end(0), m_size(0), m_allocator(allocator_type()){};
+    RedBlackTree(key_compare &compare) : m_root(0), m_end(0), m_size(0), m_allocator(allocator_type()), m_compare(compare){};
     RedBlackTree(const RedBlackTree &x)
     {
         *this = x;
         return;
     }
-    ft::pair<Node *, bool> insert(const ft::pair<key_type, mapped_type> &value, key_compare &compare, allocator_type &allocator)
+    ft::pair<Node *, bool> insert(const ft::pair<key_type, mapped_type> &value, key_compare &compare)
     {
         ft::pair<Node *, bool> k;
-        Node *node = allocator.allocate(1);
-        allocator.construct(node, Node(value));
+        Node *node = m_allocator.allocate(1);
+        m_allocator.construct(node, Node(value));
         if (m_root == NULL)
         {
-            m_end = allocator.allocate(1);
-            allocator.construct(m_end, Node(ft::make_pair<key_type, mapped_type>(key_type(), mapped_type())));
+            m_end = m_allocator.allocate(1);
+            m_allocator.construct(m_end, Node(ft::make_pair<key_type, mapped_type>(key_type(), mapped_type())));
             m_end->m_black = true;
             m_root = node;
             m_end->m_left = m_root;
@@ -739,6 +740,11 @@ public:
         return (m_size);
     }
 
+    size_t getMaxSize() const
+    {
+        return m_allocator.max_size();
+    }
+
     void print(Node *parent)
     {
         if (parent)
@@ -766,13 +772,13 @@ public:
 
     ~RedBlackTree()
     {
-        // if (m_size > 0)
-        // {
-        //     freeNodes(&this->m_end);
-        //     m_root = NULL;
-        //     m_end = NULL;
-        //     m_size = 0;
-        // }
+        if (m_size > 0)
+        {
+            freeNodes(&this->m_end);
+            m_root = NULL;
+            m_end = NULL;
+            m_size = 0;
+        }
     }
 };
 

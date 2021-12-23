@@ -27,13 +27,13 @@ namespace ft
         typedef ft::pair<const key_type, mapped_type> value_type;
         typedef Compare key_compare;
         typedef NodeBase<value_type> Node;
-        typedef typename Alloc::template rebind<Node>::other allocator_type;
+        typedef Alloc allocator_type;
         typedef typename allocator_type::reference reference;
         typedef typename allocator_type::const_reference const_reference;
         typedef typename allocator_type::pointer pointer;
         typedef typename allocator_type::const_pointer const_pointer;
-        typedef RedBlackTreeIterator<pointer, value_type> iterator;
-        typedef RedBlackTreeIterator<pointer, const value_type> const_iterator;
+        typedef RedBlackTreeIterator<Node *, value_type> iterator;
+        typedef RedBlackTreeIterator<Node *, const value_type> const_iterator;
         typedef Reverse_iterator<iterator> reverse_iterator;
         typedef Reverse_iterator<const_iterator> const_reverse_iterator;
         typedef std::ptrdiff_t difference_type;
@@ -66,14 +66,15 @@ namespace ft
     public:
         // Constructers
         explicit map(const key_compare &comp = key_compare(),
-                     const allocator_type &alloc = allocator_type()) : m_root(NULL), m_compare(comp), m_size(0), m_allocator(alloc), m_tree(RDTree(m_allocator, m_compare)){};
+                     const allocator_type &alloc = allocator_type()) : m_root(NULL), m_compare(comp), m_size(0), m_allocator(alloc), m_tree(RDTree(m_compare)){};
 
         template <class InputIterator>
         map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) : m_root(NULL), m_compare(comp), m_size(0), m_allocator(alloc)
         {
             for (; first != last; first++)
-                m_tree.insert(*first, m_compare, m_allocator);
+                m_tree.insert(*first, m_compare);
             m_root = m_tree.getRoot();
+            m_size = m_tree.getSize();
         };
 
         map(const map &x)
@@ -101,27 +102,29 @@ namespace ft
             tmp = m_root;
             while (tmp && tmp->m_left)
                 tmp = tmp->m_left;
-            return (tmp);
+            iterator it(tmp);
+            return (it);
         };
         const_iterator begin() const
         {
-            Node *tmp;
+            const Node *tmp;
 
             tmp = m_root;
             while (tmp && tmp->left)
                 tmp = tmp->left;
-            return (tmp);
+            const_iterator it(tmp);
+            return (it);
         };
 
         iterator end()
         {
-            Node *tmp = m_tree.getEnd();
-            return tmp;
+            iterator it(m_tree.getEnd());
+            return it;
         };
         const_iterator end() const
         {
-            const Node *tmp = m_tree.getEnd();
-            return tmp;
+            const_iterator it = m_tree.getEnd();
+            return it;
         };
 
         reverse_iterator rbegin()
@@ -131,26 +134,29 @@ namespace ft
             tmp = m_root;
             while (tmp->m_right)
                 tmp = tmp->m_right;
-            return (tmp);
+            reverse_iterator it(tmp);
+            return (it);
         };
+
         const_reverse_iterator rbegin() const
         {
             Node *tmp;
-
             tmp = m_root;
             while (tmp->m_right)
                 tmp = tmp->m_right;
-            return (tmp);
+            // it = tmp;
+            const_reverse_iterator it(it);
+            return (it);
         };
         reverse_iterator rend()
         {
-            Node *tmp = m_tree.getEnd();
-            return tmp;
+            reverse_iterator it(m_tree.getEnd());
+            return (it);
         };
         const_reverse_iterator rend() const
         {
-            const Node *tmp = m_tree.getEnd();
-            return tmp;
+            const_reverse_iterator it(m_tree.getEnd());
+            return it;
         };
 
         // Capacity
@@ -168,7 +174,7 @@ namespace ft
 
         size_type max_size() const
         {
-            return m_allocator.max_size();
+            return m_tree.getMaxSize();
         }
 
         // Element Access
@@ -188,7 +194,7 @@ namespace ft
         ft::pair<Node *, bool> insert(const value_type &value)
         {
             ft::pair<Node *, bool> k;
-            k = m_tree.insert(value, m_compare, m_allocator);
+            k = m_tree.insert(value, m_compare);
             m_root = m_tree.getRoot();
             m_size = m_tree.getSize();
             return k;
@@ -197,7 +203,7 @@ namespace ft
         iterator insert(iterator position, const value_type &val)
         {
             ft::pair<Node *, bool> result;
-            result = m_tree.insert(val, m_compare, m_allocator);
+            result = m_tree.insert(val, m_compare);
             m_root = m_tree.getRoot();
             m_size = m_tree.getSize();
             return result.first;
@@ -208,7 +214,7 @@ namespace ft
             // std::cout << "sdasdsadsadsasda" << std::endl;
             for (; first != last; first++)
             {
-                m_tree.insert(*first, m_compare, m_allocator);
+                m_tree.insert(*first, m_compare);
                 // std::cout << "first: "<< RED << first->first << "\t second: "<< YELLOW << first->second << std::endl;
             }
             m_root = m_tree.getRoot();
