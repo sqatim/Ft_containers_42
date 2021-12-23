@@ -13,6 +13,7 @@ SRC_NAME= mainMap.cpp\
 
 HDR_CONTAINERS_NAME= Vector.class.hpp\
 				Map.class.hpp\
+				Stack.class.hpp\
 
 HDR_ITERATORS_NAME= iterator.hpp\
 				NormalIterator.class.hpp\

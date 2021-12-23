@@ -65,7 +65,7 @@ namespace ft
 
 		template <class InputIterator>
 		vector(InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last,
-			   const allocator_type &alloc = allocator_type()): m_data(NULL), m_capacity(0), m_size(0), m_allocator(alloc)
+			   const allocator_type &alloc = allocator_type()) : m_data(NULL), m_capacity(0), m_size(0), m_allocator(alloc)
 		{
 			difference_type diff = last - first;
 			m_data = m_allocator.allocate(diff);

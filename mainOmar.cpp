@@ -6,7 +6,7 @@
 /*   By: sqatim <sqatim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 13:10:11 by obouykou          #+#    #+#             */
-/*   Updated: 2021/12/23 19:45:20 by sqatim           ###   ########.fr       */
+/*   Updated: 2021/12/23 22:27:37 by sqatim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "./Containers/Vector.class.hpp"
 // #include "stack.hpp"
 #include "./Containers/Map.class.hpp"
+#include "./Containers/Stack.class.hpp"
 
 #ifndef NS
 #define NS ft
@@ -30,7 +31,7 @@
 #endif
 
 #ifndef STACK
-#define STACK false
+#define STACK true
 #endif
 
 #ifndef MAP
@@ -65,15 +66,13 @@ void print_vector(NS::vector<T> &vect, char const *label)
     std::cout << std::endl;
 }
 
-// #ifdef STACK
-// template <typename T>
-// void print_namespace(ft::stack<T> const &stk)
-// {
-//     if (stk.size())
-//         stk.empty();
-//     std::cout << "\nNAMESPACE : ft" << std::endl;
-// }
-// #endif
+template <typename T>
+void print_namespace(ft::stack<T> const &stk)
+{
+    if (stk.size())
+        stk.empty();
+    std::cout << "\nNAMESPACE : ft" << std::endl;
+}
 
 template <typename T>
 void print_namespace(std::stack<T> const &stk)
@@ -83,23 +82,21 @@ void print_namespace(std::stack<T> const &stk)
     std::cout << "\nNAMESPACE : std" << std::endl;
 }
 
-// #ifdef STACK
-// template <typename T>
-// void print_stack(NS::stack<T> &mystk, char const *label)
-// {
-//     NS::stack<T> stk = mystk;
-//     std::cout << "\nstack Size: " << stk.size();
-//     std::cout << "\nstack [" << label << "] contains:";
-//     if (stk.empty())
-//         std::cout << "\tnothing";
-//     for (; stk.size();)
-//     {
-//         std::cout << " \n [ " << stk.top() << " ]";
-//         stk.pop();
-//     }
-//     std::cout << std::endl;
-// }
-// #endif
+template <typename T>
+void print_stack(NS::stack<T> &mystk, char const *label)
+{
+    NS::stack<T> stk = mystk;
+    std::cout << "\nstack Size: " << stk.size();
+    std::cout << "\nstack [" << label << "] contains:";
+    if (stk.empty())
+        std::cout << "\tnothing";
+    for (; stk.size();)
+    {
+        std::cout << " \n [ " << stk.top() << " ]";
+        stk.pop();
+    }
+    std::cout << std::endl;
+}
 
 template <typename T, typename U>
 void print_namespace(ft::map<T, U> const &mp)
@@ -484,412 +481,412 @@ int main(void)
         // end of vector tests
     // }
     // // stack tests
-    // if (STACK)
-    // {
-    //     // std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< stack tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
-    //     //           << std::endl;
-    //     // NS::stack<int> stackGolbal;
-    //     // print_namespace(stackGolbal);
-    //     // // top() and empty()
-    //     // {
-    //     //     std::cout << "\nfront() & back()" << std::endl;
-    //     //     std::cout << "=======================================" << std::endl;
-    //     //     NS::stack<int> mystack;
-
-    //     //     if (mystack.empty())
-    //     //         std::cout << "mystack is empty" << std::endl;
-
-    //     //     mystack.push(22);
-    //     //     mystack.push(77);
-
-    //     //     print_stack(mystack, "mystack");
-
-    //     //     // now top equals 77
-    //     //     std::cout << "mystack.top() is now " << mystack.top() << '\n';
-    //     //     std::cout << "=======================================" << std::endl;
-    //     // }
-
-    //     // // size()
-    //     // {
-    //     //     std::cout << "\nmax_size()" << std::endl;
-    //     //     std::cout << "=======================================" << std::endl;
-    //     //     NS::stack<size_t> mystack;
-
-    //     //     mystack.push(77);
-    //     //     mystack.push(65);
-    //     //     mystack.push(69);
-    //     //     mystack.push(65);
-    //     //     mystack.push(78);
-    //     //     mystack.push(22);
-
-    //     //     print_stack(mystack, "mystack");
-
-    //     //     std::cout << "mystack.size() is: " << mystack.size() << '\n';
-    //     //     std::cout << "=======================================" << std::endl;
-    //     // }
-
-    //     // // relational operators()
-    //     // {
-    //     //     std::cout << "\nrelational operators" << std::endl;
-    //     //     std::cout << "=======================================" << std::endl;
-
-    //     //     NS::stack<int> a;
-    //     //     a.push(10);
-    //     //     a.push(20);
-    //     //     a.push(30);
-    //     //     print_stack(a, "a");
-    //     //     NS::stack<int> b = a;
-    //     //     // b = a;
-
-    //     //     print_stack(b, "b");
-
-    //     //     NS::stack<int> c;
-    //     //     c.push(30);
-    //     //     c.push(20);
-    //     //     c.push(10);
-    //     //     print_stack(c, "c");
-
-    //     //     if (a == b)
-    //     //         std::cout << "\na and b are equal\n";
-    //     //     if (b != c)
-    //     //         std::cout << "b and c are not equal\n";
-    //     //     if (b < c)
-    //     //         std::cout << "b is less than c\n";
-    //     //     if (c > b)
-    //     //         std::cout << "c is greater than b\n";
-    //     //     if (a <= b)
-    //     //         std::cout << "a is less than or equal to b\n";
-    //     //     if (a >= b)
-    //     //         std::cout << "a is greater than or equal to b\n";
-    //     //     std::cout << "=======================================" << std::endl;
-    //     // }
-    //     // std::cout << "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end of stack tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
-    //     //           << std::endl;
-    // }
-    // // end of stack tests
-
-    // map tests
-    if (MAP)
+    if (STACK)
     {
-        std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< map tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
+        std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< stack tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
                   << std::endl;
-        NS::map<int, int> maptGolbal;
-        print_namespace(maptGolbal);
+        NS::stack<int> stackGolbal;
+        print_namespace(stackGolbal);
+        // top() and empty()
+        {
+            std::cout << "\nfront() & back()" << std::endl;
+            std::cout << "=======================================" << std::endl;
+            NS::stack<int> mystack;
 
-        // begin()
-        {
-            std::cout << "\nbegin() & end() " << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(4, 4));
-            map1.insert(NS::make_pair(2, 2));
-            NS::map<int, int>::iterator it = map1.begin();
-            print_map(map1, "map1");
-            std::cout << "map1.begin(): " << (*it).first << std::endl;
-            std::cout << "=======================================" << std::endl;
-        }
-        // assign operator=()
-        {
-            std::cout << "\nassign operator=()" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(4, 4));
-            print_map(map1, "map1");
-            NS::map<int, int> map2;
-            std::cout << "before assigning map1 to map2" << std::endl;
-            print_map(map2, "map2");
-            map2 = map1;
-            std::cout << "after assigning map1 to map2" << std::endl;
-            print_map(map2, "map2");
+            if (mystack.empty())
+                std::cout << "mystack is empty" << std::endl;
+
+            mystack.push(22);
+            mystack.push(77);
+
+            print_stack(mystack, "mystack");
+
+            // now top equals 77
+            std::cout << "mystack.top() is now " << mystack.top() << '\n';
             std::cout << "=======================================" << std::endl;
         }
 
-        // // clear()
-        {
-            std::cout << "\nclear()" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(4, 4));
-            print_map(map1, "map1");
-            map1.clear();
-            std::cout << "after clearing map1" << std::endl;
-            print_map(map1, "map1");
-            // std::cout << "=======================================" << std::endl;
-        }
-
-        // // count()
-        {
-            std::cout << "\ncount()" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(4, 4));
-            print_map(map1, "map1");
-            std::cout << "map1.count(5): " << map1.count(5) << std::endl;
-            std::cout << "map1.count(6): " << map1.count(6) << std::endl;
-            std::cout << "=======================================" << std::endl;
-        }
-
-        // // empty() and size()
-        {
-            std::cout << "\nempty()" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(4, 4));
-            print_map(map1, "map1");
-            std::cout << "map1.empty(): " << map1.empty() << std::endl;
-            map1.clear();
-            std::cout << "after clearing map1" << std::endl;
-            print_map(map1, "map1");
-            std::cout << "map1.empty(): " << map1.empty() << std::endl;
-            std::cout << "=======================================" << std::endl;
-        }
-
-        // // find()
-        {
-            std::cout << "\nfind()" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            print_map(map1, "map1");
-            if (map1.find(5) != map1.end())
-                std::cout << "5 has been found and its second is = " << map1.find(5)->second << std::endl;
-            else
-                std::cout << "5 has not been found" << std::endl;
-            if (map1.find(6) != map1.end())
-                std::cout << "6 has been found and its second is = " << map1.find(6)->second << std::endl;
-            else
-                std::cout << "6 has not been found" << std::endl;
-            std::cout << "=======================================" << std::endl;
-        }
-
-        // // insert()
-        {
-            std::cout << "\ninsert()" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            print_map(map1, "map1");
-            NS::map<int, int>::iterator it = map1.insert(NS::make_pair(4, 4)).first;
-            print_map(map1, "map1");
-            std::cout << "inserted 4, 4 at " << (*it).first << std::endl;
-            NS::pair<int, int> arr[] = {NS::make_pair(0, 20), NS::make_pair(2, 30),
-                                        NS::make_pair(3, 40), NS::make_pair(4, 50)};
-            NS::map<int, int> map2;
-            map2.insert(arr, arr + 4);
-            print_map(map2, "map2");
-            std::cout << "=======================================" << std::endl;
-        }
-
-        // // map constructors
-        {
-            std::cout << "\nmap constructors" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1[10] = 3;
-            map1[4] = 4;
-            print_map(map1, "map1");
-            NS::map<int, int> map2(map1);
-            print_map(map2, "map2");
-            NS::map<int, int> map3(map2.begin(), map2.end());
-            print_map(map3, "map3");
-            std::cout << "=======================================" << std::endl;
-        }
-
-        // erase()
-        {
-            std::cout << "\nerase()" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(0, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(4, 4));
-            map1.insert(NS::make_pair(3, 300));
-            map1.insert(NS::make_pair(3, 300));
-            map1.insert(NS::make_pair(1, 110));
-            map1.insert(NS::make_pair(0, 10));
-            // print_map(map1, "map1");
-            std::cout << "map1.erase(0): " << map1.erase(0) << std::endl;
-            NS::map<int, int>::iterator it = map1.begin();
-            // map1.print();
-            std::advance(it, 2);
-            // std::cout << it->first << std::endl;
-            map1.erase(map1.begin(), it);
-            // print_map(map1, "map1");
-            // map1.print();
-            // std::cout << "/*/*/*/*/*/*/*/*/*/*/*/*/*/*/" << std::endl;
-            // std::cout << map1.size() << std::endl;
-            map1.erase(map1.begin());
-            // std::cout << map1.size() << std::endl;
-            // std::cout << "/*/*/*/*/*/*/*/*/*/*/*/*/*/*/" << std::endl;
-            // print_map(map1, "map1");
-
-            std::cout << "=======================================" << std::endl;
-        }
-
-        // max_size()
+        // size()
         {
             std::cout << "\nmax_size()" << std::endl;
             std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            std::cout << "map1.max_size(): " << map1.max_size() << std::endl;
+            NS::stack<size_t> mystack;
+
+            mystack.push(77);
+            mystack.push(65);
+            mystack.push(69);
+            mystack.push(65);
+            mystack.push(78);
+            mystack.push(22);
+
+            print_stack(mystack, "mystack");
+
+            std::cout << "mystack.size() is: " << mystack.size() << '\n';
             std::cout << "=======================================" << std::endl;
         }
 
-        // swap()
+        // relational operators()
         {
-            std::cout << "\nswap()" << std::endl;
+            std::cout << "\nrelational operators" << std::endl;
             std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(4, 4));
-            print_map(map1, "map1");
-            NS::map<int, int> map2;
-            map2.insert(NS::make_pair(0, 1));
-            map2.insert(NS::make_pair(2, 2));
-            map2.insert(NS::make_pair(10, 3));
-            map2.insert(NS::make_pair(4, 4));
-            print_map(map2, "map2");
-            map1.swap(map2);
-            print_map(map1, "map1");
-            print_map(map2, "map2");
+
+            NS::stack<int> a;
+            a.push(10);
+            a.push(20);
+            a.push(30);
+            print_stack(a, "a");
+            NS::stack<int> b = a;
+            // b = a;
+
+            print_stack(b, "b");
+
+            NS::stack<int> c;
+            c.push(30);
+            c.push(20);
+            c.push(10);
+            print_stack(c, "c");
+
+            if (a == b)
+                std::cout << "\na and b are equal\n";
+            if (b != c)
+                std::cout << "b and c are not equal\n";
+            if (b < c)
+                std::cout << "b is less than c\n";
+            if (c > b)
+                std::cout << "c is greater than b\n";
+            if (a <= b)
+                std::cout << "a is less than or equal to b\n";
+            if (a >= b)
+                std::cout << "a is greater than or equal to b\n";
             std::cout << "=======================================" << std::endl;
         }
-
-        // lower_bound()
-        {
-            std::cout << "\nlower_bound()" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(4, 4));
-            print_map(map1, "map1");
-            NS::map<int, int>::iterator it = map1.lower_bound(3);
-            std::cout << "map1.lower_bound(3): " << (*it).first << std::endl;
-            it = map1.lower_bound(5);
-            std::cout << "map1.lower_bound(5): " << (*it).first << std::endl;
-            it = map1.lower_bound(6);
-            std::cout << "map1.lower_bound(6): " << (*it).first << std::endl;
-            std::cout << "=======================================" << std::endl;
-        }
-
-        // upper_bound()
-        {
-            std::cout << "\nupper_bound()" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(4, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(5, 4));
-            print_map(map1, "map1");
-            NS::map<int, int>::iterator it = map1.upper_bound(3);
-            std::cout << "map1.upper_bound(3): " << (*it).first << std::endl;
-            it = map1.upper_bound(5);
-            std::cout << "map1.upper_bound(5): " << (*it).first << std::endl;
-            it = map1.upper_bound(6);
-            std::cout << "map1.upper_bound(6): " << (*it).first << std::endl;
-            // std::cout << "=======================================" << std::endl;
-        }
-
-        // equal_range()
-        {
-            std::cout << "\nequal_range()" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(4, 4));
-            print_map(map1, "map1");
-            NS::pair<NS::map<int, int>::iterator, NS::map<int, int>::iterator> range = map1.equal_range(3);
-            std::cout << "map1.equal_range(3): " << (*range.first).first << " " << (*range.second).first << std::endl;
-            range = map1.equal_range(5);
-            std::cout << "map1.equal_range(5): " << (*range.first).first << " " << (*range.second).first << std::endl;
-            range = map1.equal_range(6);
-            std::cout << "map1.equal_range(6): " << (*range.first).first << " " << (*range.second).first << std::endl;
-            std::cout << "=======================================" << std::endl;
-        }
-
-        // get_allocator()
-        {
-            std::cout << "\nget_allocator()" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            print_map(map1, "map1");
-            NS::map<int, int>::allocator_type alloc = map1.get_allocator();
-            NS::pair<const int, int> *ptr = alloc.allocate(1);
-            alloc.deallocate(ptr, 1);
-            std::cout << "alloc max size: " << alloc.max_size() << std::endl;
-
-            std::cout << "=======================================" << std::endl;
-        }
-
-        //const iterators
-        {
-            std::cout << "\nconst iterators" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(4, 4));
-            print_map(map1, "map1");
-            NS::map<int, int>::const_iterator it = map1.begin();
-            std::cout << "map1.begin(): " << (*it).first << std::endl;
-            it = map1.end();
-            --it;
-            std::cout << "map1.end(): " << (*it).first << std::endl;
-            std::cout << "=======================================" << std::endl;
-        }
-
-        //reverse iterators
-        {
-            std::cout << "\nreverse iterators" << std::endl;
-            std::cout << "=======================================" << std::endl;
-            NS::map<int, int> map1;
-            map1.insert(NS::make_pair(5, 1));
-            map1.insert(NS::make_pair(2, 2));
-            map1.insert(NS::make_pair(10, 3));
-            map1.insert(NS::make_pair(4, 4));
-            print_map(map1, "map1");
-            NS::map<int, int>::reverse_iterator it = map1.rbegin();
-            // print all elements in reverse order
-            for (; it != map1.rend(); ++it)
-            {
-                std::cout << "[" << (*it).first << "] = " << (*it).second << std::endl;
-            }
-
-            std::cout << "=======================================" << std::endl;
-        }
-
-        std::cout << "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end of map tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
+        std::cout << "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end of stack tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
                   << std::endl;
     }
+    // // end of stack tests
+
+    // map tests
+    // if (MAP)
+    // {
+    //     std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< map tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
+    //               << std::endl;
+    //     NS::map<int, int> maptGolbal;
+    //     print_namespace(maptGolbal);
+
+    //     // begin()
+    //     {
+    //         std::cout << "\nbegin() & end() " << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(4, 4));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         NS::map<int, int>::iterator it = map1.begin();
+    //         print_map(map1, "map1");
+    //         std::cout << "map1.begin(): " << (*it).first << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+    //     // assign operator=()
+    //     {
+    //         std::cout << "\nassign operator=()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(4, 4));
+    //         print_map(map1, "map1");
+    //         NS::map<int, int> map2;
+    //         std::cout << "before assigning map1 to map2" << std::endl;
+    //         print_map(map2, "map2");
+    //         map2 = map1;
+    //         std::cout << "after assigning map1 to map2" << std::endl;
+    //         print_map(map2, "map2");
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // // clear()
+    //     {
+    //         std::cout << "\nclear()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(4, 4));
+    //         print_map(map1, "map1");
+    //         map1.clear();
+    //         std::cout << "after clearing map1" << std::endl;
+    //         print_map(map1, "map1");
+    //         // std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // // count()
+    //     {
+    //         std::cout << "\ncount()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(4, 4));
+    //         print_map(map1, "map1");
+    //         std::cout << "map1.count(5): " << map1.count(5) << std::endl;
+    //         std::cout << "map1.count(6): " << map1.count(6) << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // // empty() and size()
+    //     {
+    //         std::cout << "\nempty()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(4, 4));
+    //         print_map(map1, "map1");
+    //         std::cout << "map1.empty(): " << map1.empty() << std::endl;
+    //         map1.clear();
+    //         std::cout << "after clearing map1" << std::endl;
+    //         print_map(map1, "map1");
+    //         std::cout << "map1.empty(): " << map1.empty() << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // // find()
+    //     {
+    //         std::cout << "\nfind()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         print_map(map1, "map1");
+    //         if (map1.find(5) != map1.end())
+    //             std::cout << "5 has been found and its second is = " << map1.find(5)->second << std::endl;
+    //         else
+    //             std::cout << "5 has not been found" << std::endl;
+    //         if (map1.find(6) != map1.end())
+    //             std::cout << "6 has been found and its second is = " << map1.find(6)->second << std::endl;
+    //         else
+    //             std::cout << "6 has not been found" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // // insert()
+    //     {
+    //         std::cout << "\ninsert()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         print_map(map1, "map1");
+    //         NS::map<int, int>::iterator it = map1.insert(NS::make_pair(4, 4)).first;
+    //         print_map(map1, "map1");
+    //         std::cout << "inserted 4, 4 at " << (*it).first << std::endl;
+    //         NS::pair<int, int> arr[] = {NS::make_pair(0, 20), NS::make_pair(2, 30),
+    //                                     NS::make_pair(3, 40), NS::make_pair(4, 50)};
+    //         NS::map<int, int> map2;
+    //         map2.insert(arr, arr + 4);
+    //         print_map(map2, "map2");
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // // map constructors
+    //     {
+    //         std::cout << "\nmap constructors" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1[10] = 3;
+    //         map1[4] = 4;
+    //         print_map(map1, "map1");
+    //         NS::map<int, int> map2(map1);
+    //         print_map(map2, "map2");
+    //         NS::map<int, int> map3(map2.begin(), map2.end());
+    //         print_map(map3, "map3");
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // erase()
+    //     {
+    //         std::cout << "\nerase()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(0, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(4, 4));
+    //         map1.insert(NS::make_pair(3, 300));
+    //         map1.insert(NS::make_pair(3, 300));
+    //         map1.insert(NS::make_pair(1, 110));
+    //         map1.insert(NS::make_pair(0, 10));
+    //         // print_map(map1, "map1");
+    //         std::cout << "map1.erase(0): " << map1.erase(0) << std::endl;
+    //         NS::map<int, int>::iterator it = map1.begin();
+    //         // map1.print();
+    //         std::advance(it, 2);
+    //         // std::cout << it->first << std::endl;
+    //         map1.erase(map1.begin(), it);
+    //         // print_map(map1, "map1");
+    //         // map1.print();
+    //         // std::cout << "/*/*/*/*/*/*/*/*/*/*/*/*/*/*/" << std::endl;
+    //         // std::cout << map1.size() << std::endl;
+    //         map1.erase(map1.begin());
+    //         // std::cout << map1.size() << std::endl;
+    //         // std::cout << "/*/*/*/*/*/*/*/*/*/*/*/*/*/*/" << std::endl;
+    //         // print_map(map1, "map1");
+
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // max_size()
+    //     {
+    //         std::cout << "\nmax_size()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         std::cout << "map1.max_size(): " << map1.max_size() << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // swap()
+    //     {
+    //         std::cout << "\nswap()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(4, 4));
+    //         print_map(map1, "map1");
+    //         NS::map<int, int> map2;
+    //         map2.insert(NS::make_pair(0, 1));
+    //         map2.insert(NS::make_pair(2, 2));
+    //         map2.insert(NS::make_pair(10, 3));
+    //         map2.insert(NS::make_pair(4, 4));
+    //         print_map(map2, "map2");
+    //         map1.swap(map2);
+    //         print_map(map1, "map1");
+    //         print_map(map2, "map2");
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // lower_bound()
+    //     {
+    //         std::cout << "\nlower_bound()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(4, 4));
+    //         print_map(map1, "map1");
+    //         NS::map<int, int>::iterator it = map1.lower_bound(3);
+    //         std::cout << "map1.lower_bound(3): " << (*it).first << std::endl;
+    //         it = map1.lower_bound(5);
+    //         std::cout << "map1.lower_bound(5): " << (*it).first << std::endl;
+    //         it = map1.lower_bound(6);
+    //         std::cout << "map1.lower_bound(6): " << (*it).first << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // upper_bound()
+    //     {
+    //         std::cout << "\nupper_bound()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(4, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(5, 4));
+    //         print_map(map1, "map1");
+    //         NS::map<int, int>::iterator it = map1.upper_bound(3);
+    //         std::cout << "map1.upper_bound(3): " << (*it).first << std::endl;
+    //         it = map1.upper_bound(5);
+    //         std::cout << "map1.upper_bound(5): " << (*it).first << std::endl;
+    //         it = map1.upper_bound(6);
+    //         std::cout << "map1.upper_bound(6): " << (*it).first << std::endl;
+    //         // std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // equal_range()
+    //     {
+    //         std::cout << "\nequal_range()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(4, 4));
+    //         print_map(map1, "map1");
+    //         NS::pair<NS::map<int, int>::iterator, NS::map<int, int>::iterator> range = map1.equal_range(3);
+    //         std::cout << "map1.equal_range(3): " << (*range.first).first << " " << (*range.second).first << std::endl;
+    //         range = map1.equal_range(5);
+    //         std::cout << "map1.equal_range(5): " << (*range.first).first << " " << (*range.second).first << std::endl;
+    //         range = map1.equal_range(6);
+    //         std::cout << "map1.equal_range(6): " << (*range.first).first << " " << (*range.second).first << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     // get_allocator()
+    //     {
+    //         std::cout << "\nget_allocator()" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         print_map(map1, "map1");
+    //         NS::map<int, int>::allocator_type alloc = map1.get_allocator();
+    //         NS::pair<const int, int> *ptr = alloc.allocate(1);
+    //         alloc.deallocate(ptr, 1);
+    //         std::cout << "alloc max size: " << alloc.max_size() << std::endl;
+
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     //const iterators
+    //     {
+    //         std::cout << "\nconst iterators" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(4, 4));
+    //         print_map(map1, "map1");
+    //         NS::map<int, int>::const_iterator it = map1.begin();
+    //         std::cout << "map1.begin(): " << (*it).first << std::endl;
+    //         it = map1.end();
+    //         --it;
+    //         std::cout << "map1.end(): " << (*it).first << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     //reverse iterators
+    //     {
+    //         std::cout << "\nreverse iterators" << std::endl;
+    //         std::cout << "=======================================" << std::endl;
+    //         NS::map<int, int> map1;
+    //         map1.insert(NS::make_pair(5, 1));
+    //         map1.insert(NS::make_pair(2, 2));
+    //         map1.insert(NS::make_pair(10, 3));
+    //         map1.insert(NS::make_pair(4, 4));
+    //         print_map(map1, "map1");
+    //         NS::map<int, int>::reverse_iterator it = map1.rbegin();
+    //         // print all elements in reverse order
+    //         for (; it != map1.rend(); ++it)
+    //         {
+    //             std::cout << "[" << (*it).first << "] = " << (*it).second << std::endl;
+    //         }
+
+    //         std::cout << "=======================================" << std::endl;
+    //     }
+
+    //     std::cout << "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end of map tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
+    //               << std::endl;
+    // }
     // end of map tests
 
     std::cout << "end of program" << std::endl;
