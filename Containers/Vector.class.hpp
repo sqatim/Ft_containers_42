@@ -34,6 +34,7 @@ namespace ft
 		size_type m_size;
 		allocator_type m_allocator;
 
+	private:
 		void allocateAndCopy(size_type n, size_type size)
 		{
 			T *tmp;
@@ -49,6 +50,51 @@ namespace ft
 			m_capacity = n;
 		};
 
+		void insertAllocation(size_type capacity, std::ptrdiff_t len, const T &value, const size_type &count)
+		{
+			T *tmp;
+			size_type j;
+
+			j = 0;
+			tmp = m_allocator.allocate(capacity);
+			for (int k = 0; j < m_size + count; j++)
+			{
+				if (len == (std::ptrdiff_t)j)
+					for (size_type counter = 0; counter < count; counter++)
+						tmp[j++] = value;
+				tmp[j] = m_data[k++];
+			}
+			m_allocator.deallocate(m_data, m_capacity);
+			m_data = tmp;
+			m_capacity = capacity;
+			m_size += count;
+		}
+
+		template <class InputIt>
+		void insertAllocationGeneric(std::ptrdiff_t len, InputIt &first, InputIt &last)
+		{
+			T *tmp;
+			std::ptrdiff_t j;
+			std::ptrdiff_t count;
+			size_type capacity;
+
+			j = 0;
+			count = last - first;
+			capacity = (m_size + count != m_capacity + 1 && m_size + count <= m_capacity * 2) ? m_capacity * 2 : m_size + count;
+			tmp = m_allocator.allocate(capacity);
+			for (int k = 0; j < (std::ptrdiff_t)m_size + count; j++)
+			{
+				if (len == j)
+					for (; first < last; first++)
+						tmp[j++] = *first;
+				tmp[j] = m_data[k++];
+			}
+			m_allocator.deallocate(m_data, m_capacity);
+			m_data = tmp;
+			m_capacity = capacity;
+			m_size += count;
+		}
+
 	public:
 		// Constructs:
 
@@ -59,7 +105,7 @@ namespace ft
 						const allocator_type &alloc = allocator_type()) : m_capacity(n), m_size(n), m_allocator(alloc)
 		{
 			m_data = m_allocator.allocate(n);
-			for (int i = 0; i < n; i++)
+			for (size_type i = 0; i < n; i++)
 				m_data[i] = val;
 		};
 
@@ -101,6 +147,7 @@ namespace ft
 			}
 			return (*this);
 		}
+
 		// Capacity:
 		size_type size() const { return (m_size); };
 		size_type max_size() const { return m_allocator.max_size(); };
@@ -159,31 +206,10 @@ namespace ft
 			m_size = 0;
 		};
 
-		void insertAllocation(size_type capacity, std::ptrdiff_t len, const T &value, const size_type &count)
-		{
-			T *tmp;
-			size_type j;
-
-			j = 0;
-			tmp = m_allocator.allocate(capacity);
-			for (int k = 0; j < m_size + count; j++)
-			{
-				if (len == j)
-					for (int counter = 0; counter < count; counter++)
-						tmp[j++] = value;
-				tmp[j] = m_data[k++];
-			}
-			m_allocator.deallocate(m_data, m_capacity);
-			m_data = tmp;
-			m_capacity = capacity;
-			m_size += count;
-		}
-
 		iterator insert(iterator pos, const T &value)
 		{
 			// hna ma khasnish nfout end ! akhir element n9dar nzid momkin ikun fal end
 			std::ptrdiff_t len;
-			T *tmp;
 			size_type k;
 
 			len = pos.base() - this->begin().base();
@@ -194,7 +220,7 @@ namespace ft
 				m_data[k] = value;
 				m_size++;
 			}
-			else if (len <= m_size && m_size >= m_capacity)
+			else if (len <= (std::ptrdiff_t)m_size && m_size >= m_capacity)
 				insertAllocation(m_capacity * 2, len, value, 1);
 			return this->begin() + len;
 		};
@@ -214,16 +240,16 @@ namespace ft
 				return;
 			else if (len <= (std::ptrdiff_t)m_size && m_size + count <= m_capacity)
 			{
-				for (k = m_size + count - 1; (std::ptrdiff_t)k > len + count - 1; k--)
+				for (k = m_size + count - 1; (std::ptrdiff_t)k > len + (std::ptrdiff_t)count - 1; k--)
 				{
 					m_data[k] = m_data[m_size - i];
 					i++;
 				}
-				for (int i = 0; i < count; i++)
+				for (size_type i = 0; i < count; i++)
 					m_data[k--] = value;
 				m_size += count;
 			}
-			else if (len <= m_size && m_size + count > m_capacity)
+			else if (len <= (std::ptrdiff_t)m_size && m_size + count > m_capacity)
 			{
 				capacity = (m_size + count <= m_capacity * 2) ? m_capacity * 2 : m_size + count;
 				insertAllocation(capacity, len, value, count);
@@ -231,31 +257,6 @@ namespace ft
 			else
 				throw std::string("out of range");
 		};
-
-		template <class InputIt>
-		void insertAllocationGeneric(std::ptrdiff_t len, InputIt &first, InputIt &last)
-		{
-			T *tmp;
-			std::ptrdiff_t j;
-			std::ptrdiff_t count;
-			size_type capacity;
-
-			j = 0;
-			count = last - first;
-			capacity = (m_size + count != m_capacity + 1 && m_size + count <= m_capacity * 2) ? m_capacity * 2 : m_size + count;
-			tmp = m_allocator.allocate(capacity);
-			for (int k = 0; j < m_size + count; j++)
-			{
-				if (len == j)
-					for (; first < last; first++)
-						tmp[j++] = *first;
-				tmp[j] = m_data[k++];
-			}
-			m_allocator.deallocate(m_data, m_capacity);
-			m_data = tmp;
-			m_capacity = capacity;
-			m_size += count;
-		}
 
 		template <class InputIt>
 		void insert(iterator pos, typename enable_if<!is_integral<InputIt>::value, InputIt>::type first, InputIt last)
@@ -280,7 +281,7 @@ namespace ft
 					m_data[k--] = *first;
 				m_size += count;
 			}
-			else if (len <= m_size && m_size + count > m_capacity)
+			else if (len <= (std::ptrdiff_t)m_size && m_size + count > m_capacity)
 				insertAllocationGeneric(len, first, last);
 		};
 
@@ -348,7 +349,7 @@ namespace ft
 
 			lenToPos = pos.base() - this->begin().base();
 			begin = this->begin();
-			for (i = 0; i < lenToPos; begin++, i++)
+			for (i = 0; i < (size_type)lenToPos; begin++, i++)
 				m_data[i] = m_data[i];
 			m_size--;
 			for (; i != m_size; i++)
@@ -363,7 +364,7 @@ namespace ft
 			std::ptrdiff_t len;
 			start = first.base() - this->begin().base();
 			len = last.base() - first.base();
-			for (i = 0; i < start; first++, i++)
+			for (i = 0; i < (size_type)start; first++, i++)
 				m_data[i] = m_data[i];
 			m_size -= len;
 			for (; i != m_size; i++)

@@ -219,12 +219,7 @@ private:
         }
         //  Uncle ==> node->m_parent->m_parent->m_left
         if (!node->m_parent->m_parent->m_left || node->m_parent->m_parent->m_left->m_black)
-        {
-            // if (!node->m_parent->m_parent->m_left)
-            // {
             return rotation(node);
-            // }
-        }
         if (node->m_parent->m_parent->m_left)
         {
             node->m_parent->m_parent->m_left->m_black = true;
@@ -462,14 +457,9 @@ public:
                 m_size--;
                 m_root = m_end->m_left;
                 m_root->m_parent = m_end;
-                // std::cout << RED << "------------------warning**********************" << DEFAULT << std::endl;
-                // std::cout << m_root->m_right->m_pair.second << std::endl;
-                // std::cout << RED << "------------------warning**********************" << DEFAULT << std::endl;
             }
             else
-            {
                 m_root = NULL;
-            }
         }
         return *this;
     }
@@ -510,10 +500,6 @@ public:
         erase(key, &m_root);
     }
 
-    // void erase(value_type value)
-    // {
-    //     erase(value.first, &m_root);
-    // }
     void erase(key_type key, Node **parent)
     {
         Node *q;
