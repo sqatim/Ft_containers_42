@@ -206,9 +206,11 @@ namespace ft
         }
         void swap(set &x)
         {
-            set tmp(*this);
-            *this = x;
-            x = tmp;
+            this->m_tree.swap(x.m_tree);
+            m_root = m_tree.getEnd();
+            m_size = m_tree.getSize();
+            x.setRoot(x.m_tree.m_root);
+            x.setSize(x.m_tree.m_size);
         }
 
         void clear()
@@ -387,16 +389,19 @@ namespace ft
             return (m_allocator);
         };
 
-        void print()
-        {
-            m_tree.print(m_root);
-        }
-
         ~set()
         {
             // ~m_tree();
         }
 
+        void setRoot(Node* root)
+        {
+            m_root = root;
+        }
+        void setSize(size_type &size)
+        {
+            m_size = size;
+        }
         // FIXME Hadi khasni nhaydha ola n9adha
         const RDTree &getTree() const
         {

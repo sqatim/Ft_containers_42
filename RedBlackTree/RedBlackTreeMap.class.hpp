@@ -147,13 +147,13 @@ public:
     typedef typename Alloc::template rebind<Node>::other allocator_type;
     typedef Compare key_compare;
 
-private:
     Node *m_root;
     Node *m_end;
     size_t m_size;
     allocator_type m_allocator;
     key_compare m_compare;
 
+private:
     // methodes;
     ft::pair<Node *, bool> add(Node *parent, Node *node, key_compare &compare)
     {
@@ -714,7 +714,15 @@ public:
     {
         return m_allocator.max_size();
     }
-    
+
+    void swap(RedBlackTree& x)
+    {
+        std::swap(this->m_end, x.m_end);
+        std::swap(this->m_root, x.m_root);
+        std::swap(this->m_size, x.m_size);
+        std::swap(this->m_allocator, x.m_allocator);
+        std::swap(this->m_compare, x.m_compare);
+    }
     ~RedBlackTree()
     {
         if (m_size > 0)

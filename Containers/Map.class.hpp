@@ -234,11 +234,14 @@ namespace ft
             for (size_t i = 0; i < vect.size(); i++)
                 erase(vect.at(i));
         }
+        
         void swap(map &x)
         {
-            map tmp(*this);
-            *this = x;
-            x = tmp;
+            this->m_tree.swap(x.m_tree);
+            m_root = m_tree.getEnd();
+            m_size = m_tree.getSize();
+            x.setRoot(x.m_tree.m_root);
+            x.setSize(x.m_tree.m_size);
         }
 
         void clear()
@@ -417,13 +420,17 @@ namespace ft
             return (m_allocator);
         };
 
-        void print()
-        {
-            m_tree.print(m_root);
-        }
-
         ~map()
         {
+        }
+
+        void setRoot(Node* root)
+        {
+            m_root = root;
+        }
+        void setSize(size_type &size)
+        {
+            m_size = size;
         }
 
         const RDTree &getTree() const
