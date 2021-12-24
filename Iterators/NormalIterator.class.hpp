@@ -25,7 +25,6 @@ public:
     Normal_iterator &operator=(const Normal_iterator<Iter> &other)
     {
         if (this != &other)
-            // new (this) Normal_iterator(other);
             this->m_current = other.m_current;
         return (*this);
     };
@@ -98,7 +97,6 @@ Normal_iterator<Iterator> operator-(typename Normal_iterator<Iterator>::differen
     return *rev_it;
 }
 
-// TODO operator-
 template <class Iterator>
 typename Normal_iterator<Iterator>::difference_type operator-(const Normal_iterator<Iterator> &lhs, const Normal_iterator<Iterator> &rhs)
 {

@@ -145,7 +145,6 @@ public:
     typedef ft::pair<const key_type, mapped_type> value_type;
     typedef NodeBase<value_type> Node;
     typedef typename Alloc::template rebind<Node>::other allocator_type;
-    // typedef Alloc allocator_type;
     typedef Compare key_compare;
 
 private:
@@ -190,14 +189,14 @@ private:
 
     void checkColor(Node *node)
     {
-        if (node == NULL || m_root == m_end) // had f7alatma tbadal root kan protecti biha
+        if (node == NULL || m_root == m_end)
             return;
         if (node == m_root)
         {
             node->m_black = true;
             return;
         }
-        if (!node->m_black && !node->m_parent->m_black) // hna fen kayna segfault
+        if (!node->m_black && !node->m_parent->m_black)
             correctTree(node);
         checkColor(node->m_parent);
     }
@@ -206,7 +205,6 @@ private:
     {
         if (node->m_parent->m_isLeftChild) //  Uncle ==> node->m_parent->m_parent->m_right
         {
-            // std::cout << node << std::endl;
             if (!node->m_parent->m_parent->m_right || node->m_parent->m_parent->m_right->m_black)
                 return rotation(node);
             if (node->m_parent->m_parent->m_right)
@@ -399,7 +397,6 @@ public:
         return;
     }
 
-    
     ft::pair<Node *, bool> insert(const ft::pair<key_type, mapped_type> &value, key_compare &compare)
     {
         ft::pair<Node *, bool> k;
@@ -419,7 +416,7 @@ public:
             return ft::make_pair(node, true);
         }
         k = add(m_root, node, compare);
-        if(k.second == false)
+        if (k.second == false)
             m_allocator.deallocate(node, 1);
         return (k);
     }
@@ -466,10 +463,6 @@ public:
     {
         if ((*node) == NULL)
             return;
-        // if ((*node)->m_black)
-        //     std::cout << "[delete] a BLACK node --- " << (*node)->m_pair.second << std::endl;
-        // else
-        //     std::cout << "[delete] a RED node --- " << (*node)->m_pair.second << std::endl;
         if (*node == m_root)
         {
             delete *node;
@@ -482,7 +475,6 @@ public:
             caseOne((*node));
         else if ((*node)->m_black)
         {
-            // hta n3awd ntcheki wash les (*node) != null
             if (((*node)->m_isLeftChild && (*node)->m_parent->m_right && (*node)->m_parent->m_right->m_black == false) ||
                 (!(*node)->m_isLeftChild && (*node)->m_parent->m_left && (*node)->m_parent->m_left->m_black == false))
                 caseTwo((*node)); // f7alat makan sibling [RED]
@@ -538,11 +530,9 @@ public:
         **                     \
         **                    [D|R] (delete a red node)
         */
-        // std::cout << GREEN << "                    [" << SMILE << RED << "CaseOne" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         Node *tmp = node;
         if (!node->m_right && !node->m_left)
         {
-            // std::cout << "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" << std::endl;
         }
         // this else if are for when it had a one child
         else if (node->m_right)
@@ -588,59 +578,54 @@ public:
         **                     [R]
         ** we Perform a rotation
         */
-        // std::cout << GREEN << "                    [" << SMILE << RED << "CaseTwo" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         Node *tmp = node;
 
         if (tmp->m_isLeftChild)
         {
-            tmp->m_parent->m_left = tmp->m_left; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
+            tmp->m_parent->m_left = tmp->m_left;
             if (tmp->m_left)
                 tmp->m_left->m_parent = tmp->m_parent;
             leftRotation(tmp->m_parent);
             tmp->m_parent->m_black = false;
             tmp->m_parent->m_parent->m_black = true;
             tmp->m_parent->m_parent->m_right->m_black = false;
-            colorToRed(tmp->m_parent->m_right); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
+            colorToRed(tmp->m_parent->m_right);
         }
         else if (!tmp->m_isLeftChild)
         {
-            tmp->m_parent->m_right = tmp->m_right; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
+            tmp->m_parent->m_right = tmp->m_right;
             if (tmp->m_right)
                 tmp->m_right->m_parent = tmp->m_parent;
             rightRotation(tmp->m_parent);
             tmp->m_parent->m_black = false;
             tmp->m_parent->m_parent->m_black = true;
             tmp->m_parent->m_parent->m_left->m_black = false;
-            colorToRed(tmp->m_parent->m_left); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
+            colorToRed(tmp->m_parent->m_left);
         }
         delete (node);
     }
     void colorToRed(Node *node)
     {
-        // std::cout << YELLOW <<"wa shamir ra dkhalt l colortored "<< DEFAULT << std::endl;
         if (node == NULL)
             return;
         colorToRed(node->m_left);
         node->m_black = false;
-        checkColor(node); // t9dar takhud liya time bzaf
+        checkColor(node);
         colorToRed(node->m_right);
     }
     void caseThree(Node *node)
     {
         Node *tmp = node;
 
-        // std::cout << GREEN << "                    [" << SMILE << RED << "CaseThree" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         if (tmp->m_isLeftChild)
         {
-                // std::cout << "wa shamiir" << std::endl;
             if ((!tmp->m_parent->m_right->m_left && !tmp->m_parent->m_right->m_right) ||
-                ((tmp->m_parent->m_right->m_left && tmp->m_parent->m_right->m_left->m_black) && (tmp->m_parent->m_right->m_right && tmp->m_parent->m_right->m_right->m_black)))  // kan checki wash childs dyal sibling wash b2 black
-                // (tmp->m_parent->m_right->m_left->m_black && tmp->m_parent->m_right->m_right->m_black))
+                ((tmp->m_parent->m_right->m_left && tmp->m_parent->m_right->m_left->m_black) && (tmp->m_parent->m_right->m_right && tmp->m_parent->m_right->m_right->m_black))) // kan checki wash childs dyal sibling wash b2 black
             {
                 tmp->m_parent->m_right->m_black = false;
                 tmp->m_parent->m_black = true;
                 delete (node);
-                tmp->m_parent->m_left = tmp->m_left; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
+                tmp->m_parent->m_left = tmp->m_left;
                 if (tmp->m_left)
                     tmp->m_left->m_parent = tmp->m_parent;
                 checkColor(tmp->m_parent);
@@ -649,19 +634,18 @@ public:
             {
                 if (tmp->m_parent->m_right->m_right && !tmp->m_parent->m_right->m_right->m_black)
                 {
-                    // std::cout << "wa shamiiir" << std::endl;
-                    tmp->m_parent->m_left = tmp->m_left; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
+                    tmp->m_parent->m_left = tmp->m_left;
                     if (tmp->m_left)
                         tmp->m_left->m_parent = tmp->m_parent;
                     leftRotation(tmp->m_parent);
                     tmp->m_parent->m_black = false;
                     tmp->m_parent->m_parent->m_black = true;
                     tmp->m_parent->m_parent->m_right->m_black = false;
-                    colorToRed(tmp->m_parent->m_right); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
+                    colorToRed(tmp->m_parent->m_right);
                 }
                 else if (tmp->m_parent->m_right->m_left && !tmp->m_parent->m_right->m_left->m_black)
                 {
-                    tmp->m_parent->m_left = tmp->m_left; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
+                    tmp->m_parent->m_left = tmp->m_left;
                     if (tmp->m_left)
                         tmp->m_left->m_parent = tmp->m_parent;
                     rightLeftRotation(tmp->m_parent);
@@ -680,7 +664,7 @@ public:
                 tmp->m_parent->m_left->m_black = false;
                 tmp->m_parent->m_black = true;
                 delete (node);
-                tmp->m_parent->m_right = tmp->m_right; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
+                tmp->m_parent->m_right = tmp->m_right;
                 if (tmp->m_right)
                     tmp->m_right->m_parent = tmp->m_parent;
                 checkColor(tmp->m_parent);
@@ -689,18 +673,18 @@ public:
             {
                 if (tmp->m_parent->m_left->m_left && !tmp->m_parent->m_left->m_left->m_black)
                 {
-                    tmp->m_parent->m_right = tmp->m_right; // hadi mamt2kdsh manha : ma3raftsh wash anakhud right ola right
+                    tmp->m_parent->m_right = tmp->m_right;
                     if (tmp->m_right)
                         tmp->m_right->m_parent = tmp->m_parent;
                     rightRotation(tmp->m_parent);
                     tmp->m_parent->m_black = false;
                     tmp->m_parent->m_parent->m_black = true;
                     tmp->m_parent->m_parent->m_left->m_black = false;
-                    colorToRed(tmp->m_parent->m_left); // hadi 7a9ash ga3 les child li kayduzu l jiha lakhra khashum ikunu red
+                    colorToRed(tmp->m_parent->m_left);
                 }
                 else if (tmp->m_parent->m_left->m_right && !tmp->m_parent->m_left->m_right->m_black)
                 {
-                    tmp->m_parent->m_right = tmp->m_right; // hadi mamt2kdsh manha : ma3raftsh wash anakhud left ola right
+                    tmp->m_parent->m_right = tmp->m_right;
                     if (tmp->m_right)
                         tmp->m_right->m_parent = tmp->m_parent;
                     leftRightRotation(tmp->m_parent);
@@ -730,32 +714,7 @@ public:
     {
         return m_allocator.max_size();
     }
-
-    void print(Node *parent)
-    {
-        if (parent)
-        {
-            print(parent->m_left);
-            std::cout << "-------------------------------------------" << std::endl;
-            if (parent == m_root)
-                std::cout << YELLOW << "************ ROOT ************" << DEFAULT << std::endl;
-            std::cout << parent->m_pair.first << ": " << parent->m_pair.second << std::endl;
-            if (parent->m_isLeftChild)
-                std::cout << "Which Child: " << GREEN << "LEFT" << DEFAULT << std::endl;
-            else if (!parent->m_isLeftChild)
-                std::cout << "Which Child: " << GREEN << "RIGHT" << DEFAULT << std::endl;
-            if (parent->m_black)
-                std::cout << "Color: " << BLACK << "black" << DEFAULT << std::endl;
-            else if (!parent->m_black)
-                std::cout << "Color: " << RED << "Red" << DEFAULT << std::endl;
-            if (parent->m_right)
-                std::cout << "Right Child: [" << parent->m_right->m_pair.second << "]" << std::endl;
-            if (parent->m_left)
-                std::cout << "Left Child: [" << parent->m_left->m_pair.second << "]" << std::endl;
-            print(parent->m_right);
-        }
-    }
-
+    
     ~RedBlackTree()
     {
         if (m_size > 0)

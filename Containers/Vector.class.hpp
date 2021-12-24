@@ -161,11 +161,8 @@ namespace ft
 
 		void reserve(size_type n)
 		{
-			// If the size requested is greater than the maximum size (vector::max_size), a length_error exception is thrown.
 			if (n > m_capacity)
-			{
 				this->allocateAndCopy(n, m_size);
-			}
 		};
 
 		// Element access:
@@ -208,7 +205,6 @@ namespace ft
 
 		iterator insert(iterator pos, const T &value)
 		{
-			// hna ma khasnish nfout end ! akhir element n9dar nzid momkin ikun fal end
 			std::ptrdiff_t len;
 			size_type k;
 
@@ -288,7 +284,6 @@ namespace ft
 		template <class InputIterator>
 		void assign(InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
 		{
-			//   v1.assign(3, 100); nnormalement hadi khasha dkhul fal function lakhra
 			T *tmp;
 			size_type counter;
 
@@ -389,7 +384,6 @@ namespace ft
 
 		void resize(size_type count, T value = T())
 		{
-			// If a reallocation happens, the storage is allocated using the container's allocator, which may throw exceptions on failure (for the default allocator, bad_alloc is thrown if the allocation request does not succeed).
 			if (count <= m_size)
 			{
 				for (int i = (int)m_size; i >= (int)count; i--)

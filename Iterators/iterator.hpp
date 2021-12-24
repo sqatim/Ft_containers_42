@@ -41,7 +41,6 @@ struct Iterator_traits
     typedef typename Iterator::pointer pointer;
     typedef typename Iterator::reference reference;
     typedef typename Iterator::iterator_category iterator_category;
-    // iterator_traits() { std::cout << "iterator_traits1" << std::endl; };
 };
 
 template <class T>

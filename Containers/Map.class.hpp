@@ -424,10 +424,8 @@ namespace ft
 
         ~map()
         {
-            // ~m_tree();
         }
 
-        // FIXME Hadi khasni nhaydha ola n9adha
         const RDTree &getTree() const
         {
             return (m_tree);

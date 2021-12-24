@@ -19,10 +19,7 @@ protected:
 
 public:
     Reverse_iterator() : m_current(){};
-    Reverse_iterator(iterator_type x) : m_current(x){
-        // std::cout << "ra dkhalt hna a shrif" << std::endl;
-        // std::cout << m_current->first << std::endl;
-    };
+    Reverse_iterator(iterator_type x) : m_current(x){};
     Reverse_iterator(const Reverse_iterator<Iter> &other) { this->m_current = other.base(); };
     Reverse_iterator &operator=(const Reverse_iterator<Iter> &other)
     {
@@ -99,7 +96,7 @@ Reverse_iterator<Iterator> operator-(typename Reverse_iterator<Iterator>::differ
     rev_it.m_current = rev_it.base() + n;
     return *rev_it;
 }
-// TODO operator-
+
 template <class Iterator>
 typename Reverse_iterator<Iterator>::difference_type operator-(const Reverse_iterator<Iterator> &lhs, const Reverse_iterator<Iterator> &rhs)
 {
@@ -147,4 +144,5 @@ bool operator>=(const Reverse_iterator<Iterator> &lhs,
 {
     return lhs.base() >= rhs.base();
 }
+
 #endif
