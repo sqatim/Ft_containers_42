@@ -41,10 +41,10 @@ class RedBlackTreeIteratorSet
 public:
     typedef Iter iterator_type;
     typedef typename std::bidirectional_iterator_tag iterator_category;
-    typedef typename Iterator_traits<iterator_type>::value_type value_type;
-    typedef typename Iterator_traits<iterator_type>::difference_type difference_type;
-    typedef typename Iterator_traits<P *>::pointer pointer;
-    typedef typename Iterator_traits<P *>::reference reference;
+    typedef typename ft::iterator_traits<iterator_type>::value_type value_type;
+    typedef typename ft::iterator_traits<iterator_type>::difference_type difference_type;
+    typedef typename ft::iterator_traits<P *>::pointer pointer;
+    typedef typename ft::iterator_traits<P *>::reference reference;
     iterator_type m_current;
 
     RedBlackTreeIteratorSet() : m_current(){};

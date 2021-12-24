@@ -25,8 +25,8 @@ namespace ft
         typedef typename allocator_type::const_reference const_reference;
         typedef typename allocator_type::pointer pointer;
         typedef typename allocator_type::const_pointer const_pointer;
-        typedef RedBlackTreeIterator<Node *, value_type> iterator;
-        typedef RedBlackTreeIterator<Node *, const value_type> const_iterator;
+        typedef RedBlackTreeIteratorMap<Node *, value_type> iterator;
+        typedef RedBlackTreeIteratorMap<Node *, const value_type> const_iterator;
         typedef Reverse_iterator<iterator> reverse_iterator;
         typedef Reverse_iterator<const_iterator> const_reverse_iterator;
         typedef std::ptrdiff_t difference_type;

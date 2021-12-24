@@ -31,6 +31,7 @@ namespace ft
         typedef std::ptrdiff_t difference_type;
         typedef size_t size_type;
         typedef RedBlackTreeSet<key_type, value_type, key_compare, allocator_type> RDTree;
+   
     protected:
         Node *m_root;
         key_compare m_compare;
@@ -234,15 +235,16 @@ namespace ft
 
         // Operations:
 
-        iterator find(const key_type &k)
+        iterator find (const value_type& val) const
         {
             Node *ptr = m_root;
             iterator it;
+            iterator end = this->end();
             while (ptr)
             {
-                if (m_compare(ptr->m_value, k))
+                if (m_compare(ptr->m_value, val))
                     ptr = ptr->m_right;
-                else if (m_compare(k, ptr->m_value))
+                else if (m_compare(val, ptr->m_value))
                     ptr = ptr->m_left;
                 else
                 {
@@ -250,31 +252,13 @@ namespace ft
                     return (it);
                 }
             }
-            return this->end();
-        }
-
-        const_iterator find(const key_type &k) const
-        {
-            Node *ptr = m_root;
-            const_iterator it;
-            while (ptr)
-            {
-                if (m_compare(ptr->m_value, k))
-                    ptr = ptr->m_right;
-                else if (m_compare(k, ptr->m_value))
-                    ptr = ptr->m_left;
-                else
-                {
-                    it = ptr;
-                    return (it);
-                }
-            }
-            return this->end();
+            return end;
         }
 
         size_type count(const key_type &k) const
         {
-            if (this->find(k) != this->end())
+            iterator end = this->end();
+            if (this->find(k) != end)
                 return 1;
             return 0;
         }
@@ -284,30 +268,6 @@ namespace ft
             Node *ptr = m_root;
             Node *tmp = m_root;
             iterator it;
-            while (ptr)
-            {
-                if (ptr->m_value >= k)
-                    tmp = ptr;
-                if (m_compare(ptr->m_value, k))
-                    ptr = ptr->m_right;
-                else if (m_compare(k, ptr->m_value))
-                    ptr = ptr->m_left;
-                else
-                    break;
-            }
-            if (tmp != NULL)
-            {
-                it = tmp;
-                return (it);
-            }
-            return this->end();
-        };
-
-        const_iterator lower_bound(const key_type &k) const
-        {
-            Node *ptr = m_root;
-            Node *tmp = m_root;
-            const_iterator it;
             while (ptr)
             {
                 if (ptr->m_value >= k)
@@ -348,37 +308,12 @@ namespace ft
             }
             return this->end();
         };
-        const_iterator upper_bound(const key_type &k) const
-        {
-            Node *ptr = m_root;
-            const_iterator it;
-            while (ptr && !m_compare(k, ptr->m_value))
-            {
-                if (m_compare(ptr->m_value, k) || ptr->m_value == k)
-                    ptr = ptr->m_right;
-                else if (m_compare(k, ptr->m_value))
-                    ptr = ptr->m_left;
-            }
-            if (ptr != NULL)
-            {
-                it = ptr;
-                return (it);
-            }
-            return this->end();
-        };
-
+     
         ft::pair<iterator, iterator> equal_range(const key_type &k)
         {
             ft::pair<iterator, iterator> pair;
 
             pair = ft::make_pair<iterator, iterator>(lower_bound(k), upper_bound(k));
-            return pair;
-        };
-        ft::pair<const_iterator, const_iterator> equal_range(const key_type &k) const
-        {
-            ft::pair<const_iterator, const_iterator> pair;
-
-            pair = ft::make_pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k));
             return pair;
         };
 

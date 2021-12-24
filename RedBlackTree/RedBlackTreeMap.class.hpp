@@ -36,22 +36,22 @@ struct NodeBase
 
 // template<typename Tp>
 template <class Iter, class P>
-class RedBlackTreeIterator
+class RedBlackTreeIteratorMap
 {
 public:
     typedef Iter iterator_type;
     typedef typename std::bidirectional_iterator_tag iterator_category;
-    typedef typename Iterator_traits<iterator_type>::value_type value_type;
-    typedef typename Iterator_traits<iterator_type>::difference_type difference_type;
-    typedef typename Iterator_traits<P *>::pointer pointer;
-    typedef typename Iterator_traits<P *>::reference reference;
+    typedef typename ft::iterator_traits<iterator_type>::value_type value_type;
+    typedef typename ft::iterator_traits<iterator_type>::difference_type difference_type;
+    typedef typename ft::iterator_traits<P *>::pointer pointer;
+    typedef typename ft::iterator_traits<P *>::reference reference;
     iterator_type m_current;
 
-    RedBlackTreeIterator() : m_current(){};
-    RedBlackTreeIterator(iterator_type x) : m_current(x){};
+    RedBlackTreeIteratorMap() : m_current(){};
+    RedBlackTreeIteratorMap(iterator_type x) : m_current(x){};
     template <class T, class K>
-    RedBlackTreeIterator(const RedBlackTreeIterator<T, K> &other) : m_current(other.base()){};
-    RedBlackTreeIterator &operator=(const RedBlackTreeIterator &other)
+    RedBlackTreeIteratorMap(const RedBlackTreeIteratorMap<T, K> &other) : m_current(other.base()){};
+    RedBlackTreeIteratorMap &operator=(const RedBlackTreeIteratorMap &other)
     {
         if (this != &other)
             this->m_current = other.m_current;
@@ -70,7 +70,7 @@ public:
     {
         return this->m_current[n].m_pair;
     };
-    RedBlackTreeIterator &operator++()
+    RedBlackTreeIteratorMap &operator++()
     {
         iterator_type tmp;
         if (m_current->m_right != NULL)
@@ -89,7 +89,7 @@ public:
         }
         return *this;
     };
-    RedBlackTreeIterator &operator--()
+    RedBlackTreeIteratorMap &operator--()
     {
         iterator_type tmp;
         if (m_current->m_left != NULL)
@@ -108,30 +108,30 @@ public:
         }
         return *this;
     };
-    RedBlackTreeIterator operator++(int)
+    RedBlackTreeIteratorMap operator++(int)
     {
-        RedBlackTreeIterator copy = *this;
+        RedBlackTreeIteratorMap copy = *this;
         ++(*this);
         return copy;
     };
-    RedBlackTreeIterator operator--(int)
+    RedBlackTreeIteratorMap operator--(int)
     {
-        RedBlackTreeIterator copy = *this;
+        RedBlackTreeIteratorMap copy = *this;
         --(*this);
         return copy;
     };
 };
 
 template <class Iter, class Pair>
-bool operator==(const RedBlackTreeIterator<Iter, Pair> &lhs,
-                const RedBlackTreeIterator<Iter, Pair> &rhs)
+bool operator==(const RedBlackTreeIteratorMap<Iter, Pair> &lhs,
+                const RedBlackTreeIteratorMap<Iter, Pair> &rhs)
 {
     return lhs.base() == rhs.base();
 }
 
 template <class Iter, class Pair>
-bool operator!=(const RedBlackTreeIterator<Iter, Pair> &lhs,
-                const RedBlackTreeIterator<Iter, Pair> &rhs)
+bool operator!=(const RedBlackTreeIteratorMap<Iter, Pair> &lhs,
+                const RedBlackTreeIteratorMap<Iter, Pair> &rhs)
 {
     return lhs.base() != rhs.base();
 }
