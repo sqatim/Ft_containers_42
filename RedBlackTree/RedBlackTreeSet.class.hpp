@@ -1,5 +1,5 @@
-#ifndef REDBLACKTREE_CLASS_HPP
-#define REDBLACKTREE_CLASS_HPP
+#ifndef REDBLACKTREESET_CLASS_HPP
+#define REDBLACKTREESET_CLASS_HPP
 
 #include <iostream>
 
@@ -14,29 +14,31 @@
 #include "../NeededTemplates/pair.hpp"
 #include <typeinfo>
 
+
+
 template <class T>
-struct NodeBase
+struct NodeBaseSet
 {
     typedef T value_type;
 
-    value_type m_pair;
-    NodeBase *m_left;
-    NodeBase *m_right;
-    NodeBase *m_parent;
     bool m_isLeftChild;
     bool m_black;
-    NodeBase() : m_left(0), m_right(0), m_parent(0), m_isLeftChild(false), m_black(false)
+    value_type m_value;
+    NodeBaseSet *m_left;
+    NodeBaseSet *m_right;
+    NodeBaseSet *m_parent;
+    NodeBaseSet() : m_isLeftChild(false), m_black(false), m_left(0), m_right(0), m_parent(0)
     {
     }
-    NodeBase(value_type pair) : m_pair(pair), m_left(0),
-                                m_right(0), m_parent(0), m_isLeftChild(false), m_black(false)
+    NodeBaseSet(value_type value) : m_isLeftChild(false), m_black(false), m_value(value), m_left(0),
+                                 m_right(0), m_parent(0)
     {
     }
 };
 
 // template<typename Tp>
 template <class Iter, class P>
-class RedBlackTreeIterator
+class RedBlackTreeIteratorSet
 {
 public:
     typedef Iter iterator_type;
@@ -47,11 +49,11 @@ public:
     typedef typename Iterator_traits<P *>::reference reference;
     iterator_type m_current;
 
-    RedBlackTreeIterator() : m_current(){};
-    RedBlackTreeIterator(iterator_type x) : m_current(x){};
+    RedBlackTreeIteratorSet() : m_current(){};
+    RedBlackTreeIteratorSet(iterator_type x) : m_current(x){};
     template <class T, class K>
-    RedBlackTreeIterator(const RedBlackTreeIterator<T, K> &other) : m_current(other.base()){};
-    RedBlackTreeIterator &operator=(const RedBlackTreeIterator &other)
+    RedBlackTreeIteratorSet(const RedBlackTreeIteratorSet<T, K> &other) : m_current(other.base()){};
+    RedBlackTreeIteratorSet &operator=(const RedBlackTreeIteratorSet &other)
     {
         if (this != &other)
             this->m_current = other.m_current;
@@ -60,7 +62,7 @@ public:
     iterator_type base() const { return this->m_current; };
     reference operator*() const
     {
-        return (*m_current).m_pair;
+        return (*m_current).m_value;
     };
     pointer operator->() const
     {
@@ -68,9 +70,9 @@ public:
     };
     reference operator[](difference_type n) const
     {
-        return this->m_current[n].m_pair;
+        return this->m_current[n].m_value;
     };
-    RedBlackTreeIterator &operator++()
+    RedBlackTreeIteratorSet &operator++()
     {
         iterator_type tmp;
         if (m_current->m_right != NULL)
@@ -89,7 +91,7 @@ public:
         }
         return *this;
     };
-    RedBlackTreeIterator &operator--()
+    RedBlackTreeIteratorSet &operator--()
     {
         iterator_type tmp;
         if (m_current->m_left != NULL)
@@ -108,42 +110,41 @@ public:
         }
         return *this;
     };
-    RedBlackTreeIterator operator++(int)
+    RedBlackTreeIteratorSet operator++(int)
     {
-        RedBlackTreeIterator copy = *this;
+        RedBlackTreeIteratorSet copy = *this;
         ++(*this);
         return copy;
     };
-    RedBlackTreeIterator operator--(int)
+    RedBlackTreeIteratorSet operator--(int)
     {
-        RedBlackTreeIterator copy = *this;
+        RedBlackTreeIteratorSet copy = *this;
         --(*this);
         return copy;
     };
 };
 
 template <class Iter, class Pair>
-bool operator==(const RedBlackTreeIterator<Iter, Pair> &lhs,
-                const RedBlackTreeIterator<Iter, Pair> &rhs)
+bool operator==(const RedBlackTreeIteratorSet<Iter, Pair> &lhs,
+                const RedBlackTreeIteratorSet<Iter, Pair> &rhs)
 {
     return lhs.base() == rhs.base();
 }
 
 template <class Iter, class Pair>
-bool operator!=(const RedBlackTreeIterator<Iter, Pair> &lhs,
-                const RedBlackTreeIterator<Iter, Pair> &rhs)
+bool operator!=(const RedBlackTreeIteratorSet<Iter, Pair> &lhs,
+                const RedBlackTreeIteratorSet<Iter, Pair> &rhs)
 {
     return lhs.base() != rhs.base();
 }
 
 template <class Key, class T, class Compare, class Alloc>
-class RedBlackTree
+class RedBlackTreeSet
 {
 public:
     typedef Key key_type;
-    typedef T mapped_type;
-    typedef ft::pair<const key_type, mapped_type> value_type;
-    typedef NodeBase<value_type> Node;
+    typedef T value_type;
+    typedef NodeBaseSet<value_type> Node;
     typedef typename Alloc::template rebind<Node>::other allocator_type;
     // typedef Alloc allocator_type;
     typedef Compare key_compare;
@@ -158,7 +159,7 @@ private:
     // methodes;
     ft::pair<Node *, bool> add(Node *parent, Node *node, key_compare &compare)
     {
-        if (compare(parent->m_pair.first, node->m_pair.first))
+        if (compare(parent->m_value, node->m_value))
         {
             if (parent->m_right == NULL)
             {
@@ -171,7 +172,7 @@ private:
             }
             return add(parent->m_right, node, compare);
         }
-        else if (compare(node->m_pair.first, parent->m_pair.first))
+        else if (compare(node->m_value, parent->m_value))
         {
             if (parent->m_left == NULL)
             {
@@ -269,7 +270,6 @@ private:
         Node *tmp;
         tmp = node->m_right;
 
-        // std::cout << GREEN << "                                 [" << RED << "LEFT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
         node->m_right = tmp->m_left;
         if (node->m_right != NULL)
         {
@@ -307,7 +307,6 @@ private:
         tmp = node->m_left;
 
         node->m_left = tmp->m_right;
-        // std::cout << GREEN << "                                 [" << RED << "RIGHT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
         if (node->m_left != NULL)
         {
             node->m_left->m_parent = node;
@@ -341,14 +340,12 @@ private:
 
     void leftRightRotation(Node *node)
     {
-        std::cout << GREEN << "                                 [" << RED << "LEFTRIGHT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
         leftRotation(node->m_left);
         rightRotation(node);
     }
 
     void rightLeftRotation(Node *node)
     {
-        std::cout << GREEN << "                                 [" << RED << "RIGHTLEFT ROTATION" << GREEN << "]" << DEFAULT << std::endl;
         rightRotation(node->m_right);
         leftRotation(node);
     }
@@ -372,7 +369,6 @@ private:
     {
         while (ptr && ptr->m_right != NULL)
             ptr = ptr->m_right;
-        // std::cout << RED << "Inorder predecessor" << ptr->m_pair.second << DEFAULT << std::endl;
         return ptr;
     }
 
@@ -380,7 +376,6 @@ private:
     {
         while (ptr && ptr->m_left != NULL)
             ptr = ptr->m_left;
-        // std::cout << RED << "Inorder succesor " << ptr->m_pair.second << DEFAULT << std::endl;
         return ptr;
     }
 
@@ -397,14 +392,15 @@ private:
 
 public:
     Node *getRoot() { return (m_root); };
-    RedBlackTree() : m_root(0), m_end(0), m_size(0), m_allocator(allocator_type()){};
-    RedBlackTree(key_compare &compare) : m_root(0), m_end(0), m_size(0), m_allocator(allocator_type()), m_compare(compare){};
-    RedBlackTree(const RedBlackTree &x)
+    RedBlackTreeSet() : m_root(0), m_end(0), m_size(0), m_allocator(allocator_type()){};
+    RedBlackTreeSet(key_compare &compare) : m_root(0), m_end(0), m_size(0), m_allocator(allocator_type()), m_compare(compare){};
+    RedBlackTreeSet(const RedBlackTreeSet &x)
     {
         *this = x;
         return;
     }
-    ft::pair<Node *, bool> insert(const ft::pair<key_type, mapped_type> &value, key_compare &compare)
+
+    ft::pair<Node *, bool> insert(const key_type &value, key_compare &compare)
     {
         ft::pair<Node *, bool> k;
         Node *node = m_allocator.allocate(1);
@@ -412,7 +408,7 @@ public:
         if (m_root == NULL)
         {
             m_end = m_allocator.allocate(1);
-            m_allocator.construct(m_end, Node(ft::make_pair<key_type, mapped_type>(key_type(), mapped_type())));
+            m_allocator.construct(m_end, Node(key_type()));
             m_end->m_black = true;
             m_root = node;
             m_end->m_left = m_root;
@@ -423,6 +419,8 @@ public:
             return ft::make_pair(node, true);
         }
         k = add(m_root, node, compare);
+        if (k.second == false)
+            m_allocator.deallocate(node, 1);
         return (k);
     }
 
@@ -433,7 +431,7 @@ public:
         else
         {
             node = m_allocator.allocate(1);
-            m_allocator.construct(node, Node(x->m_pair));
+            m_allocator.construct(node, Node(x->m_value));
             node->m_black = x->m_black;
             node->m_isLeftChild = x->m_isLeftChild;
             node->m_parent = parent;
@@ -444,12 +442,12 @@ public:
             return node;
         }
     }
-    RedBlackTree &operator=(const RedBlackTree &x)
+    RedBlackTreeSet &operator=(const RedBlackTreeSet &x)
     {
         if (this != &x)
         {
             if (m_size > 0)
-                this->~RedBlackTree();
+                this->~RedBlackTreeSet();
             m_size = 0;
             m_end = reallocation(m_end, x.getEnd(), NULL);
             if (m_end != NULL)
@@ -507,26 +505,24 @@ public:
             return;
         if (!(*parent)->m_left && !(*parent)->m_right)
             deleteNode(&(*parent));
-        else if (*parent && m_compare((*parent)->m_pair.first, key))
+        else if (*parent && m_compare((*parent)->m_value, key))
             erase(key, &(*parent)->m_right);
-        else if (*parent && m_compare(key, (*parent)->m_pair.first))
+        else if (*parent && m_compare(key, (*parent)->m_value))
             erase(key, &(*parent)->m_left);
-        else if (*parent && key == (*parent)->m_pair.first)
+        else if (*parent && key == (*parent)->m_value)
         {
             // if height is 0 in parent left we cant chose inorderPredecessor  and the opposite is tree this is why we calcul the height
             if (height((*parent)->m_left) >= height((*parent)->m_right))
             {
                 q = inorderPredecessor((*parent)->m_left);
-                const_cast<key_type &>((*parent)->m_pair.first) = q->m_pair.first;
-                (*parent)->m_pair.second = q->m_pair.second;
-                erase(q->m_pair.first, &(*parent)->m_left);
+                const_cast<key_type &>((*parent)->m_value) = q->m_value;
+                erase(q->m_value, &(*parent)->m_left);
             }
             else
             {
                 q = inorderSuccessor((*parent)->m_right);
-                const_cast<key_type &>((*parent)->m_pair.first) = q->m_pair.first;
-                (*parent)->m_pair.second = q->m_pair.second;
-                erase(q->m_pair.first, &(*parent)->m_right);
+                const_cast<key_type &>((*parent)->m_value) = q->m_value;
+                erase(q->m_value, &(*parent)->m_right);
             }
         }
         return;
@@ -634,10 +630,10 @@ public:
         // std::cout << GREEN << "                    [" << SMILE << RED << "CaseThree" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         if (tmp->m_isLeftChild)
         {
-                // std::cout << "wa shamiir" << std::endl;
+            // std::cout << "wa shamiir" << std::endl;
             if ((!tmp->m_parent->m_right->m_left && !tmp->m_parent->m_right->m_right) ||
-                ((tmp->m_parent->m_right->m_left && tmp->m_parent->m_right->m_left->m_black) && (tmp->m_parent->m_right->m_right && tmp->m_parent->m_right->m_right->m_black)))  // kan checki wash childs dyal sibling wash b2 black
-                // (tmp->m_parent->m_right->m_left->m_black && tmp->m_parent->m_right->m_right->m_black))
+                ((tmp->m_parent->m_right->m_left && tmp->m_parent->m_right->m_left->m_black) && (tmp->m_parent->m_right->m_right && tmp->m_parent->m_right->m_right->m_black))) // kan checki wash childs dyal sibling wash b2 black
+            // (tmp->m_parent->m_right->m_left->m_black && tmp->m_parent->m_right->m_right->m_black))
             {
                 tmp->m_parent->m_right->m_black = false;
                 tmp->m_parent->m_black = true;
@@ -758,7 +754,7 @@ public:
         }
     }
 
-    ~RedBlackTree()
+    ~RedBlackTreeSet()
     {
         if (m_size > 0)
         {

@@ -6,9 +6,8 @@
 
 #include "../NeededTemplates/pair.hpp"
 #include "Vector.class.hpp"
-// #include "../Iterators/NormalIterator.class.hpp"
 #include "../Iterators/ReverseIterator.class.hpp"
-#include "../RedBlackTree/RedBlackTree.class.hpp"
+#include "../RedBlackTree/RedBlackTreeMap.class.hpp"
 
 namespace ft
 {
@@ -229,7 +228,7 @@ namespace ft
         }
         void erase(iterator first, iterator last)
         {
-            ft::vector<mapped_type> vect;
+            ft::vector<key_type> vect;
             for (; first != last; first++)
                 vect.push_back(first->first);
             for (size_t i = 0; i < vect.size(); i++)

@@ -1,33 +1,36 @@
 #ifndef SET_CLASS_HPP
 #define SET_CLASS_HPP
 
+#include <iostream>
+
+#include "../NeededTemplates/pair.hpp"
 #include "Vector.class.hpp"
 #include "../Iterators/ReverseIterator.class.hpp"
-#include "../RedBlackTree/RedBlackTree.class.hpp"
+#include "../RedBlackTree/RedBlackTreeSet.class.hpp"
 
 namespace ft
 {
     template <class T, class Compare = std::less<T>, class Alloc = std::allocator<T> >
     class set
     {
+    public:
         typedef T key_type;
         typedef T value_type;
         typedef Compare key_compare;
         typedef Compare value_compare;
-        typedef NodeBase<value_type> Node;
+        typedef NodeBaseSet<key_type> Node;
         typedef Alloc allocator_type;
         typedef typename allocator_type::reference reference;
         typedef typename allocator_type::const_reference const_reference;
         typedef typename allocator_type::pointer pointer;
         typedef typename allocator_type::const_pointer const_pointer;
-        typedef RedBlackTreeIterator<Node *, value_type> iterator;
-        typedef RedBlackTreeIterator<Node *, const value_type> const_iterator;
+        typedef RedBlackTreeIteratorSet<Node *, key_type> iterator;
+        typedef RedBlackTreeIteratorSet<Node *, const key_type> const_iterator;
         typedef Reverse_iterator<iterator> reverse_iterator;
         typedef Reverse_iterator<const_iterator> const_reverse_iterator;
         typedef std::ptrdiff_t difference_type;
         typedef size_t size_type;
-        typedef RedBlackTree<key_type, value_type, key_compare, allocator_type> RDTree;
-
+        typedef RedBlackTreeSet<key_type, value_type, key_compare, allocator_type> RDTree;
     protected:
         Node *m_root;
         key_compare m_compare;
@@ -180,7 +183,7 @@ namespace ft
 
         void erase(iterator position)
         {
-            erase(position->first);
+            erase(*position);
         }
 
         size_type erase(const key_type &k)
@@ -195,9 +198,9 @@ namespace ft
         }
         void erase(iterator first, iterator last)
         {
-            ft::vector<value_type> vect;
+            ft::vector<key_type> vect;
             for (; first != last; first++)
-                vect.push_back(first->first);
+                vect.push_back(*first);
             for (size_t i = 0; i < vect.size(); i++)
                 erase(vect.at(i));
         }
@@ -210,7 +213,7 @@ namespace ft
 
         void clear()
         {
-            this->m_tree.~RedBlackTree();
+            this->m_tree.~RedBlackTreeSet();
             m_root = NULL;
             m_size = 0;
         }
@@ -235,9 +238,9 @@ namespace ft
             iterator it;
             while (ptr)
             {
-                if (m_compare(ptr->m_pair, k))
+                if (m_compare(ptr->m_value, k))
                     ptr = ptr->m_right;
-                else if (m_compare(k, ptr->m_pair))
+                else if (m_compare(k, ptr->m_value))
                     ptr = ptr->m_left;
                 else
                 {
@@ -254,9 +257,9 @@ namespace ft
             const_iterator it;
             while (ptr)
             {
-                if (m_compare(ptr->m_pair, k))
+                if (m_compare(ptr->m_value, k))
                     ptr = ptr->m_right;
-                else if (m_compare(k, ptr->m_pair))
+                else if (m_compare(k, ptr->m_value))
                     ptr = ptr->m_left;
                 else
                 {
@@ -281,11 +284,11 @@ namespace ft
             iterator it;
             while (ptr)
             {
-                if (ptr->m_pair >= k)
+                if (ptr->m_value >= k)
                     tmp = ptr;
-                if (m_compare(ptr->m_pair, k))
+                if (m_compare(ptr->m_value, k))
                     ptr = ptr->m_right;
-                else if (m_compare(k, ptr->m_pair))
+                else if (m_compare(k, ptr->m_value))
                     ptr = ptr->m_left;
                 else
                     break;
@@ -305,11 +308,11 @@ namespace ft
             const_iterator it;
             while (ptr)
             {
-                if (ptr->m_pair >= k)
+                if (ptr->m_value >= k)
                     tmp = ptr;
-                if (m_compare(ptr->m_pair, k))
+                if (m_compare(ptr->m_value, k))
                     ptr = ptr->m_right;
-                else if (m_compare(k, ptr->m_pair))
+                else if (m_compare(k, ptr->m_value))
                     ptr = ptr->m_left;
                 else
                     break;
@@ -329,11 +332,11 @@ namespace ft
             iterator it;
             while (ptr)
             {
-                if (ptr->m_pair > k)
+                if (ptr->m_value > k)
                     tmp = ptr;
-                if (m_compare(ptr->m_pair, k) || k == ptr->m_pair)
+                if (m_compare(ptr->m_value, k) || k == ptr->m_value)
                     ptr = ptr->m_right;
-                else if (m_compare(k, ptr->m_pair))
+                else if (m_compare(k, ptr->m_value))
                     ptr = ptr->m_left;
             }
             if (tmp != NULL)
@@ -347,11 +350,11 @@ namespace ft
         {
             Node *ptr = m_root;
             const_iterator it;
-            while (ptr && !m_compare(k, ptr->m_pair))
+            while (ptr && !m_compare(k, ptr->m_value))
             {
-                if (m_compare(ptr->m_pair, k) || ptr->m_pair == k)
+                if (m_compare(ptr->m_value, k) || ptr->m_value == k)
                     ptr = ptr->m_right;
-                else if (m_compare(k, ptr->m_pair))
+                else if (m_compare(k, ptr->m_value))
                     ptr = ptr->m_left;
             }
             if (ptr != NULL)
@@ -369,7 +372,6 @@ namespace ft
             pair = ft::make_pair<iterator, iterator>(lower_bound(k), upper_bound(k));
             return pair;
         };
-
         ft::pair<const_iterator, const_iterator> equal_range(const key_type &k) const
         {
             ft::pair<const_iterator, const_iterator> pair;
@@ -392,6 +394,7 @@ namespace ft
 
         ~set()
         {
+            // ~m_tree();
         }
 
         // FIXME Hadi khasni nhaydha ola n9adha
@@ -400,6 +403,7 @@ namespace ft
             return (m_tree);
         }
     };
+
 }
 
 #endif
