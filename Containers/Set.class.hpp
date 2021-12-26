@@ -326,7 +326,6 @@ namespace ft
 
         ~set()
         {
-            // ~m_tree();
         }
 
         void setRoot(Node* root)
@@ -337,7 +336,7 @@ namespace ft
         {
             m_size = size;
         }
-        // FIXME Hadi khasni nhaydha ola n9adha
+
         const RDTree &getTree() const
         {
             return (m_tree);

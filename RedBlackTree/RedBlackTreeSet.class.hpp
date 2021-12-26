@@ -462,10 +462,6 @@ public:
     {
         if ((*node) == NULL)
             return;
-        // if ((*node)->m_black)
-        //     std::cout << "[delete] a BLACK node --- " << (*node)->m_pair.second << std::endl;
-        // else
-        //     std::cout << "[delete] a RED node --- " << (*node)->m_pair.second << std::endl;
         if (*node == m_root)
         {
             delete *node;
@@ -524,14 +520,6 @@ public:
     }
     void caseOne(Node *node)
     {
-        /*
-        **                [B]
-        **               /   \
-        **             [B]   [B]
-        **                     \
-        **                    [D|R] (delete a red node)
-        */
-        // std::cout << GREEN << "                    [" << SMILE << RED << "CaseOne" << GREEN << SMILE << "]" << DEFAULT << std::endl;
         Node *tmp = node;
         if (!node->m_right && !node->m_left)
         {
@@ -571,15 +559,6 @@ public:
 
     void caseTwo(Node *node)
     {
-        /*
-        ** delete a black node that have a red sibling
-        **                [B]
-        **               /   \
-        **           [D|B]   [R] S
-        **                     \
-        **                     [R]
-        ** we Perform a rotation
-        */
         Node *tmp = node;
 
         if (tmp->m_isLeftChild)

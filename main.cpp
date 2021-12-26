@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: intMain <intMain@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sqatim <sqatim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/11 13:10:11 by obouykou          #+#    #+#             */
-/*   Updated: 2021/12/24 23:28:27 by intMain          ###   ########.fr       */
+/*   Created: 2021/12/25 10:30:45 by sqatim            #+#    #+#             */
+/*   Updated: 2021/12/25 10:30:46 by sqatim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1091,13 +1091,13 @@ int main(void)
     }
 
     // max_size()
-    // {
-    //     std::cout << "\nmax_size()" << std::endl;
-    //     std::cout << "=======================================" << std::endl;
-    //     NS::set<int> set1;
-    //     std::cout << "set1.max_size(): " << set1.max_size() << std::endl;
-    //     std::cout << "=======================================" << std::endl;
-    // }
+    {
+        std::cout << "\nmax_size()" << std::endl;
+        std::cout << "=======================================" << std::endl;
+        NS::set<int> set1;
+        std::cout << "set1.max_size(): " << set1.max_size() << std::endl;
+        std::cout << "=======================================" << std::endl;
+    }
 
     // swap()
     {

@@ -16,7 +16,7 @@ namespace ft
             ++first1;
             ++first2;
         }
-        return (*first2 != *first2);
+        return (first2 != last2);
     };
 
     template <class InputIterator1, class InputIterator2>

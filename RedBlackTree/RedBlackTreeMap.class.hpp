@@ -523,13 +523,6 @@ public:
     }
     void caseOne(Node *node)
     {
-        /*
-        **                [B]
-        **               /   \
-        **             [B]   [B]
-        **                     \
-        **                    [D|R] (delete a red node)
-        */
         Node *tmp = node;
         if (!node->m_right && !node->m_left)
         {
@@ -569,15 +562,6 @@ public:
 
     void caseTwo(Node *node)
     {
-        /*
-        ** delete a black node that have a red sibling
-        **                [B]
-        **               /   \
-        **           [D|B]   [R] S
-        **                     \
-        **                     [R]
-        ** we Perform a rotation
-        */
         Node *tmp = node;
 
         if (tmp->m_isLeftChild)
